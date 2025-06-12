@@ -1,11 +1,16 @@
-import numpy
+import numpy as np
 import pandas as pd
-import tkinter
-import matplotlib
-import seaborn
+import tkinter as tk
+import matplotlib as mpl
+import seaborn as sbn
+
+def entropy():
+    df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.csv.xls")
+    n = np()
 
 df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.csv.xls")
 df = df.drop_duplicates()
+
 # df["chol"] = df["chol"].split(',', 1, expand=True)
 # for x in df.index:
 #     if df.loc[x] == ' ':
