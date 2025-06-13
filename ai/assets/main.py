@@ -21,12 +21,12 @@ df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.
 
 
 age = df["age"]
-sex = df["sex"]
-sex = df["sex"]
-# sex = df["sex"].replace((1, "male"))
-# sex = df["sex"].replace((2, "female"))
-if df["sex"] == 1:
-    df["sex"].replace(1, "male")
+# sex = df["sex"] = ["female" if x == 0 else x for x in df.sex]
+# sex = df["sex"] = ["male" if x == 1 else x for x in df.sex]
+# df = df["sex"].replace(to_replace=0, value="female")
+# df = df["sex"].replace(to_replace=1, value="male")
+df = df["sex"].apply(lambda x: "female" if x == 0 else "male")
+# print(sex)
 print(df)
 # print(df["sex"].replace(1, "male"))
 # print(df["sex"].replace(0, "female"))
