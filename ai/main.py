@@ -26,8 +26,12 @@ age = df["age"]
 # df = df["sex"].replace(to_replace=0, value="female")
 # df = df["sex"].replace(to_replace=1, value="male")
 df = df["sex"].apply(lambda x: "female" if x == 0 else "male")
+df = df["fbs"].apply(lambda x: "false" if x == 0 else "true")
+df = df["exang"].apply(lambda x: "no" if x == 0 else "yes")
+df = df["target"].apply(lambda x: "no disease" if x == 0 else "disease")
 # print(sex)
 print(df)
+
 # print(df["sex"].replace(1, "male"))
 # print(df["sex"].replace(0, "female"))
 
