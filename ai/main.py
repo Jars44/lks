@@ -48,12 +48,11 @@ df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.
 
 window = tk.Tk()
 # window.configure()
-window.geometry("500x800")
-window.resizable(False, False)
+window.geometry("500x720")
 window.title("LKS AI")
 
 input_frame = ttk.Frame(window)
-input_frame.pack(padx=1, pady=1, fill="x", expand=True)
+input_frame.pack(padx=10, pady=10, fill="x", expand=True)
 
 AGE = tk.StringVar()
 SEX = tk.StringVar()
