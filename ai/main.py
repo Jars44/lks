@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import tkinter as tk
+from tkinter import Scrollbar, Text, Frame, Pack
 from tkinter import ttk
 import matplotlib as mpl
 import seaborn as sbn
@@ -54,6 +55,28 @@ window.title("LKS AI")
 input_frame = ttk.Frame(window)
 input_frame.pack(padx=10, pady=10, fill="x", expand=True)
 
+class scrollBar(Text):
+    def __init__(self, master=None, **kw):
+        self.frame = Frame(input_frame)
+        self.vbar = Scrollbar(self.frame)
+        self.vbar.pack(side="right", fill="y")
+        
+        kw.update({"yscrollcommand": self.vbar.set})
+        Text.__init__(self, self.frame, **kw)
+        self.pack(side="left", fill="both", expand=True)
+        self.vbar["command"] = self.yview
+        
+        text_meths = vars(Text).keys()
+        methods = vars(Pack).keys() | vars(Grid).keys() | vars(Place).keys()
+        methods = methods.difference(text_meths)
+
+        for m in methods:
+            if m[0] != '_' and m != 'config' and m != 'configure':
+                setattr(self, m, getattr(self.frame, m))
+
+    def __str__(self):
+        return str(self.frame)
+
 AGE = tk.StringVar()
 SEX = tk.StringVar()
 CP = tk.StringVar()
@@ -69,9 +92,14 @@ CA = tk.StringVar()
 THAL = tk.StringVar()
 TARGET = tk.StringVar()
 
+primary_label = ttk.Label(input_frame, text="kosongkan jika tidak ada data")
+primary_label.pack(padx=5, pady=5, fill="x", expand=True)
+
+if 
+
 age = ttk.Label(input_frame, text="masukkan umur:")
 age.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=AGE)
+entry = ttk.Entry(input_frame, textvariable=AGE, )
 entry.pack(padx=5, fill="x", expand=True)
 
 sex = ttk.Label(input_frame, text="masukkan jenis kelamin:")
@@ -138,5 +166,11 @@ target = ttk.Label(input_frame, text="masukkan target:")
 target.pack(padx=5, pady=5, fill="x", expand=True)
 entry = ttk.Entry(input_frame, textvariable=TARGET)
 entry.pack(padx=5, fill="x", expand=True)
+
+def submit_data():
+    pass
+
+submit = ttk.Button(input_frame, text="kirim", command=lambda: submit_data())
+submit.pack(padx=5, pady=5, fill="x", expand=True)
 
 window.mainloop()
