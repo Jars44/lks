@@ -47,36 +47,38 @@ df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.
 #         df.loc[x,"oldpeak"] = 0
 # print(df)
 
+
+
 window = tk.Tk()
 # window.configure()
 window.geometry("500x720")
 window.title("LKS AI")
 
-input_frame = ttk.Frame(window)
-input_frame.pack(padx=10, pady=10, fill="x", expand=True)
+input_frame = tk.Text(window, wrap="word")
+input_frame.pack(side="left", padx=10, pady=10, fill="both", expand=True)
 
-class scrollBar(Text):
-    def __init__(self, master=None, **kw):
-        self.frame = Frame(input_frame)
-        self.vbar = Scrollbar(self.frame)
-        self.vbar.pack(side="right", fill="y")
-        
-        kw.update({"yscrollcommand": self.vbar.set})
-        Text.__init__(self, self.frame, **kw)
-        self.pack(side="left", fill="both", expand=True)
-        self.vbar["command"] = self.yview
-        
-        text_meths = vars(Text).keys()
-        methods = vars(Pack).keys() | vars(Grid).keys() | vars(Place).keys()
-        methods = methods.difference(text_meths)
+scrollbar = ttk.Scrollbar(input_frame, orient="vertical", command=input_frame.yview)
+scrollbar.pack(side="right", fill="y")
 
-        for m in methods:
-            if m[0] != '_' and m != 'config' and m != 'configure':
-                setattr(self, m, getattr(self.frame, m))
+input_frame.config(yscrollcommand=scrollbar.set)
 
-    def __str__(self):
-        return str(self.frame)
+# root = tk.Tk()
 
+# text_area = tk.Text(root, wrap="word", height=10, width=40)
+# text_area.pack(side="left", fill="both", expand=True)
+
+# # Create a vertical Scrollbar
+# scrollbar = ttk.Scrollbar(root, orient="vertical", command=text_area.yview)
+# scrollbar.pack(side="right", fill="y")
+
+# # Configure the Text widget to update the scrollbar
+# text_area.config(yscrollcommand=scrollbar.set)
+
+# # Insert some content into the Text widget
+# for i in range(50):
+#     text_area.insert(tk.END, f"This is line {i+1}\n")
+
+# root.mainloop()
 AGE = tk.StringVar()
 SEX = tk.StringVar()
 CP = tk.StringVar()
@@ -92,7 +94,7 @@ CA = tk.StringVar()
 THAL = tk.StringVar()
 TARGET = tk.StringVar()
 
-primary_label = ttk.Label(input_frame, text="kosongkan jika tidak ada data")
+primary_label = ttk.Label(input_frame, text="kosongkan jika data tidak ada")
 primary_label.pack(padx=5, pady=5, fill="x", expand=True)
 
 age = ttk.Label(input_frame, text="masukkan umur:")
