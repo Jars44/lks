@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
+from numpy import log2
 import tkinter as tk
-from tkinter import Scrollbar, Text, Frame, Pack
 from tkinter import ttk
+from tkinter import Scrollbar, Text, Frame, Pack, Grid, Place
 import matplotlib as mpl
 import seaborn as sbn
-from numpy import log2
 
 df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.csv.xls")
 # x = df.drop('label', axis=1)
@@ -94,8 +94,6 @@ TARGET = tk.StringVar()
 
 primary_label = ttk.Label(input_frame, text="kosongkan jika tidak ada data")
 primary_label.pack(padx=5, pady=5, fill="x", expand=True)
-
-if 
 
 age = ttk.Label(input_frame, text="masukkan umur:")
 age.pack(padx=5, pady=5, fill="x", expand=True)
