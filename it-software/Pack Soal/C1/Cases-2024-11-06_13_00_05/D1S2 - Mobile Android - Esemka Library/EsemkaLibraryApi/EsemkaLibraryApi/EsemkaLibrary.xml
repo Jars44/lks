@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EsemkaLibrary</name>
+    </assembly>
+    <members>
+        <member name="M:EsemkaLibrary.Controllers.G01LoginController.Login(EsemkaLibrary.Controllers.LoginParam)">
+             <summary>
+             Authenticates the user with the specified email and password
+             </summary>
+             <remarks>
+             Sample request 1:
+            
+                 POST /Api/Auth
+                 {
+                    "email": "iclarricoates3@clickbank.net",
+                    "password": "fTa9aI71rEm"
+                 }
+                 
+             Sample request 2:
+             
+                 POST /Api/Auth
+                 {
+                    "email": "rlochran4@hatena.ne.jp",
+                    "password": "YLhGt2JDH01N"
+                 }
+            
+             </remarks>
+             <param name="param"></param>
+             <returns>
+             
+             {
+                 token: "",
+                 expired: "",
+             }
+             
+             </returns>
+             <response code="400">If the user not found.</response>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G01LoginController.GenerateJSONWebToken(EsemkaLibrary.Models.User)">
+            <summary>
+            Generates a JSON Web Token (JWT) for the specified user.
+            </summary>
+            <param name="user">The user for whom the token is being generated.</param>
+            <returns>A string representing the generated JWT.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when the JWT key is not found in the configuration.</exception>
+        </member>
+        <member name="T:EsemkaLibrary.Controllers.LoginParam">
+            <summary>
+            Represents the parameters required for the login process.
+            </summary>
+        </member>
+        <member name="P:EsemkaLibrary.Controllers.LoginParam.Email">
+            <summary>
+            The email of the user.
+            </summary>
+            <example>iclarricoates3@clickbank.net</example>
+        </member>
+        <member name="P:EsemkaLibrary.Controllers.LoginParam.Password">
+            <summary>
+            The password of the user.
+            </summary>
+            <example>fTa9aI71rEm</example>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G02SignUpController.SignUp(EsemkaLibrary.Controllers.SignUpParam)">
+            <summary>
+            Register a new user
+            </summary>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G02SignUpController.EmailRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>^([\\w\\.\\-]+)@([\\w\\-]+)((\\.(\\w){2,3})+)$</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ 1st capture group.<br/>
+                ○ Match a character in the set [-.\w] atomically at least once.<br/>
+            ○ Match '@'.<br/>
+            ○ 2nd capture group.<br/>
+                ○ Match a character in the set [-\w] atomically at least once.<br/>
+            ○ 3rd capture group.<br/>
+                ○ Loop greedily at least once.<br/>
+                    ○ 4th capture group.<br/>
+                        ○ Match '.'.<br/>
+                        ○ Loop greedily at least 2 and at most 3 times.<br/>
+                            ○ 5th capture group.<br/>
+                                ○ Match a word character.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G02SignUpController.PasswordRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Zero-width positive lookahead.<br/>
+                ○ Match a character other than '\n' greedily any number of times.<br/>
+                ○ Match a character in the set [a-z].<br/>
+            ○ Zero-width positive lookahead.<br/>
+                ○ Match a character other than '\n' greedily any number of times.<br/>
+                ○ Match a character in the set [A-Z].<br/>
+            ○ Zero-width positive lookahead.<br/>
+                ○ Match a character other than '\n' greedily any number of times.<br/>
+                ○ Match a Unicode digit.<br/>
+            ○ Match a character other than '\n' greedily at least 8 times.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="P:EsemkaLibrary.Controllers.SignUpParam.Name">
+            <summary>
+            User's name
+            </summary>
+            <example>John Doe</example>
+        </member>
+        <member name="P:EsemkaLibrary.Controllers.SignUpParam.Password">
+            <summary>
+            User's password
+            </summary>
+            <example>Pa$$w0rd</example>
+        </member>
+        <member name="P:EsemkaLibrary.Controllers.SignUpParam.Email">
+            <summary>
+            User's email
+            </summary>
+            <example>john.doe@gmail.com</example>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G03HomeController.Get(System.String)">
+            <summary>
+            Get all books grouped by category
+            </summary>
+            <param name="searchText"> Search by Name, Authors, Publisher, and Description </param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G03HomeController.Photo(System.Guid)">
+            <summary>
+            Get book's cover by id
+            </summary>
+            <param name="bookId" example="0c1c909d-5018-4c99-a71e-b796a075d21e"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G04BookDetailController.GetProduct(System.Guid)">
+            <summary>
+            Get book by id
+            </summary>
+            <param name="bookId" example="0c1c909d-5018-4c99-a71e-b796a075d21e"></param>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G05MyCartController.PostBorrowing(EsemkaLibrary.Controllers.BorrowingParam)">
+            <summary>
+            Borrowing books
+            </summary>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G06MyProfileController.GetMe">
+            <summary>
+            Get user's profile
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G06MyProfileController.GetMePhoto">
+            <summary>
+            Get user's photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G06MyProfileController.PostMePhoto(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Update user's photo
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G06MyProfileController.GetTransactions">
+            <summary>
+            Get user's borrowing history
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G07BorrowingDetailController.GetTransactions(System.Guid)">
+            <summary>
+            Get borrowing history by id
+            </summary>
+            <param name="borrowingId" example="cb668b0f-303e-4308-9382-fa3c770e8852"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G08ForumController.GetForums">
+            <summary>
+            Get all threads
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G08ForumController.DeleteForumAsync(System.Guid)">
+            <summary>
+            Delete thread by id
+            </summary>
+            <param name="threadId" example="909990a4-00e3-41ff-a271-0b0a87249fa0"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G09AddThreadController.PostForumAsync(EsemkaLibrary.Controllers.AddThreadParam)">
+            <summary>
+            Add a new thread
+            </summary>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="P:EsemkaLibrary.Controllers.AddThreadParam.Subject">
+            <summary>
+            Subject of the thread
+            </summary>
+            <example>How to use this library?</example>
+        </member>
+        <member name="P:EsemkaLibrary.Controllers.AddThreadParam.Body">
+            <summary>
+            Body of the thread
+            </summary>
+            <example>Can someone help me with this?</example>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G10ThreadDetailController.GetForumAsync(System.Guid)">
+            <summary>
+            Get a thread by id
+            </summary>
+            <param name="threadId" example="e4b46ac8-fa4b-43c9-ba3b-ae84039fcec6"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G10ThreadDetailController.PostForumReplyAsync(System.Guid,System.String)">
+            <summary>
+            Add a new post to a thread
+            </summary>
+            <param name="threadId" example="e4b46ac8-fa4b-43c9-ba3b-ae84039fcec6"></param>
+            <param name="message" example="Hello World!"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G10ThreadDetailController.DeleteForumReplyAsync(System.Guid,System.Guid)">
+            <summary>
+            Delete a post by id
+            </summary>
+            <param name="threadId" example="e4b46ac8-fa4b-43c9-ba3b-ae84039fcec6"></param>
+            <param name="postId" example="6610c12c-9757-47ba-94c8-6e13f771600f"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Controllers.G10ThreadDetailController.GetMePhoto(System.String)">
+            <summary>
+            Get user photo by email
+            </summary>
+            <param name="email" example="rlochran4@hatena.ne.jp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EsemkaLibrary.Models.LibraryDbContext.SeedData">
+            <summary>
+            Seeds the database with initial data if it is empty.
+            </summary>
+            <remarks>
+            This method adds initial data for Users, Books, BorrowingHistories, and ForumThreads if they do not already exist in the database.
+            </remarks>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the EmailRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.EmailRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PasswordRegex_1">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the PasswordRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.PasswordRegex_1.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PasswordRegex_1.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PasswordRegex_1.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PasswordRegex_1.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.PasswordRegex_1.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PasswordRegex_1.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PasswordRegex_1.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.PasswordRegex_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.IsWordChar(System.Char)">
+            <summary>Determines whether the character is part of the [\w] set.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPop(System.Int32[],System.Int32@,System.Int32@,System.Int32@)">
+            <summary>Pops 2 values from the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32)">
+            <summary>Pushes 1 value onto the backtracking stack.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
+            <summary>Pushes 2 values onto the backtracking stack.</summary>
+        </member>
+    </members>
+</doc>

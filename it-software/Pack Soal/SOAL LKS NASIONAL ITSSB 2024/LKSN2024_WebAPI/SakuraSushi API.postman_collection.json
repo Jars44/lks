@@ -1,0 +1,2697 @@
+{
+	"info": {
+		"_postman_id": "1b2c4872-060e-43bd-97eb-74e8bf9b5efb",
+		"name": "SakuraSushi API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3685681"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "SignIn",
+							"item": [
+								{
+									"name": "Endpoint for user sign-in.",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200 or 401\", function () {",
+													"    pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+													"});",
+													"",
+													"// Check if the response is a string when status is 200",
+													"if (pm.response.code === 200) {",
+													"    pm.test(\"Status code is 200\", function () {",
+													"        pm.response.to.have.status(200);",
+													"    });",
+													"",
+													"    pm.test(\"Response has token and expiredAt\", function () {",
+													"        var jsonData = pm.response.json();",
+													"        pm.expect(jsonData).to.have.property(\"token\");",
+													"        pm.expect(jsonData).to.have.property(\"expiredAt\");",
+													"    });",
+													"",
+													"    pm.test(\"Token is a non-empty string\", function () {",
+													"        var jsonData = pm.response.json();",
+													"        pm.expect(jsonData.token).to.be.a('string').that.is.not.empty;",
+													"    });",
+													"",
+													"    pm.test(\"Save token to environment\", function () {",
+													"        var jsonData = pm.response.json();",
+													"        pm.environment.set(\"authToken\", jsonData.token);",
+													"        pm.collectionVariables.set(\"authToken\", jsonData.token);",
+													"    });",
+													"",
+													"    pm.test(\"ExpiredAt is a valid date\", function () {",
+													"        var jsonData = pm.response.json();",
+													"        pm.expect(new Date(jsonData.expiredAt)).to.be.a('date');",
+													"    });",
+													"}",
+													"",
+													"if (pm.response.code === 401) {",
+													"    pm.test(\"Status code is 401\", function () {",
+													"        pm.response.to.have.status(401);",
+													"    });",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"username\": \"fcerith0\",\n  \"password\": \"Cashier123!\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Auth/SignIn",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Auth",
+												"SignIn"
+											]
+										},
+										"description": "The function is an HTTP POST endpoint designed for user sign-in.\r\nIt accepts a sign-in model containing the user's credentials, such as username and password, and validates these credentials against the database.\r\nThe endpoint is documented with sample credentials for different roles, including Cashier, Waiter, and Chef.\r\nWhen a POST request is made to ```/api/auth/signin``` with the user's credentials, the function attempts to find a matching user in the database by comparing the provided username and hashed password. \r\nIf a matching user is found, the function returns an action result containing the user token (JWT), indicating a successful sign-in. \r\nIf no matching user is found, the function returns an Unauthorized status.\r\nThe endpoint is annotated to produce a 200 OK response on success and a 401 Unauthorized response on failure.\r\nThis endpoint is crucial for authenticating users and providing them with access tokens for subsequent requests.\r\n\r\n\r\nHashing the password: \r\n```\r\nstring HashPassword(string password) {\r\n    var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));\r\n    return BitConverter.ToString(hashedBytes).Replace(\"-\", \"\").ToLower();\r\n}\r\n```"
+									},
+									"response": [
+										{
+											"name": "Valid Credentials for Cashier",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"fcerith0\",\n  \"password\": \"Cashier123!\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/SignIn",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"SignIn"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"token\": \"<string>\",\n  \"expiredAt\": \"<dateTime>\"\n}"
+										},
+										{
+											"name": "Valid Credentials for Waiter",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"odearing1\",\n  \"password\": \"Waiter123!\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/SignIn",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"SignIn"
+													]
+												}
+											},
+											"_postman_previewlanguage": null,
+											"header": null,
+											"cookie": [],
+											"body": null
+										},
+										{
+											"name": "Valid Credentials for Chef",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"darmell2\",\n  \"password\": \"Chef123!\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/SignIn",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"SignIn"
+													]
+												}
+											},
+											"_postman_previewlanguage": null,
+											"header": null,
+											"cookie": [],
+											"body": null
+										},
+										{
+											"name": "Unauthorized",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"fcerith0\",\n  \"password\": \"Cashier123\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/SignIn",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"SignIn"
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"type\": \"<string>\",\n  \"title\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"detail\": \"<string>\",\n  \"instance\": \"<string>\",\n  \"aute5\": {}\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Me",
+							"item": [
+								{
+									"name": "Endpoint to get the current user's information.",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200 or 401\", function () {\r",
+													"    pm.expect(pm.response.code).to.be.oneOf([200, 401]);\r",
+													"});\r",
+													"\r",
+													"// Check if the response is a string when status is 200\r",
+													"if (pm.response.code === 200) {\r",
+													"    // Check if the status code is 200\r",
+													"    pm.test(\"Status code is 200\", function () {\r",
+													"        pm.response.to.have.status(200);\r",
+													"    });\r",
+													"\r",
+													"    // Check if the response has the expected structure\r",
+													"    pm.test(\"Response has user details\", function () {\r",
+													"        var jsonData = pm.response.json();\r",
+													"        pm.expect(jsonData).to.have.property(\"username\");\r",
+													"        pm.expect(jsonData).to.have.property(\"fullName\");\r",
+													"        pm.expect(jsonData).to.have.property(\"email\");\r",
+													"        pm.expect(jsonData).to.have.property(\"phoneNumber\");\r",
+													"        pm.expect(jsonData).to.have.property(\"role\");\r",
+													"    });\r",
+													"\r",
+													"    // Check if the username is not empty\r",
+													"    pm.test(\"Username is a non-empty string\", function () {\r",
+													"        var jsonData = pm.response.json();\r",
+													"        pm.expect(jsonData.username).to.be.a('string').that.is.not.empty;\r",
+													"    });\r",
+													"\r",
+													"    // Check if the role is one of the allowed enum values\r",
+													"    pm.test(\"Role is a valid enum value\", function () {\r",
+													"        var jsonData = pm.response.json();\r",
+													"        var validRoles = [\"Cashier\", \"Waiter\", \"Chef\"];\r",
+													"        pm.expect(validRoles).to.include(jsonData.role);\r",
+													"    });\r",
+													"\r",
+													"    // Check if the response does not have extra properties\r",
+													"    pm.test(\"Response does not have extra properties\", function () {\r",
+													"        var jsonData = pm.response.json();\r",
+													"        var allowedProperties = [\"username\", \"fullName\", \"email\", \"phoneNumber\", \"role\"];\r",
+													"        var responseProperties = Object.keys(jsonData);\r",
+													"        responseProperties.forEach(function(property) {\r",
+													"            pm.expect(allowedProperties).to.include(property);\r",
+													"        });\r",
+													"    });\r",
+													"\r",
+													"    // Check if the email is a valid email format\r",
+													"    pm.test(\"Email is a valid email format\", function () {\r",
+													"        var jsonData = pm.response.json();\r",
+													"        pm.expect(jsonData.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);\r",
+													"    });\r",
+													"}\r",
+													"\r",
+													"// Check if the response is a string when status is 401\r",
+													"if (pm.response.code === 401) {\r",
+													"    // Check if the status code is 401\r",
+													"    pm.test(\"Status code is 401\", function () {\r",
+													"        pm.response.to.have.status(401);\r",
+													"    });\r",
+													"}"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{authToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Auth/Me",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Auth",
+												"Me"
+											]
+										},
+										"description": "The function is an HTTP GET endpoint designed to retrieve the current authenticated user's information.\r\nWhen a GET request is made to ```/api/auth/me```, the function extracts the user's identity from the authentication token provided in the request headers.\r\nIt then queries the database to retrieve the user's details, such as username, email, and roles.\r\nIf the user is successfully authenticated and found in the database, the function returns an action result containing the user's information, indicating a successful retrieval.\r\nIf the user is not authenticated or not found, the function returns an Unauthorized status.\r\nThis endpoint is essential for providing authenticated users with their profile information and ensuring that only authorized users can access their data.\r\nThe endpoint is annotated to produce a 200 OK response on success and a 401 Unauthorized response on failure."
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/Me",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"Me"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"fullName\": \"<string>\",\n  \"username\": \"<string>\",\n  \"email\": \"<email>\",\n  \"phoneNumber\": \"<string>\",\n  \"role\": \"Cashier\"\n}"
+										},
+										{
+											"name": "Unauthorized",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Auth/Me",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Auth",
+														"Me"
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"type\": \"<string>\",\n  \"title\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"detail\": \"<string>\",\n  \"instance\": \"<string>\",\n  \"aute5\": {}\n}"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Transaction",
+					"item": [
+						{
+							"name": "{uniqueCode}",
+							"item": [
+								{
+									"name": "Cart",
+									"item": [
+										{
+											"name": "{itemId}",
+											"item": [
+												{
+													"name": "Removes an item from the cart.",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"// Check if the status code is 204, 404, or 400",
+																	"pm.test(\"Status code is 204, 404, or 400\", function () {",
+																	"    pm.expect(pm.response.code).to.be.oneOf([204, 404, 400]);",
+																	"});",
+																	"",
+																	"// Check if the response time is less than 200ms",
+																	"pm.test(\"Response time is less than 200ms\", function () {",
+																	"    pm.expect(pm.response.responseTime).to.be.below(200);",
+																	"});",
+																	"",
+																	"// Check if the response is empty when status is 204",
+																	"if (pm.response.code === 204) {",
+																	"    pm.test(\"Response is empty\", function () {",
+																	"        pm.expect(pm.response.text()).to.be.empty;",
+																	"    });",
+																	"}",
+																	"",
+																	"// Check if the response message is \"Transaction not found\" when status is 404",
+																	"if (pm.response.code === 404) {",
+																	"    pm.test(\"Response message is 'Transaction not found'\", function () {",
+																	"        pm.expect(pm.response.text()).to.eql(\"Transaction not found\");",
+																	"    });",
+																	"",
+																	"    pm.test(\"Response message is 'Item not found in cart'\", function () {",
+																	"        pm.expect(pm.response.text()).to.eql(\"Item not found in cart\");",
+																	"    });",
+																	"}"
+																],
+																"type": "text/javascript",
+																"packages": {}
+															}
+														}
+													],
+													"request": {
+														"method": "DELETE",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart/:itemId",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Cart",
+																":itemId"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}",
+																	"description": "(Required) "
+																},
+																{
+																	"key": "itemId",
+																	"value": "<uuid>",
+																	"description": "(Required) "
+																}
+															]
+														},
+														"description": "The function is an HTTP DELETE endpoint designed to remove an item from the cart associated with a specific transaction.\r\nWhen a DELETE request is made to ```/api/transaction/{uniqueCode}/cart/{itemId}``` with the <b>uniqueCode</b> and <b>itemId</b> as route parameters, the function attempts to find an open transaction that matches the provided unique code.\r\nIt queries the database to include related cart items and their associated item details.\r\n\r\n\r\nIf a matching transaction is found, the function checks if the item exists in the cart.\r\nIf the item does not exist, the function returns a 404 Not Found status with the message \"Item not found in cart.\".\r\nIf the item exists, the function removes the item from the cart and updates the transaction in the database.\r\nIf the transaction is successfully updated, the function returns a 200 OK status with the updated list of cart items.\r\n\r\n\r\nIf no matching transaction is found, the function returns a 404 Not Found status with an appropriate message.\r\nIf the request is invalid, it returns a 400 Bad Request status with the model state errors.\r\nThis endpoint is crucial for allowing users to remove items from their cart during an ongoing transaction.\r\nThe endpoint is annotated to produce a 200 OK response on success, a 400 Bad Request response for invalid requests, and a 404 Not Found response if the transaction or item is not found."
+													},
+													"response": [
+														{
+															"name": "No Content",
+															"originalRequest": {
+																"method": "DELETE",
+																"header": [],
+																"url": {
+																	"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart/:itemId",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"Transaction",
+																		":uniqueCode",
+																		"Cart",
+																		":itemId"
+																	],
+																	"variable": [
+																		{
+																			"key": "uniqueCode",
+																			"value": "{{uniqueCode}}"
+																		},
+																		{
+																			"key": "itemId",
+																			"value": ""
+																		}
+																	]
+																}
+															},
+															"status": "No Content",
+															"code": 204,
+															"_postman_previewlanguage": "text",
+															"header": [],
+															"cookie": [],
+															"body": ""
+														},
+														{
+															"name": "Not Found",
+															"originalRequest": {
+																"method": "DELETE",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "text/plain"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart/:itemId",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"Transaction",
+																		":uniqueCode",
+																		"Cart",
+																		":itemId"
+																	],
+																	"variable": [
+																		{
+																			"key": "uniqueCode",
+																			"value": "{{uniqueCode}}"
+																		},
+																		{
+																			"key": "itemId",
+																			"value": ""
+																		}
+																	]
+																}
+															},
+															"status": "Not Found",
+															"code": 404,
+															"_postman_previewlanguage": "json",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/json"
+																}
+															],
+															"cookie": [],
+															"body": "<string>"
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "Order",
+											"item": [
+												{
+													"name": "Creates an order from the cart items in the transaction.",
+													"event": [
+														{
+															"listen": "test",
+															"script": {
+																"exec": [
+																	"// Check if the status code is 201, or 404\r",
+																	"pm.test(\"Status code is 201, or 404\", function () {\r",
+																	"    pm.expect(pm.response.code).to.be.oneOf([201, 404]);\r",
+																	"});\r",
+																	"\r",
+																	"// Check if the response contains the expected properties when status is 201\r",
+																	"if (pm.response.code === 201) {\r",
+																	"    pm.test(\"Response contains expected properties\", function () {\r",
+																	"        var jsonData = pm.response.json();\r",
+																	"        pm.expect(jsonData).to.be.an('array');\r",
+																	"        jsonData.forEach(function(order) {\r",
+																	"            pm.expect(order).to.have.property(\"id\");\r",
+																	"            pm.expect(order).to.have.property(\"orderedAt\");\r",
+																	"            pm.expect(order).to.have.property(\"amount\");\r",
+																	"            pm.expect(order).to.have.property(\"orderItems\");\r",
+																	"            pm.expect(order.orderItems).to.be.an('array');\r",
+																	"            order.orderItems.forEach(function(orderItem) {\r",
+																	"                pm.expect(orderItem).to.have.property(\"quantity\");\r",
+																	"                pm.expect(orderItem).to.have.property(\"price\");\r",
+																	"                pm.expect(orderItem).to.have.property(\"item\");\r",
+																	"                pm.expect(orderItem.item).to.have.property(\"id\");\r",
+																	"                pm.expect(orderItem.item).to.have.property(\"name\");\r",
+																	"                pm.expect(orderItem.item).to.have.property(\"description\");\r",
+																	"                pm.expect(orderItem.item).to.have.property(\"price\");\r",
+																	"                pm.expect(orderItem.item).to.have.property(\"available\");\r",
+																	"            });\r",
+																	"        });\r",
+																	"    });\r",
+																	"}\r",
+																	"\r",
+																	"// Check if the response message is \"Transaction not found\" when status is 404\r",
+																	"if (pm.response.code === 404) {\r",
+																	"    pm.test(\"Response message is 'Transaction not found'\", function () {\r",
+																	"        pm.expect(pm.response.text()).to.eq(\"Transaction not found\");\r",
+																	"    });\r",
+																	"}\r",
+																	""
+																],
+																"type": "text/javascript",
+																"packages": {}
+															}
+														}
+													],
+													"request": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart/Order",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Cart",
+																"Order"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}",
+																	"description": "(Required) "
+																}
+															]
+														},
+														"description": "The function is an HTTP POST endpoint designed to create an order from the cart items in a specific transaction. \r\nWhen a POST request is made to ```/api/transaction/{uniqueCode}/cart/order``` with the <b>uniqueCode</b> as a route parameter, the function attempts to find an open transaction that matches the provided unique code.\r\nIt queries the database to include related cart items, orders, and their associated order items and item details.\r\n\r\n\r\nIf a matching transaction is found, the function creates a new order using the cart items from the transaction.\r\nIt calculates the total amount for the order by summing the total prices of the cart items.\r\nThe new order is then added to the transaction, and the transaction is updated in the database.\r\nIf the order is successfully created and the transaction is updated, the function returns a 201 Created status with the newly created order.\r\n\r\n\r\nIf no matching transaction is found, the function returns a 404 Not Found status with the message \"Transaction not found.\".\r\nIf the request is invalid, it returns a 400 Bad Request status with the model state errors. \r\nThis endpoint is crucial for converting cart items into an order during an ongoing transaction. \r\nThe endpoint is annotated to produce a 201 Created response on success, a 400 Bad Request response for invalid requests, and a 404 Not Found response if the transaction is not found."
+													},
+													"response": [
+														{
+															"name": "Created",
+															"originalRequest": {
+																"method": "POST",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "text/plain"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart/Order",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"Transaction",
+																		":uniqueCode",
+																		"Cart",
+																		"Order"
+																	],
+																	"variable": [
+																		{
+																			"key": "uniqueCode",
+																			"value": "{{uniqueCode}}"
+																		}
+																	]
+																}
+															},
+															"status": "Created",
+															"code": 201,
+															"_postman_previewlanguage": "json",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/json"
+																}
+															],
+															"cookie": [],
+															"body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"orderedAt\": \"<dateTime>\",\n    \"amount\": \"<double>\",\n    \"orderItems\": [\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"Completed\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      },\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"Completed\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"orderedAt\": \"<dateTime>\",\n    \"amount\": \"<double>\",\n    \"orderItems\": [\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"InProgress\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      },\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"Pending\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      }\n    ]\n  }\n]"
+														},
+														{
+															"name": "Not Found",
+															"originalRequest": {
+																"method": "POST",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "text/plain"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart/Order",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"Transaction",
+																		":uniqueCode",
+																		"Cart",
+																		"Order"
+																	],
+																	"variable": [
+																		{
+																			"key": "uniqueCode",
+																			"value": "{{uniqueCode}}"
+																		}
+																	]
+																}
+															},
+															"status": "Not Found",
+															"code": 404,
+															"_postman_previewlanguage": "json",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/json"
+																}
+															],
+															"cookie": [],
+															"body": "<string>"
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "Retrieves the cart items in the transaction.",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"// Check if the status code is 200 or 404\r",
+															"pm.test(\"Status code is 200 or 404\", function () {\r",
+															"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+															"});\r",
+															"\r",
+															"// Check if the response is an array when status is 200\r",
+															"if (pm.response.code === 200) {\r",
+															"    pm.test(\"Response is an array\", function () {\r",
+															"        var jsonData = pm.response.json();\r",
+															"        pm.expect(jsonData).to.be.an('array');\r",
+															"    });\r",
+															"\r",
+															"    // Check if each item in the array has the expected properties\r",
+															"    pm.test(\"Each item has expected properties\", function () {\r",
+															"        var jsonData = pm.response.json();\r",
+															"        jsonData.forEach(function(cartitem) {\r",
+															"            pm.expect(cartitem).to.have.property(\"quantity\");\r",
+															"            pm.expect(cartitem).to.have.property(\"totalPrice\");\r",
+															"            pm.expect(cartitem).to.have.property(\"addedAt\");\r",
+															"            pm.expect(cartitem).to.have.property(\"item\");\r",
+															"            pm.expect(cartitem.item).to.have.property(\"id\");\r",
+															"            pm.expect(cartitem.item).to.have.property(\"name\");\r",
+															"            pm.expect(cartitem.item).to.have.property(\"description\");\r",
+															"            pm.expect(cartitem.item).to.have.property(\"price\");\r",
+															"            pm.expect(cartitem.item).to.have.property(\"available\");\r",
+															"        });\r",
+															"    });\r",
+															"\r",
+															"    // Check if each item does not have extra properties\r",
+															"    pm.test(\"Each item does not have extra properties\", function () {\r",
+															"        var jsonData = pm.response.json();\r",
+															"        var allowedCartItemProperties = [\"quantity\", \"totalPrice\", \"addedAt\", \"item\"];\r",
+															"        var allowedItemProperties = [\"id\", \"name\", \"description\", \"price\", \"available\"];\r",
+															"        jsonData.forEach(function(cartitem) {\r",
+															"            var cartitemProperties = Object.keys(cartitem);\r",
+															"            cartitemProperties.forEach(function(property) {\r",
+															"                pm.expect(allowedCartItemProperties).to.include(property);\r",
+															"            });\r",
+															"            var itemProperties = Object.keys(cartitem.item);\r",
+															"            itemProperties.forEach(function(property) {\r",
+															"                pm.expect(allowedItemProperties).to.include(property);\r",
+															"            });\r",
+															"        });\r",
+															"    });\r",
+															"}\r",
+															"\r",
+															"// Check if the response message is \"Transaction not found\" when status is 404\r",
+															"if (pm.response.code === 404) {\r",
+															"    pm.test(\"Response message is 'Transaction not found'\", function () {\r",
+															"        pm.expect(pm.response.text()).to.eq(\"Transaction not found\");\r",
+															"    });\r",
+															"}"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Transaction",
+														":uniqueCode",
+														"Cart"
+													],
+													"variable": [
+														{
+															"key": "uniqueCode",
+															"value": "{{uniqueCode}}",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "The function is an HTTP GET endpoint designed to retrieve the cart items associated with a specific transaction.\r\nWhen a GET request is made to ```/api/transaction/{uniqueCode}/cart``` with a <b>uniqueCode</b> route parameter, the function queries the database to find a transaction that matches the provided unique code and is not closed.\r\nIt includes related cart items and their associated item details in the query.\r\nIf a matching transaction is found, the function returns an action result containing the list of cart items, indicating a successful retrieval.\r\nIf no matching transaction is found, the function returns a 404 Not Found status with an appropriate message.\r\nThis endpoint is essential for retrieving the current items in a user's cart during an ongoing transaction.\r\nThe endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction is not found."
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Cart"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "[\n  {\n    \"quantity\": \"<integer>\",\n    \"totalPrice\": \"<double>\",\n    \"addedAt\": \"<dateTime>\",\n    \"item\": {\n      \"name\": \"<string>\",\n      \"id\": \"<uuid>\",\n      \"description\": \"<string>\",\n      \"price\": \"<double>\",\n      \"available\": \"<boolean>\"\n    }\n  },\n  {\n    \"quantity\": \"<integer>\",\n    \"totalPrice\": \"<double>\",\n    \"addedAt\": \"<dateTime>\",\n    \"item\": {\n      \"name\": \"<string>\",\n      \"id\": \"<uuid>\",\n      \"description\": \"<string>\",\n      \"price\": \"<double>\",\n      \"available\": \"<boolean>\"\n    }\n  }\n]"
+												},
+												{
+													"name": "Not Found",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Cart"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "ASDFG"
+																}
+															]
+														}
+													},
+													"status": "Not Found",
+													"code": 404,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "<string>"
+												}
+											]
+										},
+										{
+											"name": "Adds an item to the cart.",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"// Check if the status code is 201, 404, or 400",
+															"pm.test(\"Status code is 201, 404, or 400\", function () {",
+															"    pm.expect(pm.response.code).to.be.oneOf([201, 404, 400]);",
+															"});",
+															"",
+															"// Check if the response contains the expected properties when status is 201",
+															"if (pm.response.code === 201) {",
+															"    // Check if each item in the array has the expected properties",
+															"    pm.test(\"Each item has expected properties\", function () {",
+															"        var jsonData = pm.response.json();",
+															"        jsonData.forEach(function(cartitem) {",
+															"            pm.expect(cartitem).to.have.property(\"quantity\");",
+															"            pm.expect(cartitem).to.have.property(\"totalPrice\");",
+															"            pm.expect(cartitem).to.have.property(\"addedAt\");",
+															"            pm.expect(cartitem).to.have.property(\"item\");",
+															"            pm.expect(cartitem.item).to.have.property(\"id\");",
+															"            pm.expect(cartitem.item).to.have.property(\"name\");",
+															"            pm.expect(cartitem.item).to.have.property(\"description\");",
+															"            pm.expect(cartitem.item).to.have.property(\"price\");",
+															"            pm.expect(cartitem.item).to.have.property(\"available\");",
+															"        });",
+															"    });",
+															"",
+															"    // Check if each item does not have extra properties",
+															"    pm.test(\"Each item does not have extra properties\", function () {",
+															"        var jsonData = pm.response.json();",
+															"        var allowedCartItemProperties = [\"quantity\", \"totalPrice\", \"addedAt\", \"item\"];",
+															"        var allowedItemProperties = [\"id\", \"name\", \"description\", \"price\", \"available\"];",
+															"        jsonData.forEach(function(cartitem) {",
+															"            var cartitemProperties = Object.keys(cartitem);",
+															"            cartitemProperties.forEach(function(property) {",
+															"                pm.expect(allowedCartItemProperties).to.include(property);",
+															"            });",
+															"            var itemProperties = Object.keys(cartitem.item);",
+															"            itemProperties.forEach(function(property) {",
+															"                pm.expect(allowedItemProperties).to.include(property);",
+															"            });",
+															"        });",
+															"    });",
+															"}",
+															"",
+															"// Check if the response message is \"Transaction not found\" when status is 404",
+															"if (pm.response.code === 404) {",
+															"    pm.test(\"Response message is 'Transaction not found'\", function () {",
+															"        pm.expect(pm.response.text()).to.eq(\"Transaction not found\");",
+															"    });",
+															"",
+															"    pm.test(\"Response message is 'Transaction not found'\", function () {",
+															"        pm.expect(pm.response.text()).to.eq(\"Item not found\");",
+															"    });",
+															"}",
+															"",
+															"// Check if the response message is \"Invalid item data\" when status is 400",
+															"if (pm.response.code === 400) {",
+															"    pm.test(\"Response message is 'Invalid item data'\", function () {",
+															"        var jsonData = pm.response.json();",
+															"        pm.expect(jsonData.errros.ItemId[0]).to.eq(\"Item is not available\");",
+															"    });",
+															"}"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"itemId\": \"8c0c634b-26ba-42a7-aa57-d550ce587ddc\",\n  \"quantity\": \"1\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Transaction",
+														":uniqueCode",
+														"Cart"
+													],
+													"variable": [
+														{
+															"key": "uniqueCode",
+															"value": "{{uniqueCode}}",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "The function is an HTTP POST endpoint designed to add an item to the cart associated with a specific transaction.\r\nWhen a POST request is made to ```/api/transaction/{uniqueCode}/cart``` with the <b>uniqueCode</b> as a route parameter and the item details in the request body, the function attempts to find an open transaction that matches the provided unique code.\r\nIt queries the database to include related cart items and their associated item details.\r\n\r\nIf a matching transaction is found, the function checks if the item is available.\r\nIf the item is not available, the function returns a 400 Bad Request status with the message \"Item is not available.\".\r\nIf the item is available, the function adds the new item to the cart and updates the transaction in the database.\r\nIf the transaction is successfully updated, the function returns a 201 Created status with the updated list of cart items.\r\n\r\nIf no matching transaction is found, the function returns a 404 Not Found status with an appropriate message.\r\nIf the request is invalid, it returns a 400 Bad Request status with the model state errors.\r\nThis endpoint is crucial for allowing users to add items to their cart during an ongoing transaction.\r\nThe endpoint is annotated to produce a 201 Created response on success, a 400 Bad Request response for invalid requests or unavailable items, and a 404 Not Found response if the transaction is not found."
+											},
+											"response": [
+												{
+													"name": "Created",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"itemId\": \"8c0c634b-26ba-42a7-aa57-d550ce587ddc\",\n  \"quantity\": \"1\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Cart"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}"
+																}
+															]
+														}
+													},
+													"status": "Created",
+													"code": 201,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "[\n  {\n    \"quantity\": \"<integer>\",\n    \"totalPrice\": \"<double>\",\n    \"addedAt\": \"<dateTime>\",\n    \"item\": {\n      \"name\": \"<string>\",\n      \"id\": \"<uuid>\",\n      \"description\": \"<string>\",\n      \"price\": \"<double>\",\n      \"available\": \"<boolean>\"\n    }\n  },\n  {\n    \"quantity\": \"<integer>\",\n    \"totalPrice\": \"<double>\",\n    \"addedAt\": \"<dateTime>\",\n    \"item\": {\n      \"name\": \"<string>\",\n      \"id\": \"<uuid>\",\n      \"description\": \"<string>\",\n      \"price\": \"<double>\",\n      \"available\": \"<boolean>\"\n    }\n  }\n]"
+												},
+												{
+													"name": "Bad Request",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"itemId\": \"8c0c634b-26ba-42a7-aa57-d550ce587ddc\",\n  \"quantity\": \"-1\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Cart"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}"
+																}
+															]
+														}
+													},
+													"status": "Bad Request",
+													"code": 400,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"type\": \"<string>\",\n  \"title\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"detail\": \"<string>\",\n  \"instance\": \"<string>\",\n  \"aute5\": {}\n}"
+												},
+												{
+													"name": "Not Found",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n  \"itemId\": \"8c0c634b-26ba-42a7-aa57-d550ce587ddd\",\n  \"quantity\": \"1\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Cart",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Cart"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}"
+																}
+															]
+														}
+													},
+													"status": "Not Found",
+													"code": 404,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "<string>"
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "Orders",
+									"item": [
+										{
+											"name": "{orderId}",
+											"item": [
+												{
+													"name": "Items",
+													"item": [
+														{
+															"name": "{itemId}",
+															"item": [
+																{
+																	"name": "Status",
+																	"item": [
+																		{
+																			"name": "Updates the status of an order item in the transaction.",
+																			"event": [
+																				{
+																					"listen": "test",
+																					"script": {
+																						"exec": [
+																							"// Check if the status code is 200 or 404\r",
+																							"pm.test(\"Status code is 200 or 404\", function () {\r",
+																							"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+																							"});\r",
+																							"\r",
+																							"// Check if the response time is less than 200ms\r",
+																							"pm.test(\"Response time is less than 200ms\", function () {\r",
+																							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+																							"});\r",
+																							"\r",
+																							"// Check if the response contains the expected properties when status is 200\r",
+																							"if (pm.response.code === 200) {\r",
+																							"    pm.test(\"Response contains expected properties\", function () {\r",
+																							"        var orderItem = pm.response.json();\r",
+																							"        pm.expect(orderItem).to.have.property(\"quantity\");\r",
+																							"        pm.expect(orderItem).to.have.property(\"price\");\r",
+																							"        pm.expect(orderItem).to.have.property(\"status\");\r",
+																							"        pm.expect(orderItem).to.have.property(\"item\");\r",
+																							"        pm.expect(orderItem.item).to.have.property(\"id\");\r",
+																							"        pm.expect(orderItem.item).to.have.property(\"name\");\r",
+																							"        pm.expect(orderItem.item).to.have.property(\"description\");\r",
+																							"        pm.expect(orderItem.item).to.have.property(\"price\");\r",
+																							"        pm.expect(orderItem.item).to.have.property(\"available\");\r",
+																							"    });\r",
+																							"}\r",
+																							"\r",
+																							"// Check if the response message is \"Transaction not found\" when status is 404\r",
+																							"if (pm.response.code === 404) {\r",
+																							"    pm.test(\"Response message is 'Transaction not found'\", function () {\r",
+																							"        pm.expect(pm.response.text()).to.eql(\"Transaction not found\");\r",
+																							"    });\r",
+																							"\r",
+																							"    pm.test(\"Response message is 'Order not found'\", function () {\r",
+																							"        pm.expect(pm.response.text()).to.eq(\"Order not found\");\r",
+																							"    });\r",
+																							"\r",
+																							"    pm.test(\"Response message is 'Order item not found'\", function () {\r",
+																							"        pm.expect(pm.response.text()).to.eq(\"Order item not found\");\r",
+																							"    });\r",
+																							"}"
+																						],
+																						"type": "text/javascript",
+																						"packages": {}
+																					}
+																				}
+																			],
+																			"request": {
+																				"auth": {
+																					"type": "bearer",
+																					"bearer": [
+																						{
+																							"key": "token",
+																							"value": "{{bearerToken}}",
+																							"type": "string"
+																						}
+																					]
+																				},
+																				"method": "PUT",
+																				"header": [
+																					{
+																						"key": "Content-Type",
+																						"value": "multipart/form-data"
+																					},
+																					{
+																						"key": "Accept",
+																						"value": "text/plain"
+																					}
+																				],
+																				"body": {
+																					"mode": "formdata",
+																					"formdata": [
+																						{
+																							"key": "status",
+																							"value": "InProgress",
+																							"description": "Represents the status of an order item.\r\n```\r\n    0 - Pending (Default) - The order item is pending.\r\n    1 - InProgress - The order item is being prepared.\r\n    2 - Completed - The order item is completed.\r\n    3 - Cancelled - The order item is cancelled.\r\n``` (This can only be one of Pending,InProgress,Completed,Cancelled)",
+																							"type": "text"
+																						}
+																					]
+																				},
+																				"url": {
+																					"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders/:orderId/Items/:itemId/Status",
+																					"host": [
+																						"{{baseUrl}}"
+																					],
+																					"path": [
+																						"api",
+																						"Transaction",
+																						":uniqueCode",
+																						"Orders",
+																						":orderId",
+																						"Items",
+																						":itemId",
+																						"Status"
+																					],
+																					"variable": [
+																						{
+																							"key": "uniqueCode",
+																							"value": "{{uniqueCode}}",
+																							"description": "(Required) "
+																						},
+																						{
+																							"key": "orderId",
+																							"value": "<uuid>",
+																							"description": "(Required) "
+																						},
+																						{
+																							"key": "itemId",
+																							"value": "<uuid>",
+																							"description": "(Required) "
+																						}
+																					]
+																				},
+																				"description": "Roles: <b>Chef</b>, <b>Waiter</b>\r\n\r\nThe function is an HTTP PUT endpoint designed to update the status of a specific order item within a transaction. \r\nWhen a PUT request is made to ```/api/transaction/{uniqueCode}/Orders/{orderId}/Items/{itemId}/Status``` with the <b>uniqueCode</b>, <b>orderId</b>, and <b>itemId</b> as route parameters, and the <b>new status</b> as a form parameter, the function attempts to find an open transaction that matches the provided unique code. \r\nIt queries the database to include related orders and their order items.\r\n            \r\nIf a matching transaction is found, the function attempts to find the specified order within the transaction.\r\nIf the order is found, the function then attempts to find the specified order item within the order.\r\nIf the order item is found, the function updates the status of the order item to the specified status.\r\nThe changes are then saved to the database.\r\n            \r\nIf the transaction, order, or order item is not found, the function returns a 404 Not Found status with an appropriate message (\"Transaction not found,\" \"Order not found,\" or \"Order item not found\"). \r\nIf the status is successfully updated, the function returns a 200 OK status with the updated order item. \r\nThis endpoint is crucial for updating the status of order items within a transaction, ensuring that the status of each item can be tracked and managed.\r\nThe endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction, order, or order item is not found."
+																			},
+																			"response": [
+																				{
+																					"name": "OK",
+																					"originalRequest": {
+																						"method": "PUT",
+																						"header": [
+																							{
+																								"key": "Content-Type",
+																								"value": "multipart/form-data"
+																							},
+																							{
+																								"key": "Accept",
+																								"value": "text/plain"
+																							},
+																							{
+																								"key": "Authorization",
+																								"value": "Bearer <token>",
+																								"description": "Added as a part of security scheme: bearer"
+																							}
+																						],
+																						"body": {
+																							"mode": "formdata",
+																							"formdata": [
+																								{
+																									"key": "status",
+																									"value": "InProgress",
+																									"description": "Represents the status of an order item.\r\n```\r\n    0 - Pending (Default) - The order item is pending.\r\n    1 - InProgress - The order item is being prepared.\r\n    2 - Completed - The order item is completed.\r\n    3 - Cancelled - The order item is cancelled.\r\n``` (This can only be one of Pending,InProgress,Completed,Cancelled)",
+																									"type": "text"
+																								}
+																							]
+																						},
+																						"url": {
+																							"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders/:orderId/Items/:itemId/Status",
+																							"host": [
+																								"{{baseUrl}}"
+																							],
+																							"path": [
+																								"api",
+																								"Transaction",
+																								":uniqueCode",
+																								"Orders",
+																								":orderId",
+																								"Items",
+																								":itemId",
+																								"Status"
+																							],
+																							"variable": [
+																								{
+																									"key": "uniqueCode"
+																								},
+																								{
+																									"key": "orderId"
+																								},
+																								{
+																									"key": "itemId"
+																								}
+																							]
+																						}
+																					},
+																					"status": "OK",
+																					"code": 200,
+																					"_postman_previewlanguage": "json",
+																					"header": [
+																						{
+																							"key": "Content-Type",
+																							"value": "application/json"
+																						}
+																					],
+																					"cookie": [],
+																					"body": "{\n  \"quantity\": \"<integer>\",\n  \"status\": \"Completed\",\n  \"item\": {\n    \"name\": \"<string>\",\n    \"id\": \"<uuid>\",\n    \"description\": \"<string>\",\n    \"price\": \"<double>\",\n    \"available\": \"<boolean>\"\n  }\n}"
+																				},
+																				{
+																					"name": "Unauthorized",
+																					"originalRequest": {
+																						"method": "PUT",
+																						"header": [
+																							{
+																								"key": "Content-Type",
+																								"value": "multipart/form-data"
+																							},
+																							{
+																								"key": "Authorization",
+																								"value": "Bearer <token>",
+																								"description": "Added as a part of security scheme: bearer"
+																							}
+																						],
+																						"body": {
+																							"mode": "formdata",
+																							"formdata": [
+																								{
+																									"key": "status",
+																									"value": "InProgress",
+																									"description": "Represents the status of an order item.\r\n```\r\n    0 - Pending (Default) - The order item is pending.\r\n    1 - InProgress - The order item is being prepared.\r\n    2 - Completed - The order item is completed.\r\n    3 - Cancelled - The order item is cancelled.\r\n``` (This can only be one of Pending,InProgress,Completed,Cancelled)",
+																									"type": "text"
+																								}
+																							]
+																						},
+																						"url": {
+																							"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders/:orderId/Items/:itemId/Status",
+																							"host": [
+																								"{{baseUrl}}"
+																							],
+																							"path": [
+																								"api",
+																								"Transaction",
+																								":uniqueCode",
+																								"Orders",
+																								":orderId",
+																								"Items",
+																								":itemId",
+																								"Status"
+																							],
+																							"variable": [
+																								{
+																									"key": "uniqueCode"
+																								},
+																								{
+																									"key": "orderId"
+																								},
+																								{
+																									"key": "itemId"
+																								}
+																							]
+																						}
+																					},
+																					"status": "Unauthorized",
+																					"code": 401,
+																					"_postman_previewlanguage": "text",
+																					"header": [],
+																					"cookie": [],
+																					"body": ""
+																				},
+																				{
+																					"name": "Forbidden",
+																					"originalRequest": {
+																						"method": "PUT",
+																						"header": [
+																							{
+																								"key": "Content-Type",
+																								"value": "multipart/form-data"
+																							},
+																							{
+																								"key": "Authorization",
+																								"value": "Bearer <token>",
+																								"description": "Added as a part of security scheme: bearer"
+																							}
+																						],
+																						"body": {
+																							"mode": "formdata",
+																							"formdata": [
+																								{
+																									"key": "status",
+																									"value": "InProgress",
+																									"description": "Represents the status of an order item.\r\n```\r\n    0 - Pending (Default) - The order item is pending.\r\n    1 - InProgress - The order item is being prepared.\r\n    2 - Completed - The order item is completed.\r\n    3 - Cancelled - The order item is cancelled.\r\n``` (This can only be one of Pending,InProgress,Completed,Cancelled)",
+																									"type": "text"
+																								}
+																							]
+																						},
+																						"url": {
+																							"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders/:orderId/Items/:itemId/Status",
+																							"host": [
+																								"{{baseUrl}}"
+																							],
+																							"path": [
+																								"api",
+																								"Transaction",
+																								":uniqueCode",
+																								"Orders",
+																								":orderId",
+																								"Items",
+																								":itemId",
+																								"Status"
+																							],
+																							"variable": [
+																								{
+																									"key": "uniqueCode"
+																								},
+																								{
+																									"key": "orderId"
+																								},
+																								{
+																									"key": "itemId"
+																								}
+																							]
+																						}
+																					},
+																					"status": "Forbidden",
+																					"code": 403,
+																					"_postman_previewlanguage": "text",
+																					"header": [],
+																					"cookie": [],
+																					"body": ""
+																				},
+																				{
+																					"name": "Not Found",
+																					"originalRequest": {
+																						"method": "PUT",
+																						"header": [
+																							{
+																								"key": "Content-Type",
+																								"value": "multipart/form-data"
+																							},
+																							{
+																								"key": "Accept",
+																								"value": "text/plain"
+																							},
+																							{
+																								"key": "Authorization",
+																								"value": "Bearer <token>",
+																								"description": "Added as a part of security scheme: bearer"
+																							}
+																						],
+																						"body": {
+																							"mode": "formdata",
+																							"formdata": [
+																								{
+																									"key": "status",
+																									"value": "InProgress",
+																									"description": "Represents the status of an order item.\r\n```\r\n    0 - Pending (Default) - The order item is pending.\r\n    1 - InProgress - The order item is being prepared.\r\n    2 - Completed - The order item is completed.\r\n    3 - Cancelled - The order item is cancelled.\r\n``` (This can only be one of Pending,InProgress,Completed,Cancelled)",
+																									"type": "text"
+																								}
+																							]
+																						},
+																						"url": {
+																							"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders/:orderId/Items/:itemId/Status",
+																							"host": [
+																								"{{baseUrl}}"
+																							],
+																							"path": [
+																								"api",
+																								"Transaction",
+																								":uniqueCode",
+																								"Orders",
+																								":orderId",
+																								"Items",
+																								":itemId",
+																								"Status"
+																							],
+																							"variable": [
+																								{
+																									"key": "uniqueCode"
+																								},
+																								{
+																									"key": "orderId"
+																								},
+																								{
+																									"key": "itemId"
+																								}
+																							]
+																						}
+																					},
+																					"status": "Not Found",
+																					"code": 404,
+																					"_postman_previewlanguage": "json",
+																					"header": [
+																						{
+																							"key": "Content-Type",
+																							"value": "application/json"
+																						}
+																					],
+																					"cookie": [],
+																					"body": "<string>"
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														}
+													]
+												}
+											]
+										},
+										{
+											"name": "Retrieves the orders associated with the specified transaction.",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"// Check if the status code is 200 or 404\r",
+															"pm.test(\"Status code is 200 or 404\", function () {\r",
+															"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+															"});\r",
+															"\r",
+															"// Check if the response contains the expected properties when status is 200\r",
+															"if (pm.response.code === 200) {\r",
+															"    pm.test(\"Response contains expected properties\", function () {\r",
+															"        var jsonData = pm.response.json();\r",
+															"        pm.expect(jsonData).to.be.an('array');\r",
+															"        jsonData.forEach(function(order) {\r",
+															"            pm.expect(order).to.have.property(\"id\");\r",
+															"            pm.expect(order).to.have.property(\"orderedAt\");\r",
+															"            pm.expect(order).to.have.property(\"totalAmount\");\r",
+															"            pm.expect(order).to.have.property(\"orderItems\");\r",
+															"            pm.expect(order.orderItems).to.be.an('array');\r",
+															"            order.orderItems.forEach(function(orderItem) {\r",
+															"                pm.expect(orderItem).to.have.property(\"id\");\r",
+															"                pm.expect(orderItem).to.have.property(\"quantity\");\r",
+															"                pm.expect(orderItem).to.have.property(\"price\");\r",
+															"                pm.expect(orderItem).to.have.property(\"item\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"id\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"name\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"description\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"price\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"available\");\r",
+															"            });\r",
+															"        });\r",
+															"    });\r",
+															"}\r",
+															"\r",
+															"// Check if the response message is \"Transaction not found\" when status is 404\r",
+															"if (pm.response.code === 404) {\r",
+															"    pm.test(\"Response message is 'Transaction not found'\", function () {\r",
+															"        pm.expect(pm.response.text()).to.eql(\"Transaction not found\");\r",
+															"    });\r",
+															"}"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Transaction",
+														":uniqueCode",
+														"Orders"
+													],
+													"variable": [
+														{
+															"key": "uniqueCode",
+															"value": "{{uniqueCode}}",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "The function is an HTTP GET endpoint designed to retrieve the orders associated with a specific transaction. \r\nWhen a GET request is made to ```/api/transaction/{uniqueCode}/Orders``` with the <b>uniqueCode</b> as a route parameter, the function attempts to find an open transaction that matches the provided unique code.\r\nIt queries the database to include related orders, ordering them by the time they were placed (<b>OrderedAt</b>).\r\nAdditionally, it includes the order items within each order, ordering them by the item name, and includes the item details.\r\n\r\n\r\nIf a matching transaction is found, the function returns a 200 OK status with the list of orders associated with the transaction.\r\nIf no matching transaction is found, the function returns a 404 Not Found status with the message \"Transaction not found.\".\r\nThis endpoint is crucial for retrieving the list of orders for a specific transaction, ensuring that users can view the details of their orders.\r\nThe endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction is not found."
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Orders"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "[\n  {\n    \"id\": \"<uuid>\",\n    \"orderedAt\": \"<dateTime>\",\n    \"amount\": \"<double>\",\n    \"orderItems\": [\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"Completed\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      },\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"Completed\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"<uuid>\",\n    \"orderedAt\": \"<dateTime>\",\n    \"amount\": \"<double>\",\n    \"orderItems\": [\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"InProgress\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      },\n      {\n        \"quantity\": \"<integer>\",\n        \"status\": \"Pending\",\n        \"item\": {\n          \"name\": \"<string>\",\n          \"id\": \"<uuid>\",\n          \"description\": \"<string>\",\n          \"price\": \"<double>\",\n          \"available\": \"<boolean>\"\n        }\n      }\n    ]\n  }\n]"
+												},
+												{
+													"name": "Unauthorized",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Orders"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode"
+																}
+															]
+														}
+													},
+													"status": "Unauthorized",
+													"code": 401,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "<string>"
+												},
+												{
+													"name": "Error",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Orders",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Orders"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode"
+																}
+															]
+														}
+													},
+													"status": "Internal Server Error",
+													"code": 500,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"type\": \"<string>\",\n  \"title\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"detail\": \"<string>\",\n  \"instance\": \"<string>\",\n  \"aute5\": {}\n}"
+												}
+											]
+										}
+									]
+								},
+								{
+									"name": "Pay",
+									"item": [
+										{
+											"name": "Pays the transaction associated with the specified unique code.",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															""
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"// Check if the status code is 200 or 404\r",
+															"pm.test(\"Status code is 200 or 404\", function () {\r",
+															"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);\r",
+															"});\r",
+															"\r",
+															"// Check if the response contains the expected properties when status is 200\r",
+															"if (pm.response.code === 200) {\r",
+															"    pm.test(\"Response contains expected properties\", function () {\r",
+															"        var jsonData = pm.response.json();\r",
+															"        pm.expect(jsonData).to.have.property(\"uniqueCode\");\r",
+															"        pm.expect(jsonData).to.have.property(\"openedAt\");\r",
+															"        pm.expect(jsonData).to.have.property(\"closedAt\");\r",
+															"        pm.expect(jsonData).to.have.property(\"totalAmount\");\r",
+															"        pm.expect(jsonData).to.have.property(\"orders\");\r",
+															"        pm.expect(jsonData.orders).to.be.an('array');\r",
+															"        jsonData.orders.forEach(function(order) {\r",
+															"            pm.expect(order).to.have.property(\"id\");\r",
+															"            pm.expect(order).to.have.property(\"amount\");\r",
+															"            pm.expect(order).to.have.property(\"orderedAt\");\r",
+															"            pm.expect(order).to.have.property(\"orderItems\");\r",
+															"            pm.expect(order.orderItems).to.be.an('array');\r",
+															"            order.orderItems.forEach(function(orderItem) {\r",
+															"                pm.expect(orderItem).to.have.property(\"id\");\r",
+															"                pm.expect(orderItem).to.have.property(\"quantity\");\r",
+															"                pm.expect(orderItem).to.have.property(\"price\");\r",
+															"                pm.expect(orderItem).to.have.property(\"status\");\r",
+															"                pm.expect(orderItem).to.have.property(\"item\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"id\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"name\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"description\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"price\");\r",
+															"                pm.expect(orderItem.item).to.have.property(\"available\");\r",
+															"            });\r",
+															"        });\r",
+															"    });\r",
+															"}\r",
+															"\r",
+															"// Check if the response message is \"Transaction not found\" when status is 404\r",
+															"if (pm.response.code === 404) {\r",
+															"    pm.test(\"Response message is 'Transaction not found'\", function () {\r",
+															"        var jsonData = pm.response.json();\r",
+															"        pm.expect(jsonData).to.eql(\"Transaction not found\");\r",
+															"    });\r",
+															"}"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"auth": {
+													"type": "bearer",
+													"bearer": [
+														{
+															"key": "token",
+															"value": "{{authToken}}",
+															"type": "string"
+														}
+													]
+												},
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "text/plain"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Pay",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"Transaction",
+														":uniqueCode",
+														"Pay"
+													],
+													"variable": [
+														{
+															"key": "uniqueCode",
+															"value": "{{uniqueCode}}",
+															"description": "(Required) "
+														}
+													]
+												},
+												"description": "Roles: <b>Cashier</b>\r\n\r\nThe function is an HTTP POST endpoint designed to process the payment for a specific transaction. When a POST request is made to ```/api/transaction/{uniqueCode}/Pay``` with the <b>uniqueCode</b> as a route parameter, the function attempts to find an open transaction that matches the provided unique code. \r\nIt queries the database to include related orders, ordering them by the time they were placed, and includes the order items within each order, ordering them by the item name, and includes the item details.\r\n\r\n\r\nIf a matching transaction is found, the function calculates the total amount for the transaction by summing the amounts of the completed order items.\r\nEach order's amount is calculated by summing the product of the quantity and price of its completed order items.\r\nThe total amount for the transaction is then the sum of the amounts of all orders.\r\nAfter calculating the total amount, the function sets the <b>ClosedAt</b> property of the transaction to the current date and time, indicating that the transaction is closed.\r\n\r\n\r\nIf the transaction is successfully found and the total amount is calculated, the function saves the changes to the database and returns a 200 OK status with the transaction details, including the total amount.\r\nIf no matching transaction is found, the function returns a 404 Not Found status with the message \"Transaction not found.\".\r\nThis endpoint is crucial for processing the payment of a specific transaction, ensuring that users can finalize their transaction and view the total amount due.\r\nThe endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction is not found."
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer {{authToken}}",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Pay",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Pay"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"uniqueCode\": \"<string>\",\n  \"id\": \"<uuid>\",\n  \"tableId\": \"<uuid>\",\n  \"cashierId\": \"<uuid>\",\n  \"openedAt\": \"<dateTime>\",\n  \"closedAt\": \"<dateTime>\",\n  \"totalAmount\": \"<double>\",\n  \"table\": {\n    \"tableNumber\": \"<string>\",\n    \"id\": \"<uuid>\",\n    \"capacity\": \"<integer>\",\n    \"transactions\": [\n      {\n        \"value\": \"<Circular reference to #/components/schemas/Transaction detected>\"\n      },\n      {\n        \"value\": \"<Circular reference to #/components/schemas/Transaction detected>\"\n      }\n    ]\n  },\n  \"cashier\": {\n    \"fullName\": \"<string>\",\n    \"username\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phoneNumber\": \"<string>\",\n    \"role\": \"Waiter\"\n  },\n  \"orders\": [\n    {\n      \"id\": \"<uuid>\",\n      \"orderedAt\": \"<dateTime>\",\n      \"amount\": \"<double>\",\n      \"orderItems\": [\n        {\n          \"quantity\": \"<integer>\",\n          \"status\": \"InProgress\",\n          \"item\": {\n            \"name\": \"<string>\",\n            \"id\": \"<uuid>\",\n            \"description\": \"<string>\",\n            \"price\": \"<double>\",\n            \"available\": \"<boolean>\"\n          }\n        },\n        {\n          \"quantity\": \"<integer>\",\n          \"status\": \"InProgress\",\n          \"item\": {\n            \"name\": \"<string>\",\n            \"id\": \"<uuid>\",\n            \"description\": \"<string>\",\n            \"price\": \"<double>\",\n            \"available\": \"<boolean>\"\n          }\n        }\n      ]\n    },\n    {\n      \"id\": \"<uuid>\",\n      \"orderedAt\": \"<dateTime>\",\n      \"amount\": \"<double>\",\n      \"orderItems\": [\n        {\n          \"quantity\": \"<integer>\",\n          \"status\": \"Cancelled\",\n          \"item\": {\n            \"name\": \"<string>\",\n            \"id\": \"<uuid>\",\n            \"description\": \"<string>\",\n            \"price\": \"<double>\",\n            \"available\": \"<boolean>\"\n          }\n        },\n        {\n          \"quantity\": \"<integer>\",\n          \"status\": \"Pending\",\n          \"item\": {\n            \"name\": \"<string>\",\n            \"id\": \"<uuid>\",\n            \"description\": \"<string>\",\n            \"price\": \"<double>\",\n            \"available\": \"<boolean>\"\n          }\n        }\n      ]\n    }\n  ]\n}"
+												},
+												{
+													"name": "Unauthorized",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Authorization",
+																"value": "Bearer {{authToken}}",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Pay",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Pay"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}"
+																}
+															]
+														}
+													},
+													"status": "Unauthorized",
+													"code": 401,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												},
+												{
+													"name": "Forbidden",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Authorization",
+																"value": "Bearer {{authToken}}",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Pay",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Pay"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode",
+																	"value": "{{uniqueCode}}"
+																}
+															]
+														}
+													},
+													"status": "Forbidden",
+													"code": 403,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": ""
+												},
+												{
+													"name": "Not Found",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "text/plain"
+															},
+															{
+																"key": "Authorization",
+																"value": "Bearer <token>",
+																"description": "Added as a part of security scheme: bearer"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/Transaction/:uniqueCode/Pay",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"Transaction",
+																":uniqueCode",
+																"Pay"
+															],
+															"variable": [
+																{
+																	"key": "uniqueCode"
+																}
+															]
+														}
+													},
+													"status": "Not Found",
+													"code": 404,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json"
+														}
+													],
+													"cookie": [],
+													"body": "<string>"
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Generates a unique code for a transaction associated with the specified table.",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200 or 400 or 404\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);\r",
+											"});\r",
+											"\r",
+											"// Check if the response is a string when status is 200\r",
+											"if (pm.response.code === 200) {\r",
+											"    pm.test(\"Response is a string\", function () {\r",
+											"        pm.expect(pm.response.text()).to.be.a('string');\r",
+											"    });\r",
+											"}\r",
+											"\r",
+											"// Check if the response message is \"Table already has an open transaction.\" when status is 400\r",
+											"if (pm.response.code === 400) {\r",
+											"    pm.test(\"Response message is 'Table already has an open transaction.'\", function () {\r",
+											"        var jsonData = pm.response.json();\r",
+											"        pm.expect(jsonData.errors.TableNumber[0]).to.eq(\"Table already has an open transaction\");\r",
+											"    });\r",
+											"}\r",
+											"\r",
+											"// Check if the response message is \"Table not found.\" when status is 404\r",
+											"if (pm.response.code === 404) {\r",
+											"    pm.test(\"Response message is 'Table not found.'\", function () {\r",
+											"        pm.expect(pm.response.text()).to.eq(\"Table not found\");\r",
+											"    });\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "text/plain"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "tableNumber",
+											"value": "Table 3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Transaction",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Transaction"
+									]
+								},
+								"description": "Roles: <b>Cashier</b>, <b>Waiter</b>\r\n\r\nThe function is an HTTP POST endpoint designed to generate a unique code for a transaction associated with a specified table. \r\nWhen a POST request is made to ```/api/transaction``` with the <b>tableNumber</b> as a form parameter, the function attempts to find the table ID that matches the provided table number.\r\nIt queries the database to retrieve the table ID.\r\n\r\n\r\nIf a matching table is found, the function checks if there is already an open transaction for that table.\r\nIf an open transaction exists, the function returns a 400 Bad Request status with the message \"Table already has an open transaction.\". \r\nIf no open transaction exists, the function generates a unique code for the new transaction. \r\nIt ensures the uniqueness of the code by checking the database to confirm that no open transaction has the same code.\r\nThe function continues generating codes until a unique one is found.\r\nOnce a unique code is generated, it creates a new transaction with this code and associates it with the table.\r\n\r\n\r\nIf the table is successfully found and the transaction is created, the function returns a 200 OK status with the generated unique code.\r\nIf no matching table is found, the function returns a 404 Not Found status with the message \"Table not found.\".\r\nThis endpoint is crucial for initiating a new transaction for a specific table, ensuring that each transaction has a unique identifier.\r\nThe endpoint is annotated to produce a 200 OK response on success, a 400 Bad Request response if the table already has an open transaction, and a 404 Not Found response if the table is not found."
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{authToken}}",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "tableNumber",
+													"value": "Table 3",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Transaction",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Transaction"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "<string>"
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "tableNumber",
+													"value": "Table 40",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Transaction",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Transaction"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "<string>"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Items",
+					"item": [
+						{
+							"name": "Retrieves a list of items based on the specified search criteria.",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response is an array",
+											"pm.test(\"Response is an array\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.be.an('array');",
+											"});",
+											"",
+											"// Check if each category has the expected properties",
+											"pm.test(\"Each category has expected properties\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    jsonData.forEach(function(category) {",
+											"        pm.expect(category).to.have.property(\"name\");",
+											"        pm.expect(category).to.have.property(\"description\");",
+											"        pm.expect(category).to.have.property(\"items\");",
+											"    });",
+											"});",
+											"",
+											"// Check if each category does not have extra properties",
+											"pm.test(\"Each category does not have extra properties\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var allowedProperties = [\"name\", \"description\", \"items\"];",
+											"    jsonData.forEach(function(category) {",
+											"        var categoryProperties = Object.keys(category);",
+											"        categoryProperties.forEach(function(property) {",
+											"            pm.expect(allowedProperties).to.include(property);",
+											"        });",
+											"    });",
+											"});",
+											"",
+											"// Check if each item does not have extra properties",
+											"pm.test(\"Each item does not have extra properties\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var allowedItemProperties = [\"id\", \"name\", \"description\", \"price\", \"available\"];",
+											"    jsonData.forEach(function(category) {",
+											"        category.items.forEach(function(item) {",
+											"            var itemProperties = Object.keys(item);",
+											"            itemProperties.forEach(function(property) {",
+											"                pm.expect(allowedItemProperties).to.include(property);",
+											"            });",
+											"        });",
+											"    });",
+											"});",
+											"",
+											"// Check if each item within categories has the expected properties",
+											"pm.test(\"Each item within categories has expected properties\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    jsonData.forEach(function(category) {",
+											"        category.items.forEach(function(item) {",
+											"            pm.expect(item).to.have.property(\"id\");",
+											"            pm.expect(item).to.have.property(\"name\");",
+											"            pm.expect(item).to.have.property(\"description\");",
+											"            pm.expect(item).to.have.property(\"price\");",
+											"            pm.expect(item).to.have.property(\"available\");",
+											"        });",
+											"    });",
+											"});",
+											"",
+											"// Check if items are ordered by name within each category",
+											"pm.test(\"Items are ordered by name within each category\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    jsonData.forEach(function(category) {",
+											"        var itemNames = category.items.map(item => item.name);",
+											"        var sortedItemNames = [...itemNames].sort();",
+											"        pm.expect(itemNames).to.eql(sortedItemNames);",
+											"    });",
+											"});",
+											"",
+											"// Check if categories are ordered by name",
+											"pm.test(\"Categories are ordered by name\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var categoryNames = jsonData.map(category => category.name);",
+											"    var sortedCategoryNames = [...categoryNames].sort();",
+											"    pm.expect(categoryNames).to.eql(sortedCategoryNames);",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/plain"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Items",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Items"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "Tahu",
+											"description": "The search criteria to filter the items.",
+											"disabled": true
+										}
+									]
+								},
+								"description": "The function is an HTTP GET endpoint that retrieves a list of categories from the database based on the specified search criteria. The search criteria are used to filter the items within each category by their <b>name</b> or <b>description</b>. \r\nThe function queries the categories table, including related items that match the search criteria. \r\nIt filters the items within each category where the item's <b>name</b> or <b>description</b> contains the search string. \r\nThe items are ordered by their <b>name</b> within each category, and the categories are ordered by their <b>name</b>. \r\nThe results are retrieved as a list. \r\nFinally, the function returns an action result containing the list of filtered and ordered categories. \r\nThe endpoint uses the HTTP GET method and is accessible via the URL ```/api/items```, with an optional query parameter search to specify the search criteria."
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Items",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Items"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "",
+													"description": "The search criteria to filter the items.",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"name\": \"<string>\",\n    \"description\": \"<string>\",\n    \"items\": [\n      {\n        \"name\": \"<string>\",\n        \"id\": \"<uuid>\",\n        \"description\": \"<string>\",\n        \"price\": \"<double>\",\n        \"available\": \"<boolean>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"id\": \"<uuid>\",\n        \"description\": \"<string>\",\n        \"price\": \"<double>\",\n        \"available\": \"<boolean>\"\n      }\n    ]\n  },\n  {\n    \"name\": \"<string>\",\n    \"description\": \"<string>\",\n    \"items\": [\n      {\n        \"name\": \"<string>\",\n        \"id\": \"<uuid>\",\n        \"description\": \"<string>\",\n        \"price\": \"<double>\",\n        \"available\": \"<boolean>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"id\": \"<uuid>\",\n        \"description\": \"<string>\",\n        \"price\": \"<double>\",\n        \"available\": \"<boolean>\"\n      }\n    ]\n  }\n]"
+								},
+								{
+									"name": "Search yellow",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Items?search=Yellow",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Items"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "Yellow",
+													"description": "The search criteria to filter the items."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 21 Aug 2024 20:40:01 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"name\": \"Nigiri\",\n        \"description\": \"Hand-pressed sushi rice topped with slices of raw fish or seafood\",\n        \"items\": [\n            {\n                \"id\": \"1f621478-33ff-4866-91a4-eef528e13b4e\",\n                \"name\": \"Yellowtail Nigiri\",\n                \"description\": \"Hand-pressed sushi rice topped with fresh yellowtail\",\n                \"price\": 4.99,\n                \"available\": true\n            }\n        ]\n    },\n    {\n        \"name\": \"Sashimi\",\n        \"description\": \"Fresh slices of raw fish or seafood\",\n        \"items\": [\n            {\n                \"id\": \"42be1567-f58d-4e40-9c4b-884dbea04d5c\",\n                \"name\": \"Yellowtail Sashimi\",\n                \"description\": \"Fresh slices of raw yellowtail\",\n                \"price\": 10.99,\n                \"available\": false\n            }\n        ]\n    }\n]"
+								},
+								{
+									"name": "Search Tahu",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "text/plain"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Items?search=Tahu",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Items"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "Tahu",
+													"description": "The search criteria to filter the items."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 21 Aug 2024 20:40:58 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "[]"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5555"
+		},
+		{
+			"key": "uniqueCode",
+			"value": "ABCD",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

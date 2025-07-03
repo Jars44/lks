@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Voto.API</name>
+    </assembly>
+    <members>
+        <member name="M:Voto.API.Controllers.AuthController.Auth(Voto.API.Controllers.AuthDTO)">
+            <summary>
+            User login endpoint
+            </summary>
+            <response code="200">Successfully login and get login token</response>
+            <response code="404">User not found</response>
+        </member>
+        <member name="M:Voto.API.Controllers.CameraController.GetCamera(System.Nullable{System.Int32},System.String)">
+            <summary>
+            Camera data endpoint
+            </summary>
+            <response code="200">Successfully get camera data</response>
+        </member>
+        <member name="M:Voto.API.Controllers.CameraController.GetCameraDetail(System.Int32)">
+            <summary>
+            Camera information endpoint
+            </summary>
+            <response code="200">Successfully get camera information</response>
+            <response code="404">Data not found</response>
+        </member>
+        <member name="M:Voto.API.Controllers.CategoryController.GetCategory">
+            <summary>
+            Category data endpoint
+            </summary>
+            <response code="200">Successfully get category data</response>
+        </member>
+        <member name="M:Voto.API.Controllers.TransactionController.AddNewTransaction(Voto.API.Controllers.TransactionDTO)">
+            <summary>
+            Add new transaction endpoint
+            </summary>
+            <response code="200">Successfully add new transaction</response>
+            <response code="400">Bad request</response>
+            <response code="401">Unauthorized access (not login yet / no token provided)</response>
+        </member>
+        <member name="M:Voto.API.Controllers.UserController.GetMyInformation">
+            <summary>
+            User information endpoint
+            </summary>
+            <response code="200">Successfully get user information</response>
+            <response code="401">Unauthorized access (not login yet / no token provided)</response>
+        </member>
+        <member name="M:Voto.API.Controllers.UserController.GetMyTransaction">
+            <summary>
+            User transaction endpoint
+            </summary>
+            <response code="200">Successfully get user transaction</response>
+            <response code="401">Unauthorized access (not login yet / no token provided)</response>
+        </member>
+        <member name="M:Voto.API.Controllers.UserController.UpdateVotoken(System.Int32)">
+            <summary>
+            Update user votoken endpoint
+            </summary>
+            <response code="200">Successfully update votoken</response>
+            <response code="401">Unauthorized access (not login yet / no token provided)</response>
+            <response code="400">Bad request</response>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,17 @@
+D:\C2\HovRailKiosk\bin\Debug\HovRailKiosk.exe.config
+D:\C2\HovRailKiosk\bin\Debug\HovRailKiosk.exe
+D:\C2\HovRailKiosk\bin\Debug\HovRailKiosk.pdb
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.csproj.AssemblyReference.cache
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.Form1.resources
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.Properties.Resources.resources
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.csproj.GenerateResource.cache
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.csproj.CoreCompileInputs.cache
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.exe
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.pdb
+D:\C2\HovRailKiosk\bin\Debug\EntityFramework.dll
+D:\C2\HovRailKiosk\bin\Debug\EntityFramework.SqlServer.dll
+D:\C2\HovRailKiosk\bin\Debug\EntityFramework.xml
+D:\C2\HovRailKiosk\bin\Debug\EntityFramework.SqlServer.xml
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.RouteForm.resources
+D:\C2\HovRailKiosk\obj\Debug\HovRailK.D76CAD06.Up2Date
+D:\C2\HovRailKiosk\obj\Debug\HovRailKiosk.BookForm.resources

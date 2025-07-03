@@ -1,0 +1,7 @@
+Orange: rgb(254, 122, 54)
+Blue: rgb(54, 82, 173)
+Navy: rgb(40, 2, 116)
+Milk White: rgb(233, 246, 255)
+
+Font: Segoe UI 
+Font Size: SemiBold 10 pt

@@ -1,0 +1,6 @@
+@SyncNuget_HostAddress = http://localhost:5204
+
+GET {{SyncNuget_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

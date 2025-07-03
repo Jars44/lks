@@ -1,0 +1,40 @@
+ESEMKA POLLING
+
+1) Halaman Awal
+   - Pada halaman awal pengguna dapat melihat polling yang sedang berlangsung dan hasil sementara
+   - Dibagian atas halaman terdapat tombol masuk untuk membuka halaman masuk
+2) Halaman Masuk
+   - Pada halaman ini terdapat opsi untuk masuk sebagai admin atau masuk sebagai pengguna biasa
+   - Jika user memilih masuk sebagai admin tampilkan menu dialog untuk menginputkan username dan password
+   - Jika user memilih masuk sebagai pengguna biasa maka tampilkan menu dialog untuk menginputkan kode identitas
+3) Halaman Utama (admin)
+   - Pada halaman utama terdapat tombol untuk pergi ke menu Pemungutan Suara, Pengguna, dan Laporan
+4) Halaman Pemungutan Suara (admin)
+   - Pada halaman ini admin dapat mengolah data pemungutan suara meliputi: Membuat pemungutan suara baru, Mengubah pemungutan suara, dan Menghapus pemungutan suara
+   - Hanya pemungutan suara yang belum terdapat responden yang dapat dihapus dan diubah, jika pemungutan suara tersebut telah dimulai maka tidak bisa diubah maupun dihapus
+   - Admin juga dapat menutup pemungutan suara yang sedang berlangsung
+5) Halaman Pengguna (admin)
+   - Admin juga dapat menambahkan pengguna baru, mengubah pengguna dan menghapus pengguna
+   - Hanya nama pengguna yang dapat diubah
+   - Jika pengguna dihapus maka hapus juga semua data partisipasi pengguna pada semua polling
+   - Kode Identitas berupa karakter numerik sepanjang 5 karakter
+6) Halaman Laporan (admin)
+   - Pada halaman ini admin dapat melihat laporan tiap tiap pemungutan suara yang dibuat oleh admin 
+   - Admin perlu memilih data pemungutan suara, jika data dipilih maka tampilkan statistik berikut
+     - Jumlah Responden
+     - Statistik Responden yang memilih opsi pemungutan suara, misal: Opsi A (5/150 Orang), Opsi B (560/150 Orang)
+     - Presentase semua opsi yang ditampilkan dalam diagram lingkaran
+7) Halaman Utama (pengguna biasa)
+   - Pada halaman ini terdapat tombol Ikuti Pemungutan Suara, dan Laporan
+8) Halaman Ikuti Pemungutan Suara
+   - Pada halaman ini terdapat daftar pemungutan suara yang dapat diikuti
+   - Jika pengguna memilih pemungutan suara maka tampilkan menu dialog yang berisi opsi yang dapat dipilih pengguna
+   - Jika pengguna memilih salah satu opsi pada menu dialog maka simpan data yang dipilih pengguna dan tutup menu dialog tsb
+   - Pengguna hanya dapat mengikuti pemungutan suara sekali
+9) Halaman Laporan (Pengguna Biasa)
+   - Pada halaman ini pengguna dapat melihat laporan tiap tiap pemungutan suara yang diikutinya
+   - Pengguna perlu memilih data pemungutan suara, jika data dipilih maka tampilkan statistik berikut
+     - Jawaban yang pengguna berikan
+     - Jumlah Responden
+     - Statistik Responden yang memilih opsi pemungutan suara, misal: Opsi A (5/150 Orang), Opsi B (560/150 Orang)
+     - Presentase semua opsi yang ditampilkan dalam diagram lingkaran

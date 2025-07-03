@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35004.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncNuget2", "SyncNuget2.csproj", "{816E62E4-36CA-49F0-8552-77F8909F9634}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{816E62E4-36CA-49F0-8552-77F8909F9634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{816E62E4-36CA-49F0-8552-77F8909F9634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{816E62E4-36CA-49F0-8552-77F8909F9634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{816E62E4-36CA-49F0-8552-77F8909F9634}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03DEB7B6-1677-45F8-8DEA-E3260357BF8B}
+	EndGlobalSection
+EndGlobal

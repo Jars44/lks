@@ -1,0 +1,819 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sakura Sushi</name>
+    </assembly>
+    <members>
+        <member name="F:SakuraSushi.Controllers.AuthController._configuration">
+            <summary>
+            The configuration instance.
+            </summary>
+        </member>
+        <member name="F:SakuraSushi.Controllers.AuthController._db">
+            <summary>
+            The database context.
+            </summary>
+        </member>
+        <member name="F:SakuraSushi.Controllers.AuthController._logger">
+            <summary>
+            The logger instance.
+            </summary>
+        </member>
+        <member name="M:SakuraSushi.Controllers.AuthController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,SakuraSushi.Models.RestaurantContext,Microsoft.Extensions.Logging.ILogger{SakuraSushi.Controllers.AuthController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SakuraSushi.Controllers.AuthController"/> class.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="db">The database context.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:SakuraSushi.Controllers.AuthController.SignInAsync(SakuraSushi.Controllers.SignInParam)">
+            <summary>
+            Endpoint for user sign-in.
+            </summary>
+            <remarks>
+            The function is an HTTP POST endpoint designed for user sign-in.
+            It accepts a sign-in model containing the user's credentials, such as username and password, and validates these credentials against the database.
+            The endpoint is documented with sample credentials for different roles, including Cashier, Waiter, and Chef.
+            When a POST request is made to <code>/api/auth/signin</code> with the user's credentials, the function attempts to find a matching user in the database by comparing the provided username and hashed password. 
+            If a matching user is found, the function returns an action result containing the user token (JWT), indicating a successful sign-in. 
+            If no matching user is found, the function returns an Unauthorized status.
+            The endpoint is annotated to produce a 200 OK response on success and a 401 Unauthorized response on failure.
+            This endpoint is crucial for authenticating users and providing them with access tokens for subsequent requests.
+            <br/>
+            Hashing the password: <br/>
+            <code>
+            string HashPassword(string password) {
+                var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+            </code>
+            </remarks>
+            <param name="model">
+            The sign-in model containing the user's credentials. Sample credentials: <br />
+            <table border="1">
+                <tr><th>Role</th><th>Username</th><th>Password</th></tr>
+                <tr><th>Cashier</th><td>fcerith0</td><td>Cashier123!</td></tr>
+                <tr><th>Waiter</th><td>odearing1</td><td>Waiter123!</td></tr>
+                <tr><th>Chef</th><td>darmell2</td><td>Chef123!</td></tr>
+            </table>
+            </param>
+            <example><code>POST /api/auth/signin</code></example>
+            <returns>An action result containing the user token if the sign-in is successful, or Unauthorized if the sign-in fails.</returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.AuthController.GenerateJwtToken(SakuraSushi.Models.User,System.DateTime)">
+            <summary>
+            Generates a JWT token for the specified user.
+            </summary>
+            <param name="user">The user to generate the token for.</param>
+            <param name="expiredAt">The expiration date and time of the token.</param>
+        </member>
+        <member name="M:SakuraSushi.Controllers.AuthController.GetCurrentUserAsync">
+            <summary>
+            Endpoint to get the current user's information.
+            </summary>
+            <remarks>
+            The function is an HTTP GET endpoint designed to retrieve the current authenticated user's information.
+            When a GET request is made to <code>/api/auth/me</code>, the function extracts the user's identity from the authentication token provided in the request headers.
+            It then queries the database to retrieve the user's details, such as username, email, and roles.
+            If the user is successfully authenticated and found in the database, the function returns an action result containing the user's information, indicating a successful retrieval.
+            If the user is not authenticated or not found, the function returns an Unauthorized status.
+            This endpoint is essential for providing authenticated users with their profile information and ensuring that only authorized users can access their data.
+            The endpoint is annotated to produce a 200 OK response on success and a 401 Unauthorized response on failure.
+            </remarks>
+            <returns>An action result containing the user's information if authenticated, or Unauthorized if not authenticated.</returns>
+        </member>
+        <member name="T:SakuraSushi.Controllers.SignInParam">
+            <summary>
+            Represents a model for user sign-in.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Controllers.SignInParam.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Controllers.SignInParam.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            [MaxLength(50)]
+        </member>
+        <member name="T:SakuraSushi.Controllers.UserToken">
+            <summary>
+            Represents a user token.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Controllers.UserToken.Token">
+            <summary>
+            Gets or sets the token.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Controllers.UserToken.ExpiredAt">
+            <summary>
+            Gets or sets the expiration date and time of the token.
+            </summary>
+        </member>
+        <member name="M:SakuraSushi.Controllers.CartController.GetAsync(System.String)">
+            <summary>
+            Retrieves the cart items in the transaction.
+            </summary>
+            <remarks>
+            The function is an HTTP GET endpoint designed to retrieve the cart items associated with a specific transaction.
+            When a GET request is made to <code>/api/transaction/{uniqueCode}/cart</code> with a <b>uniqueCode</b> route parameter, the function queries the database to find a transaction that matches the provided unique code and is not closed.
+            It includes related cart items and their associated item details in the query.
+            If a matching transaction is found, the function returns an action result containing the list of cart items, indicating a successful retrieval.
+            If no matching transaction is found, the function returns a 404 Not Found status with an appropriate message.
+            This endpoint is essential for retrieving the current items in a user's cart during an ongoing transaction.
+            The endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction is not found.
+            </remarks>
+            <param name="uniqueCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.CartController.AddItem(System.String,SakuraSushi.Controllers.CartItemParam)">
+            <summary>
+            Adds an item to the cart.
+            </summary>
+            <remarks>
+            The function is an HTTP POST endpoint designed to add an item to the cart associated with a specific transaction.
+            When a POST request is made to <code>/api/transaction/{uniqueCode}/cart</code> with the <b>uniqueCode</b> as a route parameter and the item details in the request body, the function attempts to find an open transaction that matches the provided unique code.
+            It queries the database to include related cart items and their associated item details.
+            
+            If a matching transaction is found, the function checks if the item is available.
+            If the item is not available, the function returns a 400 Bad Request status with the message "Item is not available.".
+            If the item is available, the function adds the new item to the cart and updates the transaction in the database.
+            If the transaction is successfully updated, the function returns a 201 Created status with the updated list of cart items.
+            
+            If no matching transaction is found, the function returns a 404 Not Found status with an appropriate message.
+            If the request is invalid, it returns a 400 Bad Request status with the model state errors.
+            This endpoint is crucial for allowing users to add items to their cart during an ongoing transaction.
+            The endpoint is annotated to produce a 201 Created response on success, a 400 Bad Request response for invalid requests or unavailable items, and a 404 Not Found response if the transaction is not found.
+            </remarks>
+            <param name="uniqueCode"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.CartController.DeleteItem(System.String,System.Guid)">
+            <summary>
+            Removes an item from the cart.
+            </summary>
+            <remarks>
+            The function is an HTTP DELETE endpoint designed to remove an item from the cart associated with a specific transaction.
+            When a DELETE request is made to <code>/api/transaction/{uniqueCode}/cart/{itemId}</code> with the <b>uniqueCode</b> and <b>itemId</b> as route parameters, the function attempts to find an open transaction that matches the provided unique code.
+            It queries the database to include related cart items and their associated item details.
+            <br/>
+            If a matching transaction is found, the function checks if the item exists in the cart.
+            If the item does not exist, the function returns a 404 Not Found status with the message "Item not found in cart.".
+            If the item exists, the function removes the item from the cart and updates the transaction in the database.
+            If the transaction is successfully updated, the function returns a 200 OK status with the updated list of cart items.
+            <br/>
+            If no matching transaction is found, the function returns a 404 Not Found status with an appropriate message.
+            If the request is invalid, it returns a 400 Bad Request status with the model state errors.
+            This endpoint is crucial for allowing users to remove items from their cart during an ongoing transaction.
+            The endpoint is annotated to produce a 200 OK response on success, a 400 Bad Request response for invalid requests, and a 404 Not Found response if the transaction or item is not found.
+            </remarks>
+            <param name="uniqueCode"></param>
+            <param name="itemId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.CartController.Order(System.String)">
+            <summary>
+            Creates an order from the cart items in the transaction.
+            </summary>
+            <remarks>
+            The function is an HTTP POST endpoint designed to create an order from the cart items in a specific transaction. 
+            When a POST request is made to <code>/api/transaction/{uniqueCode}/cart/order</code> with the <b>uniqueCode</b> as a route parameter, the function attempts to find an open transaction that matches the provided unique code.
+            It queries the database to include related cart items, orders, and their associated order items and item details.
+            <br/>
+            If a matching transaction is found, the function creates a new order using the cart items from the transaction.
+            It calculates the total amount for the order by summing the total prices of the cart items.
+            The new order is then added to the transaction, and the transaction is updated in the database.
+            If the order is successfully created and the transaction is updated, the function returns a 201 Created status with the newly created order.
+            <br/>
+            If no matching transaction is found, the function returns a 404 Not Found status with the message "Transaction not found.".
+            If the request is invalid, it returns a 400 Bad Request status with the model state errors. 
+            This endpoint is crucial for converting cart items into an order during an ongoing transaction. 
+            The endpoint is annotated to produce a 201 Created response on success, a 400 Bad Request response for invalid requests, and a 404 Not Found response if the transaction is not found.
+            </remarks>
+            <param name="uniqueCode"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SakuraSushi.Controllers.CartItemParam">
+            <summary>
+            Represents the parameters for adding an item to the cart.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Controllers.CartItemParam.ItemId">
+            <summary>
+            Gets or sets the unique identifier of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Controllers.CartItemParam.Quantity">
+            <summary>
+            Gets or sets the quantity of the item.
+            </summary>
+            <remarks>
+            The quantity should be between 1 and 10.
+            </remarks>
+        </member>
+        <member name="T:SakuraSushi.Controllers.ErrorController">
+            <summary>
+            Controller for handling errors in the application.
+            </summary>
+        </member>
+        <member name="M:SakuraSushi.Controllers.ErrorController.Throw">
+            <summary>
+            Throws a sample exception.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> representing the result of the action.</returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.ErrorController.HandleErrorDevelopment(Microsoft.Extensions.Hosting.IHostEnvironment)">
+            <summary>
+            Handles errors during development.
+            </summary>
+            <param name="hostEnvironment">The hosting environment.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> representing the result of the action.</returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.ErrorController.HandleError">
+            <summary>
+            Handles errors in the application.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> representing the result of the action.</returns>
+        </member>
+        <member name="T:SakuraSushi.Controllers.ItemsController">
+            <summary>
+            Represents a controller for managing items in a restaurant.
+            </summary>
+        </member>
+        <member name="F:SakuraSushi.Controllers.ItemsController._db">
+            <summary>
+            The database context for the restaurant.
+            </summary>
+        </member>
+        <member name="M:SakuraSushi.Controllers.ItemsController.#ctor(SakuraSushi.Models.RestaurantContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SakuraSushi.Controllers.ItemsController"/> class.
+            </summary>
+            <param name="db">The database context for the restaurant.</param>
+        </member>
+        <member name="M:SakuraSushi.Controllers.ItemsController.GetItems(System.String)">
+            <summary>
+            Retrieves a list of items based on the specified search criteria.
+            </summary>
+            <remarks>
+            The function is an HTTP GET endpoint that retrieves a list of categories from the database based on the specified search criteria. The search criteria are used to filter the items within each category by their <b>name</b> or <b>description</b>. 
+            The function queries the categories table, including related items that match the search criteria. 
+            It filters the items within each category where the item's <b>name</b> or <b>description</b> contains the search string. 
+            The items are ordered by their <b>name</b> within each category, and the categories are ordered by their <b>name</b>. 
+            The results are retrieved as a list. 
+            Finally, the function returns an action result containing the list of filtered and ordered categories. 
+            The endpoint uses the HTTP GET method and is accessible via the URL <code>/api/items</code>, with an optional query parameter search to specify the search criteria.
+            </remarks>
+            <param name="search">The search criteria to filter the items.</param>
+            <returns>An action result containing the list of items.</returns>
+        </member>
+        <member name="F:SakuraSushi.Controllers.TransactionController._logger">
+            <summary>
+            The logger instance for the controller.
+            </summary>
+        </member>
+        <member name="F:SakuraSushi.Controllers.TransactionController._db">
+            <summary>
+            The database context for the controller.
+            </summary>
+        </member>
+        <member name="M:SakuraSushi.Controllers.TransactionController.#ctor(Microsoft.Extensions.Logging.ILogger{SakuraSushi.Controllers.TransactionController},SakuraSushi.Models.RestaurantContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SakuraSushi.Controllers.TransactionController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="db"></param>
+        </member>
+        <member name="M:SakuraSushi.Controllers.TransactionController.GetAsync(System.String)">
+            <summary>
+            Generates a unique code for a transaction associated with the specified table.
+            </summary>
+            <remarks>
+            Roles: <b>Cashier</b>, <b>Waiter</b> <br/>
+            The function is an HTTP POST endpoint designed to generate a unique code for a transaction associated with a specified table. 
+            When a POST request is made to <code>/api/transaction</code> with the <b>tableNumber</b> as a form parameter, the function attempts to find the table ID that matches the provided table number.
+            It queries the database to retrieve the table ID.
+            <br/>
+            If a matching table is found, the function checks if there is already an open transaction for that table.
+            If an open transaction exists, the function returns a 400 Bad Request status with the message "Table already has an open transaction.". 
+            If no open transaction exists, the function generates a unique code for the new transaction. 
+            It ensures the uniqueness of the code by checking the database to confirm that no open transaction has the same code.
+            The function continues generating codes until a unique one is found.
+            Once a unique code is generated, it creates a new transaction with this code and associates it with the table.
+            <br/>
+            If the table is successfully found and the transaction is created, the function returns a 200 OK status with the generated unique code.
+            If no matching table is found, the function returns a 404 Not Found status with the message "Table not found.".
+            This endpoint is crucial for initiating a new transaction for a specific table, ensuring that each transaction has a unique identifier.
+            The endpoint is annotated to produce a 200 OK response on success, a 400 Bad Request response if the table already has an open transaction, and a 404 Not Found response if the table is not found.
+            </remarks>
+            <param name="tableNumber"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.TransactionController.GetOrdersAsync(System.String)">
+            <summary>
+            Retrieves the orders associated with the specified transaction.
+            </summary>
+            <remarks>
+            The function is an HTTP GET endpoint designed to retrieve the orders associated with a specific transaction. 
+            When a GET request is made to <code>/api/transaction/{uniqueCode}/Orders</code> with the <b>uniqueCode</b> as a route parameter, the function attempts to find an open transaction that matches the provided unique code.
+            It queries the database to include related orders, ordering them by the time they were placed (<b>OrderedAt</b>).
+            Additionally, it includes the order items within each order, ordering them by the item name, and includes the item details.
+            <br/>
+            If a matching transaction is found, the function returns a 200 OK status with the list of orders associated with the transaction.
+            If no matching transaction is found, the function returns a 404 Not Found status with the message "Transaction not found.".
+            This endpoint is crucial for retrieving the list of orders for a specific transaction, ensuring that users can view the details of their orders.
+            The endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction is not found.
+            </remarks>
+            <param name="uniqueCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.TransactionController.PayAsync(System.String)">
+            <summary>
+            Pays the transaction associated with the specified unique code.
+            </summary>
+            <remarks>
+            Roles: <b>Cashier</b> <br/>
+            The function is an HTTP POST endpoint designed to process the payment for a specific transaction. When a POST request is made to <code>/api/transaction/{uniqueCode}/Pay</code> with the <b>uniqueCode</b> as a route parameter, the function attempts to find an open transaction that matches the provided unique code. 
+            It queries the database to include related orders, ordering them by the time they were placed, and includes the order items within each order, ordering them by the item name, and includes the item details.
+            <br/>
+            If a matching transaction is found, the function calculates the total amount for the transaction by summing the amounts of the completed order items.
+            Each order's amount is calculated by summing the product of the quantity and price of its completed order items.
+            The total amount for the transaction is then the sum of the amounts of all orders.
+            After calculating the total amount, the function sets the <b>ClosedAt</b> property of the transaction to the current date and time, indicating that the transaction is closed.
+            <br/>
+            If the transaction is successfully found and the total amount is calculated, the function saves the changes to the database and returns a 200 OK status with the transaction details, including the total amount.
+            If no matching transaction is found, the function returns a 404 Not Found status with the message "Transaction not found.".
+            This endpoint is crucial for processing the payment of a specific transaction, ensuring that users can finalize their transaction and view the total amount due.
+            The endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction is not found.
+            </remarks>
+            <param name="uniqueCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SakuraSushi.Controllers.TransactionController.UpdateOrderItemStatusAsync(System.String,System.Guid,System.Guid,SakuraSushi.Models.OrderItemStatus)">
+             <summary>
+             Updates the status of an order item in the transaction.
+             </summary>
+             <remarks>
+             Roles: <b>Chef</b>, <b>Waiter</b>
+             
+             The function is an HTTP PUT endpoint designed to update the status of a specific order item within a transaction. 
+             When a PUT request is made to <code>/api/transaction/{uniqueCode}/Orders/{orderId}/Items/{itemId}/Status</code> with the <b>uniqueCode</b>, <b>orderId</b>, and <b>itemId</b> as route parameters, and the <b>new status</b> as a form parameter, the function attempts to find an open transaction that matches the provided unique code. 
+             It queries the database to include related orders and their order items.
+            
+             If a matching transaction is found, the function attempts to find the specified order within the transaction.
+             If the order is found, the function then attempts to find the specified order item within the order.
+             If the order item is found, the function updates the status of the order item to the specified status.
+             The changes are then saved to the database.
+            
+             If the transaction, order, or order item is not found, the function returns a 404 Not Found status with an appropriate message ("Transaction not found," "Order not found," or "Order item not found"). 
+             If the status is successfully updated, the function returns a 200 OK status with the updated order item. 
+             This endpoint is crucial for updating the status of order items within a transaction, ensuring that the status of each item can be tracked and managed.
+             The endpoint is annotated to produce a 200 OK response on success and a 404 Not Found response if the transaction, order, or order item is not found.
+             </remarks>
+             <param name="uniqueCode"></param>
+             <param name="orderId"></param>
+             <param name="itemId"></param>
+             <param name="status"></param>
+             <returns></returns>
+        </member>
+        <member name="T:SakuraSushi.Migrations.InitialMigrations">
+            <inheritdoc />
+        </member>
+        <member name="M:SakuraSushi.Migrations.InitialMigrations.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SakuraSushi.Migrations.InitialMigrations.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SakuraSushi.Migrations.InitialMigrations.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:SakuraSushi.Models.CartItem">
+            <summary>
+            Represents an item in the cart.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.Id">
+            <summary>
+            Gets or sets the unique identifier of the cart item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.TransactionId">
+            <summary>
+            Gets or sets the unique identifier of the transaction associated with the cart item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.ItemId">
+            <summary>
+            Gets or sets the unique identifier of the item associated with the cart item.
+                /// </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.Quantity">
+            <summary>
+            Gets or sets the quantity of the cart item.
+            </summary>
+            <remarks>
+            The quantity should be between 1 and 100.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.Price">
+            <summary>
+            Gets or sets the price of the cart item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.TotalPrice">
+            <summary>
+            Gets or sets the total price of the cart item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.AddedAt">
+            <summary>
+            Gets or sets the date and time when the cart item was added.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.Transaction">
+            <summary>
+            Gets or sets the transaction associated with the cart item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.CartItem.Item">
+            <summary>
+            Gets or sets the item associated with the cart item.
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.Category">
+            <summary>
+            Represents a category of items in the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Category.Id">
+            <summary>
+            Gets or sets the unique identifier of the category.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Category.Name">
+            <summary>
+            Gets or sets the name of the category.
+            </summary>
+            <remarks>
+            The name should not exceed 50 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.Category.Description">
+            <summary>
+            Gets or sets the description of the category.
+            </summary>
+            <remarks>
+            The description should not exceed 200 characters in length.
+            </remarks>s
+        </member>
+        <member name="P:SakuraSushi.Models.Category.Items">
+            <summary>
+            Gets the collection of items in the category.
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.Item">
+            <summary>
+            Represents an item in the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.Id">
+            <summary>
+            Gets or sets the unique identifier of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.CategoryId">
+            <summary>
+            Gets or sets the category identifier of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.Name">
+            <summary>
+            Gets or sets the name of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.Description">
+            <summary>
+            Gets or sets the description of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.Price">
+            <summary>
+            Gets or sets the price of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.ImageUrl">
+            <summary>
+            Gets or sets the URL of the item's image.
+            </summary>
+            <remarks>
+            The URL should not exceed 200 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.Available">
+            <summary>
+            Gets or sets a value indicating whether the item is available.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.Category">
+            <summary>
+            Gets or sets the category of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Item.OrderItems">
+            <summary>
+            Gets the collection of order items associated with the item.
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.Order">
+            <summary>
+            Represents an order in the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Order.Id">
+            <summary>
+            Gets or sets the unique identifier of the order.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Order.TransactionId">
+            <summary>
+            Gets or sets the unique identifier of the transaction associated with the order.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Order.OrderedAt">
+            <summary>
+            Gets or sets the date and time when the order was placed.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Order.Amount">
+            <summary>
+            Gets or sets the total amount of the order.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Order.Transaction">
+            <summary>
+            Gets or sets the transaction associated with the order.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Order.OrderItems">
+            <summary>
+            Gets the list of order items in the order.
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.OrderItem">
+            <summary>
+            Represents an order item in the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.Id">
+            <summary>
+            Gets or sets the unique identifier for the order item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.OrderId">
+            <summary>
+            Gets or sets the unique identifier for the order that this item belongs to.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.ItemId">
+            <summary>
+            Gets or sets the unique identifier for the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.Quantity">
+            <summary>
+            Gets or sets the quantity of the item in the order.
+            </summary>
+            <remarks>
+            The quantity should be between 1 and 100.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.Price">
+            <summary>
+            Gets or sets the price of the item.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.Status">
+            <summary>
+            Gets or sets the status of the order item.
+            </summary>
+            <remarks>
+            The default value is <see cref="F:SakuraSushi.Models.OrderItemStatus.Pending"/>.
+            </remarks>
+            <value>
+            The status of the order item.
+            </value>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.Order">
+            <summary>
+            Gets or sets the order that this item belongs to.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.OrderItem.Item">
+            <summary>
+            Gets or sets the item associated with this order item.
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.OrderItemStatus">
+            <summary>
+            Represents the status of an order item.
+            <code>
+                0 - Pending (Default) - The order item is pending.
+                1 - InProgress - The order item is being prepared.
+                2 - Completed - The order item is completed.
+                3 - Cancelled - The order item is cancelled.
+            </code>
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.RestaurantContext">
+            <summary>
+            Represents the database context for the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.Table">
+            <summary>
+            Represents a table in the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Table.Id">
+            <summary>
+            Gets or sets the unique identifier of the table.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Table.TableNumber">
+            <summary>
+            Gets or sets the table number.
+            </summary>
+            <remarks>
+            The table number should not exceed 10 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.Table.Capacity">
+            <summary>
+            Gets or sets the capacity of the table.
+            </summary>
+            <remarks>
+            The capacity should be between 1 and 20.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.Table.Transactions">
+            <summary>
+            Gets the collection of transactions associated with the table.
+            </summary>
+        </member>
+        <member name="T:SakuraSushi.Models.Transaction">
+            <summary>
+            Represents a transaction in the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.Id">
+            <summary>
+            Gets or sets the unique identifier of the transaction.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.TableId">
+            <summary>
+            Gets or sets the identifier of the table associated with the transaction.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.CashierId">
+            <summary>
+            Gets or sets the identifier of the cashier associated with the transaction.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.UniqueCode">
+            <summary>
+            Gets or sets the unique code of the transaction.
+            </summary>
+            <remarks>
+            The unique code should not exceed 10 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.OpenedAt">
+            <summary>
+            Gets or sets the date and time when the transaction was opened.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.ClosedAt">
+            <summary>
+            Gets or sets the date and time when the transaction was closed.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.TotalAmount">
+            <summary>
+            Gets or sets the total amount of the transaction.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.Table">
+            <summary>
+            Gets or sets the table associated with the transaction.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.Cashier">
+            <summary>
+            Gets or sets the cashier associated with the transaction.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.Orders">
+            <summary>
+            Gets the list of orders associated with the transaction.
+                /// </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.Transaction.CartItems">
+            <summary>
+            Gets the list of cart items associated with the transaction.
+            </summary>
+        </member>
+        <member name="M:SakuraSushi.Models.Transaction.GenerateRandomCode">
+            <summary>
+            Generates a random code for the transaction.
+            </summary>
+            <remarks>
+            The code is a 4-character alphanumeric string.
+            </remarks>
+            <returns>A randomly generated code.</returns>
+        </member>
+        <member name="T:SakuraSushi.Models.User">
+            <summary>
+            Represents a user in the Sakura Sushi application.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.User.Id">
+            <summary>
+            Gets or sets the unique identifier for the user.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.User.Username">
+            <summary>
+            Gets or sets the username of the user.
+            </summary>
+            <remarks>
+            The username should not exceed 20 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.User.PasswordHash">
+            <summary>
+            Gets or sets the hashed password of the user.
+            </summary>
+            <remarks>
+            The password hash should not exceed 100 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.User.FullName">
+            <summary>
+            Gets or sets the full name of the user.
+            </summary>
+            <remarks>
+            The full name should not exceed 100 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.User.Email">
+            <summary>
+            Gets or sets the email address of the user.
+            </summary>
+            <remarks>
+            The email address should not exceed 100 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.User.PhoneNumber">
+            <summary>
+            Gets or sets the phone number of the user.
+            </summary>
+            <remarks>
+            The phone number should not exceed 15 characters in length.
+            </remarks>
+        </member>
+        <member name="P:SakuraSushi.Models.User.Role">
+            <summary>
+            Gets or sets the role of the user.
+            </summary>
+        </member>
+        <member name="P:SakuraSushi.Models.User.Transactions">
+            <summary>
+            Gets the collection of transactions associated with the user.
+            </summary>
+        </member>
+        <member name="M:SakuraSushi.Models.User.HashPassword(System.String)">
+            <summary>
+            Hashes the specified password using SHA256 algorithm.
+            </summary>
+            <param name="password">The password to hash.</param>
+            <returns>The hashed password.</returns>
+        </member>
+        <member name="T:SakuraSushi.Models.UserRole">
+            <summary>
+            Represents the role of a user.
+            <code>
+            0 - Waiter
+            1 - Cashier
+            2 - Chef
+            </code>
+            </summary>
+        </member>
+    </members>
+</doc>
