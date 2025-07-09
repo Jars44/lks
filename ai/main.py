@@ -6,21 +6,28 @@ from tkinter import ttk
 from tkinter import Scrollbar, Text, Frame, Pack, Grid, Place
 import matplotlib as mpl
 import seaborn as sbn
+from collections import Counter
 
 df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.csv.xls")
-# x = df.drop('label', axis=1)
-# y = df['label']
 
-# total = 10
-# pA = 8 / total
-# pB = 2 / total
-# entropy = - (pA * log2(pA) + pB * log2(pB))
+# def entrophy(data):
+#     values, counts = np.unique(data, return_counts=True)
+#     probs = counts / counts.sum()
+#     entrophy = -np.sum(probs * np.log2(probs))
+#     return entrophy
 
-# print(entropy)
-# def entropy():
-#     df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.csv.xls")
-#     n = np()
+def entrophy(df):
+    total = len(df)
+    counter = Counter(df)
+    entrophy = 0
 
+    for jumlah in counter.values():
+        p = jumlah / total
+        entrophy -= p * log2(p)
+
+    return entrophy
+
+print(f"entropy: {entrophy(df)}")
 
 # age = df["age"]
 # # sex = df["sex"] = ["female" if x == 0 else x for x in df.sex]
