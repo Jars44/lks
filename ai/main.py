@@ -13,10 +13,9 @@ df = pd.read_csv(r"O:\Tugas\lks\ai\assets\Datasset LKS AI Kabupaten Malang 2025.
 # def entrophy(data):
 #     values, counts = np.unique(data, return_counts=True)
 #     probs = counts / counts.sum()
-#     entrophy = -np.sum(probs * np.log2(probs))
-#     return entrophy
+#     return -np.sum(probs * np.log2(probs)) 
 
-def entrophy(df):
+def entropy(df):
     total = len(df)
     counter = Counter(df)
     entrophy = 0
@@ -27,7 +26,50 @@ def entrophy(df):
 
     return entrophy
 
-print(f"entropy: {entrophy(df)}")
+print(f"entropy: {entropy(df)}")
+
+def gain(data, split_atribute_name, target_name=0):
+    total_entropy = entropy(data[target_name])
+    vals, counts = np.unique(data[split_atribute_name], return_counts=True)
+
+    weighted_entropy = 0
+    for i in range(len(vals)):
+        subset = data[data[split_atribute_name] == vals[i]]
+        weighted_entropy += (counts[i]/np.sum(counts)) * entropy(subset[target_name])
+
+    return total_entropy - weighted_entropy
+
+def build_tree(data, features, target_name=0):
+    target_values = data[target_name]
+
+    if len(np.unique(target_values)) == 1:
+        return np.unique(target_values)[0]
+    if len(features) == 0:
+        return target_values.mode()[0]
+
+    gains = [gain(data, f, target_name) for f in features]
+    best_features = features[np.argmax(gains)]
+
+    tree = {best_features: {}}
+    for value in np.unique(data[best_features]):
+        subset = data[data[best_features] == value].drop(columns=[best_features])
+        subtree = build_tree(subset, [f for f in features if f != best_features], target_name)
+        tree[best_features][value] = subtree
+
+    return tree
+
+def predict(query, tree):
+    for key in query:
+        if key in tree:
+            try:
+                subtree = tree[key][query[key]]
+                if isinstance(subtree, dict):
+                    return predict(query, subtree)
+                else:
+                    return subtree
+            except:
+                return "null"
+
 
 # age = df["age"]
 # # sex = df["sex"] = ["female" if x == 0 else x for x in df.sex]
@@ -53,7 +95,6 @@ print(f"entropy: {entrophy(df)}")
 #     if df.loc[x,"oldpeak"] == '':
 #         df.loc[x,"oldpeak"] = 0
 # print(df)
-
 
 
 window = tk.Tk()
