@@ -70,6 +70,8 @@ def predict(query, tree):
             except:
                 return "null"
 
+print(predict(df, 'idk'))
+
 
 # age = df["age"]
 # # sex = df["sex"] = ["female" if x == 0 else x for x in df.sex]
