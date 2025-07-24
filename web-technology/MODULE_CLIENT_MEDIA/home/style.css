@@ -43,16 +43,8 @@ body {
   border-width: medium;
 }
 
-.input:focus {
-  background-color: #CB3000;
-}
-
 .input::placeholder {
-  color: white;;
-}
-
-.option:hover {
-  background-color: white;
+  color: white;
 }
 
 .button-form {
