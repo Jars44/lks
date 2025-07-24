@@ -26,9 +26,46 @@ body {
   margin-top: 20px;
 }
 
-.input {
+.form-input {
   display: flex;
   flex-direction: column;
-  padding: 40px;
-  width: 20em;
+  width: 330px;
+  gap: 10px;
+}
+
+.input {
+  border-radius: 5px;
+  padding: 8px;
+  background-color: #CB3000;
+  color: white;
+  border-color: #000000;
+  border-style: solid;
+  border-width: medium;
+}
+
+.input:focus {
+  background-color: #CB3000;
+}
+
+.input::placeholder {
+  color: white;;
+}
+
+.option:hover {
+  background-color: white;
+}
+
+.button-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  padding: 10px 40px;
+  font-weight: 800;
+  border-radius: 5px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
