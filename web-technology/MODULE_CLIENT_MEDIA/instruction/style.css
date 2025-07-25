@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -15,9 +16,41 @@ body {
 }
 
 .container {
+  position: absolute;
+  width: 500px;
+  height: 400px;
   background-color: #000000;
-  opacity: 80%;
+  opacity: 90%;
   z-index: 99;
+  color: white;
+  line-height: 60px;
+}
+
+p {
+  line-height: 30px;
+}
+
+.container-text {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+}
+
+.cross {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 7px;
+  background-color: red;
+  color: white;
+  font-size: 40px;;
 }
 
 .form-container {

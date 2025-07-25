@@ -8,24 +8,33 @@
   </head>
   <body>
     <div class="container">
-      <div class="form-container">
-        <img src="../Images/logo.png" alt="logo" />
-        <form action="" class="form">
-          <div class="form-input">
-            <input class="input" type="text" placeholder="Input Username" />
-            <select id="level" class="input" required>
-              <option class="input" value="level" disabled selected hidden>Select Level</option>
-              <option class="option" value="1">Level 1</option>
-              <option class="option" value="2">Level 2</option>
-              <option class="option" value="3">Level 3</option>
-            </select>
-            <div class="button-form">
-              <button class="button">Play</button>
-              <button class="button">Instruction</button>
-            </div>
-          </div>
-        </form>
+      <div class="container-text">
+        <h1>How to play game</h1>
+        <p>1. Input Username</p>
+        <p>2. Put the bomb</p>
+        <p>3. Blow up as many walls as possible</p>
+        <p>4. Blow up enemies</p>
+        <p>5. Enjoy!</p>
       </div>
+      <button class="cross" onclick="document.location='/web-technology/MODULE_CLIENT_MEDIA/home/index.html'">⨯</button>
+    </div>
+    <div class="form-container">
+      <img src="../Images/logo.png" alt="logo" />
+      <form action="" class="form">
+        <div class="form-input">
+          <input class="input" type="text" placeholder="Input Username" />
+          <select id="level" class="input" required>
+            <option class="input" value="level" disabled selected hidden>Select Level</option>
+            <option class="option" value="1">Level 1</option>
+            <option class="option" value="2">Level 2</option>
+            <option class="option" value="3">Level 3</option>
+          </select>
+          <div class="button-form">
+            <button class="button">Play</button>
+            <button class="button">Instruction</button>
+          </div>
+        </div>
+      </form>
     </div>
   </body>
 </html>
