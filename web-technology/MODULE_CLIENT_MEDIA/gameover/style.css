@@ -1,4 +1,5 @@
-*, html  {
+*,
+html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -8,7 +9,6 @@
 body {
   color: white;
   background-color: #353535;
-
 }
 
 .container {
@@ -46,7 +46,7 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
 #wall-crack {
@@ -73,7 +73,7 @@ h2 {
 }
 
 .save {
-  background-color: #CB3000;
+  background-color: #cb3000;
   color: white;
   border: none;
   width: 160px;
@@ -86,7 +86,7 @@ h2 {
 }
 
 .leaderboard {
-  background-color: #006DA6;
+  background-color: #006da6;
   color: white;
   border: none;
   width: 180px;
@@ -95,5 +95,5 @@ h2 {
   cursor: pointer;
   font-weight: 800;
   text-align: center;
-  font-size: 1.3em; 
+  font-size: 1.3em;
 }
