@@ -6,23 +6,47 @@ html {
 }
 
 .container {
-  width: 60%;
-  height: auto;
+  width: auto;
+  height: 80%;
 }
 
 img {
   position: absolute;
   top: 50%;
-  left: 40px;
+  left: 5px;
   transform: translateY(-50%);
+  width: 70%;
+  height: auto;
 }
 
 .test {
   position: absolute;
   top: 50%;
-  right: 20%;
+  right: 5px;
   transform: translateY(-50%);
-  background-color: black;
-  width: 400px;
-  height: 100%;
+  background-color: #353535;
+  width: 446px;
+  height: 99%;
+}
+
+.logo {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heart {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: auto;
 }
