@@ -1,0 +1,405 @@
+*,
+html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* home page */
+
+.form-container {
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form {
+  margin-top: 20px;
+}
+
+.form-input {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  gap: 10px;
+}
+
+.input {
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #cb3000;
+  color: white;
+  border-color: #000000;
+  border-style: solid;
+  border-width: medium;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.input-username {
+  border-radius: 5px;
+  padding: 10px;
+  padding-left: px;
+  background-color: #cb3000;
+  color: white;
+  border-color: #000000;
+  border-style: solid;
+  border-width: medium;
+}
+
+.input-username::placeholder {
+  color: white;
+}
+
+.button-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-root {
+  padding: 10px 40px;
+  font-weight: 800;
+  border-radius: 5px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button-a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  width: 160px;
+}
+
+/* instruction page */
+
+.container-instruction {
+  position: absolute;
+  top: 30%;
+  left: 37%;
+  width: 500px;
+  height: 400px;
+  background-color: #000000;
+  opacity: 90%;
+  z-index: 99;
+  color: white;
+  line-height: 60px;
+}
+
+p {
+  line-height: 30px;
+}
+
+.container-text-instruction {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+}
+
+.cross-instruction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 7px;
+  background-color: red;
+  color: white;
+  font-size: 40px;
+}
+
+.form-container-instruction {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form-instruction {
+  margin-top: 20px;
+}
+
+.form-input-instruction {
+  display: flex;
+  flex-direction: column;
+  width: 330px;
+  gap: 10px;
+}
+
+.input-instruction {
+  border-radius: 5px;
+  padding: 8px;
+  background-color: #cb3000;
+  color: white;
+  border-color: #000000;
+  border-style: solid;
+  border-width: medium;
+}
+
+.input-instruction::placeholder {
+  color: white;
+}
+
+.button-form-instruction {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-instruction {
+  padding: 10px 40px;
+  font-weight: 800;
+  border-radius: 5px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* game page */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.background {
+  width: 1000px;
+  height: auto;
+}
+
+.player {
+  width: 80px;
+  height: auto;
+}
+
+.wall {
+  width: 100%;
+  height: auto;
+}
+
+.dog {
+  width: 80px;
+  height: auto;
+}
+
+.bomb {
+  width: 80px;
+  height: auto;
+}
+
+.grid-container {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(7, fr);
+}
+
+.grid-item {
+  width: 91px;
+  height: 91px;
+  text-align: center;
+  font-size: 24px;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  background-color: #818181;
+  width: 400px;
+}
+
+
+/* gameover page */
+
+.container-gameover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 93vh; 
+}
+
+.title-gameover {
+  text-align: center;
+  font-size: 4.5rem;
+}
+
+.subtitle-gameover {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 20px;
+}
+
+.stats-gameover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  gap: 20px;
+}
+
+.stats-gameover > h2 {
+  margin-right: 30px;
+}
+
+.gameover-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#wall-crack {
+  width: 60px;
+  height: auto;
+}
+
+#tnt {
+  width: 60px;
+  height: auto;
+}
+
+#ice {
+  width: 60px;
+  height: auto;
+}
+
+.buttons-gameover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.save-gameover {
+  background-color: #cb3000;
+  color: white;
+  border: none;
+  width: 160px;
+  height: 50px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 800;
+  text-align: center;
+  font-size: 1.3em;
+}
+
+.leaderboard-gameover {
+  background-color: #006da6;
+  color: white;
+  border: none;
+  width: 180px;
+  height: 50px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 800;
+  text-align: center;
+  font-size: 1.3em;
+}
+
+
+/* leaderboard page */
+
+.container-leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 93vh;
+}
+
+.table-leaderboard {
+  font-size: 1.5em;
+  width: 550px;
+  border-collapse: collapse;
+  margin-top: 30px;
+}
+
+.image-leaderboard {
+  width: 50px;
+  height: auto;
+}
+
+.table-leaderboard td {
+  padding: 10px;
+}
+
+.row-mid-leaderboard {
+  border-top: 1px solid #818181;
+  border-bottom: 1px solid #818181;
+}
+
+.stat-leaderboard {
+  text-align: center;
+}
+
+.stats-leaderboard {
+  text-align: center;
+}
+
+.button-leaderboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.play-leaderboard {
+  background-color: #cb3000;
+  color: white;
+  border: none;
+  width: 160px;
+  height: 50px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 800;
+  text-align: center;
+  font-size: 1.3em;
+}
+
+.reset-leaderboard {
+  background-color: #006da6;
+  color: white;
+  border: none;
+  width: 180px;
+  height: 50px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 800;
+  text-align: center;
+  font-size: 1.3em;
+}

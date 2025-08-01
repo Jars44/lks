@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOMSKUY</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section id="home" style="display: none;">
+      <div class="form-container">
+        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo.png" alt="logo" class="logo-root" />
+        <form action="" class="form">
+          <div class="form-input">
+            <input class="input-username" type="text" placeholder="Input Username" />
+            <select id="level-instruction" class="input" required>
+              <option class="input" value="level" disabled selected hidden>Select Level</option>
+              <option class="option" value="1">Level 1</option>
+              <option class="option" value="2">Level 2</option>
+              <option class="option" value="3">Level 3</option>
+            </select>
+            <div class="button-form">
+              <button class="button-root">Play</button>
+              <a href="" class="button-a">Instruction</a>
+            </div>
+          </div>
+        </form>
+      </div>  
+    </section>
+    <section id="instruction" style="display: none;">
+      <div class="container-instruction">
+        <div class="container-text-instruction">
+          <h1>How to play game</h1>
+          <p>1. Input Username</p>
+          <p>2. Put the bomb</p>
+          <p>3. Blow up as many walls as possible</p>
+          <p>4. Blow up enemies</p>
+          <p>5. Enjoy!</p>
+        </div>
+        <button class="cross-instruction" onclick="document.location='/web-technology/MODULE_CLIENT_MEDIA/home/index.html'">
+          ⨯
+        </button>
+      </div>
+      <div class="form-container-instruction">
+        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo.png" alt="logo" />
+        <form action="" class="form-instruction">
+          <div class="form-input-instruction">
+            <input class="input-instruction" type="text" placeholder="Input Username" />
+            <select id="level" class="input-instruction" required>
+              <option class="input-instruction" value="level" disabled selected hidden">Select Level</option>
+              <option class="option" value="1">Level 1</option>
+              <option class="option" value="2">Level 2</option>
+              <option class="option" value="3">Level 3</option>
+            </select>
+            <div class="button-form-instruction">
+              <button class="button-instruction">Play</button>
+              <button class="button-instruction">Instruction</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+    <section id="game" style="display: none;">
+      <div class="container">
+        <img class="background" src="/web-technology/MODULE_CLIENT_MEDIA/Images/background.jpg" alt="background" />
+        <div class="grid-container">
+          <div class="grid-item">1</div>
+          <div class="grid-item">2</div>
+          <div class="grid-item">3</div>
+          <div class="grid-item">4</div>
+          <div class="grid-item">5</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">
+            <img class="dog" src="/web-technology/MODULE_CLIENT_MEDIA/Images/dog_down.png" alt="dog" />
+          </div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">9</div>
+          <div class="grid-item" id="player">
+            <img class="player" src="/web-technology/MODULE_CLIENT_MEDIA/Images/char_down.png" alt="player" />
+          </div>
+          <div class="grid-item">11</div>
+          <div class="grid-item">12</div>
+          <div class="grid-item">13</div>
+          <div class="grid-item">14</div>
+          <div class="grid-item">15</div>
+          <div class="grid-item">16</div>
+          <div class="grid-item">17</div>
+          <div class="grid-item">18</div>
+          <div class="grid-item">19</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">
+            <img class="bomb" src="/web-technology/MODULE_CLIENT_MEDIA/Images/bomb.png" alt="bomb" />
+          </div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">26</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">28</div>
+          <div class="grid-item">29</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">31</div>
+          <div class="grid-item">32</div>
+          <div class="grid-item">33</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">35</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">37</div>
+          <div class="grid-item">38</div>
+          <div class="grid-item">39</div>
+          <div class="grid-item">40</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">42</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">44</div>
+          <div class="grid-item">45</div>
+          <div class="grid-item">46</div>
+          <div class="grid-item">47</div>
+          <div class="grid-item">48</div>
+          <div class="grid-item">49</div>
+          <div class="grid-item">50</div>
+          <div class="grid-item">51</div>
+          <div class="grid-item">52</div>
+          <div class="grid-item">53</div>
+          <div class="grid-item">54</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">56</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">58</div>
+          <div class="grid-item">
+            <img class="wall" src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png" alt="wall" />
+          </div>
+          <div class="grid-item">60</div>
+          <div class="grid-item">61</div>
+          <div class="grid-item">62</div>
+          <div class="grid-item">63</div>
+        </div>
+        <!-- <div class="stats">
+        <h1>Game Stats</h1>
+        <p>Player :David</p>
+        <p>Time :01:22</p>
+        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png" alt="health indicator" />
+        <img
+          src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
+          alt="wall_crack"
+          id="wall-crack-1"
+          class="gameover-images"
+        />
+        <h2>= 4</h2>
+        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-1" class="gameover-images" />
+        <h2>= 0</h2>
+        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-1" class="gameover-images" />
+        <h2>= 1</h2>
+      </div> -->
+      </div>
+    </section>
+    <section id="gameover" style="display: none;">
+      <div class="container-gameover">
+        <h1 class="title-gameover">Game Over!</h1>
+        <h2 class="subtitle-gameover">Good job David! Your time 01:22 with result:</h2>
+        <div class="stats-gameover">
+          <img
+            src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
+            alt="wall_crack"
+            id="wall-crack-gameover"
+            class="gameover-images"
+          />
+          <h2>= 4</h2>
+          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-gameover" class="gameover-images" />
+          <h2>= 0</h2>
+          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-gameover" class="gameover-images" />
+          <h2>= 1</h2>
+        </div>
+        <div class="buttons-gameover">
+          <button class="save-gameover">Save Score</button>
+          <button class="leaderboard-gameover" onclick="document.location='/web-technology/MODULE_CLIENT_MEDIA/leaderboard'">
+            Leaderboard
+          </button>
+        </div>
+      </div>
+    </section>
+    <section id="leaderboard" style="display: block;">
+      <div class="container-leaderboard">
+        <h1 style="font-size: 4rem">Leaderboards</h1>
+        <div class="table-container">
+          <table class="table-leaderboard">
+            <tr>
+              <th style="text-align: left">Player Name</th>
+              <th>Time</th>
+              <th>
+                <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png" alt="wall_crack" class="image-leaderboard" />
+              </th>
+              <th>
+                <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" class="image-leaderboard" />
+              </th>
+              <th>
+                <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" class="image-leaderboard" />
+              </th>
+            </tr>
+            <tr>
+              <td>David</td>
+              <td class="stat-leaderboard">05:30</td>
+              <td class="stats-leaderboard">9</td>
+              <td class="stats-leaderboard">1</td>
+              <td class="stats-leaderboard">1</td>
+            </tr>
+            <tr class="row-mid-leaderboard">
+              <td>Joni</td>
+              <td class="stat-leaderboard">01:20</td>
+              <td class="stats-leaderboard">4</td>
+              <td class="stats-leaderboard">0</td>
+              <td class="stats-leaderboard">1</td>
+            </tr>
+            <tr class="row-leaderboard">
+              <td>Hikmat</td>
+              <td class="stat-leaderboard">00:50</td>
+              <td class="stats-leaderboard">1</td>
+              <td class="stats-leaderboard">2</td>
+              <td class="stats-leaderboard">0</td>
+            </tr>
+          </table>
+        </div>
+        <div class="button-leaderboard">
+          <button class="play-leaderboard">Play Again</button>
+          <button class="reset-leaderboard">Reset</button>
+        </div>
+      </div>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>
