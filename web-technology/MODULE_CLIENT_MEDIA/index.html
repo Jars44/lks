@@ -7,21 +7,21 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <section id="home" style="display: none;">
+    <section id="home" style="display: block;">
       <div class="form-container">
         <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo.png" alt="logo" class="logo-root" />
         <form action="" class="form">
           <div class="form-input">
-            <input class="input-username" type="text" placeholder="Input Username" />
+            <input class="input-username" type="text" placeholder="Input Username" required/>
             <select id="level-instruction" class="input" required>
-              <option class="input" value="level" disabled selected hidden>Select Level</option>
-              <option class="option" value="1">Level 1</option>
-              <option class="option" value="2">Level 2</option>
-              <option class="option" value="3">Level 3</option>
+              <option class="input" value="level" disabled selected hidden>Select Difficulty</option>
+              <option class="option" value="1">Easy</option>
+              <option class="option" value="2">Medium</option>
+              <option class="option" value="3">Hard</option>
             </select>
             <div class="button-form">
               <button class="button-root">Play</button>
-              <a href="" class="button-a">Instruction</a>
+              <a href="" class="button-root" id="button-instruction">Instruction</a>
             </div>
           </div>
         </form>
@@ -37,7 +37,7 @@
           <p>4. Blow up enemies</p>
           <p>5. Enjoy!</p>
         </div>
-        <button class="cross-instruction" onclick="document.location='/web-technology/MODULE_CLIENT_MEDIA/home/index.html'">
+        <button class="cross-instruction" id="cross-instruction">
           ⨯
         </button>
       </div>
@@ -47,7 +47,7 @@
           <div class="form-input-instruction">
             <input class="input-instruction" type="text" placeholder="Input Username" />
             <select id="level" class="input-instruction" required>
-              <option class="input-instruction" value="level" disabled selected hidden">Select Level</option>
+              <option class="input-instruction" value="level" disabled selected hidden>Select Level</option>
               <option class="option" value="1">Level 1</option>
               <option class="option" value="2">Level 2</option>
               <option class="option" value="3">Level 3</option>
@@ -60,7 +60,7 @@
         </form>
       </div>
     </section>
-    <section id="game" style="display: block;">
+    <section id="game" style="display: none;">
       <div class="container">
         <img class="background" src="/web-technology/MODULE_CLIENT_MEDIA/Images/background.jpg" alt="background" />
         <div class="grid-container">
