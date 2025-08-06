@@ -7,27 +7,27 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <section id="home" style="display: block;">
+    <section id="home" style="display: block">
       <div class="form-container">
         <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo.png" alt="logo" class="logo-root" />
-        <form action="" class="form">
+        <form class="form">
           <div class="form-input">
-            <input class="input-username" type="text" placeholder="Input Username" required/>
-            <select id="level-instruction" class="input" required>
-              <option class="input" value="level" disabled selected hidden>Select Difficulty</option>
-              <option class="option" value="1">Easy</option>
-              <option class="option" value="2">Medium</option>
-              <option class="option" value="3">Hard</option>
+            <input class="input-username" type="text" placeholder="Input Username" id="username" required />
+            <select id="level" class="input" required>
+              <option class="input" value="0" disabled selected hidden>Select Difficulty</option>
+              <option class="input" id="difficulty" value="1">Easy</option>
+              <option class="input" id="difficulty" value="2">Medium</option>
+              <option class="input" id="difficulty" value="3">Hard</option>
             </select>
             <div class="button-form">
-              <button class="button-root">Play</button>
-              <a href="" class="button-root" id="button-instruction">Instruction</a>
+              <button class="button-root" id="button-play" onclick="Play()">Play</button>
+              <button class="button-root" id="button-instruction" onclick="Instruction()">Instruction</button>
             </div>
           </div>
         </form>
-      </div>  
+      </div>
     </section>
-    <section id="instruction" style="display: none;">
+    <section id="instruction" style="display: none">
       <div class="container-instruction">
         <div class="container-text-instruction">
           <h1>How to play game</h1>
@@ -37,9 +37,7 @@
           <p>4. Blow up enemies</p>
           <p>5. Enjoy!</p>
         </div>
-        <button class="cross-instruction" id="cross-instruction">
-          ⨯
-        </button>
+        <button class="cross-instruction" id="cross-instruction" onclick="CloseInstruction()">⨯</button>
       </div>
       <div class="form-container-instruction">
         <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo.png" alt="logo" />
@@ -60,7 +58,7 @@
         </form>
       </div>
     </section>
-    <section id="game" style="display: none;">
+    <section id="game" style="display: none">
       <div class="container">
         <img class="background" src="/web-technology/MODULE_CLIENT_MEDIA/Images/background.jpg" alt="background" />
         <div class="grid-container">
@@ -167,25 +165,25 @@
           <div class="grid-item">63</div>
         </div>
         <div class="stats">
-        <h1>Game Stats</h1>
-        <p>Player :David</p>
-        <p>Time :01:22</p>
-        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png" alt="health indicator" />
-        <img
-          src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
-          alt="wall_crack"
-          id="wall-crack-1"
-          class="gameover-images"
-        />
-        <h2>= 4</h2>
-        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-1" class="gameover-images" />
-        <h2>= 0</h2>
-        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-1" class="gameover-images" />
-        <h2>= 1</h2>
-      </div>
+          <h1>Game Stats</h1>
+          <p>Player :David</p>
+          <p>Time :01:22</p>
+          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png" alt="health indicator" />
+          <img
+            src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
+            alt="wall_crack"
+            id="wall-crack-1"
+            class="gameover-images"
+          />
+          <h2>= 4</h2>
+          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-1" class="gameover-images" />
+          <h2>= 0</h2>
+          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-1" class="gameover-images" />
+          <h2>= 1</h2>
+        </div>
       </div>
     </section>
-    <section id="gameover" style="display: none;">
+    <section id="gameover" style="display: none">
       <div class="container-gameover">
         <h1 class="title-gameover">Game Over!</h1>
         <h2 class="subtitle-gameover">Good job David! Your time 01:22 with result:</h2>
@@ -197,20 +195,33 @@
             class="gameover-images"
           />
           <h2>= 4</h2>
-          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-gameover" class="gameover-images" />
+          <img
+            src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png"
+            alt="tnt"
+            id="tnt-gameover"
+            class="gameover-images"
+          />
           <h2>= 0</h2>
-          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-gameover" class="gameover-images" />
+          <img
+            src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png"
+            alt="ice"
+            id="ice-gameover"
+            class="gameover-images"
+          />
           <h2>= 1</h2>
         </div>
         <div class="buttons-gameover">
           <button class="save-gameover">Save Score</button>
-          <button class="leaderboard-gameover" onclick="document.location='/web-technology/MODULE_CLIENT_MEDIA/leaderboard'">
+          <button
+            class="leaderboard-gameover"
+            onclick="document.location='/web-technology/MODULE_CLIENT_MEDIA/leaderboard'"
+          >
             Leaderboard
           </button>
         </div>
       </div>
     </section>
-    <section id="leaderboard" style="display: none;">
+    <section id="leaderboard" style="display: none">
       <div class="container-leaderboard">
         <h1 style="font-size: 4rem">Leaderboards</h1>
         <div class="table-container">
@@ -219,7 +230,11 @@
               <th style="text-align: left">Player Name</th>
               <th>Time</th>
               <th>
-                <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png" alt="wall_crack" class="image-leaderboard" />
+                <img
+                  src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
+                  alt="wall_crack"
+                  class="image-leaderboard"
+                />
               </th>
               <th>
                 <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" class="image-leaderboard" />
