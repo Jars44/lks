@@ -7,12 +7,14 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- Loading Screen Section -->
-    <section id="loading" style="display: none">
-      <div class="loading-container">
-        <div class="loading-spinner"></div>
-        <h2 class="loading-text">Loading Game...</h2>
-        <p class="loading-subtext">Preparing your adventure</p>
+    <!-- Loading Screen Overlay -->
+    <section id="loading-overlay" style="display: none">
+      <div class="loading-popup">
+        <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <h2 class="loading-text">Loading Game...</h2>
+          <div class="countdown">3</div>
+        </div>
       </div>
     </section>
 
@@ -81,8 +83,8 @@
       </div>
     </section>
 
-    <!-- Game Section with Pause Button -->
-    <section id="game" style="display: block">
+    <!-- Game Section  -->
+    <section id="game" style="display: none">
       <div class="container-game">
         <img class="background" src="/web-technology/MODULE_CLIENT_MEDIA/Images/background.jpg" alt="background" />
         <button class="pause-game-button" onclick="pauseGame()" title="Press ESC to pause">⏸</button>
@@ -195,7 +197,7 @@
             <p class="name">Player :David</p>
             <p class="time">Time :01:22</p>
           </div>
-          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png" alt="health indicator" />
+          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png" alt="health indicator" class="heart_indicator" />
           <div class="container-stats">
             <div class="wall-score">
               <img

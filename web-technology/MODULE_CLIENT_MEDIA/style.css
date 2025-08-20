@@ -14,24 +14,42 @@ body {
   height: 100vh;
 }
 
-/* Loading Screen Styles */
-.loading-container {
+/* Loading Screen Popup Styles */
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  z-index: 9999;
+}
+
+.loading-popup {
   background-color: #000000;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
   color: white;
+  box-shadow: 0 0 20px rgba(203, 48, 0, 0.5);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid #f3f3f3;
-  border-top: 6px solid #cb3000;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #333;
+  border-top: 4px solid #cb3000;
   border-radius: 50%;
-  animation: spin 2s linear infinite;
+  animation: spin 1s linear infinite;
   margin-bottom: 20px;
 }
 
@@ -41,27 +59,38 @@ body {
 }
 
 .loading-text {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
 }
 
-.loading-subtext {
-  font-size: 1.2rem;
-  color: #cccccc;
+.countdown {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #cb3000;
+  margin-top: 10px;
 }
 
 /* Pause Overlay Styles */
+#pause-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998;
+}
+
 .pause-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: #000000;
   padding: 40px;
-  border-radius: 10px;
+  border-radius: 15px;
   text-align: center;
   color: white;
-  z-index: 1000;
+  box-shadow: 0 0 20px rgba(203, 48, 0, 0.5);
 }
 
 .pause-title {
@@ -302,6 +331,11 @@ body {
 .logo-game {
   margin-top: 40px;
   height: 40px;
+  width: auto;
+}
+
+.heart-indicator {
+  height: 10px;
   width: auto;
 }
 

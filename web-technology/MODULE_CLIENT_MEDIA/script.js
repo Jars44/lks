@@ -1,19 +1,31 @@
-document.getElementById("home").style.display = "none";
+document.getElementById("home").style.display = "block";
 
 // Game state variables
 let isPaused = false;
 let gameInterval;
+let countdownInterval;
 
 // Loading screen and pause functionality
 function showLoadingScreen() {
-  document.getElementById("loading").style.display = "flex";
-  document.getElementById("home").style.display = "none";
-  document.getElementById("game").style.display = "none";
+  document.getElementById("loading-overlay").style.display = "flex";
+  let countdown = 3;
+  const countdownElement = document.querySelector('.countdown');
+  
+  countdownElement.textContent = countdown;
+  
+  countdownInterval = setInterval(() => {
+    countdown--;
+    countdownElement.textContent = countdown;
+    
+    if (countdown <= 0) {
+      clearInterval(countdownInterval);
+      hideLoadingScreen();
+    }
+  }, 1000);
 }
 
 function hideLoadingScreen() {
-  document.getElementById("loading").style.display = "none";
-  document.getElementById("game").style.display = "block";
+  document.getElementById("loading-overlay").style.display = "none";
 }
 
 function pauseGame() {
@@ -34,6 +46,7 @@ function resumeGame() {
 
 function goToHome() {
   document.getElementById("pause-overlay").style.display = "none";
+  document.getElementById("game").style.display = "none";
   document.getElementById("home").style.display = "block";
 }
 
@@ -56,12 +69,11 @@ function Play() {
     difficulty.setCustomValidity("");
   }
   
-  // Show loading screen
+  // Show loading screen with countdown
   showLoadingScreen();
   
-  // Simulate loading for 3 seconds
+  // After countdown finishes, start game
   setTimeout(() => {
-    hideLoadingScreen();
     document.getElementById("home").style.display = "none";
     document.getElementById("game").style.display = "block";
     console.log("Game started with username:", username.value, "and difficulty:", difficulty.value);
