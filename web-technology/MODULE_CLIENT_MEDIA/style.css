@@ -310,12 +310,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-}
-
-.background {
-  width: 1000px;
-  height: auto;
 }
 
 .stat {
@@ -335,7 +329,7 @@ body {
 }
 
 .heart-indicator {
-  height: 10px;
+  height: 120px;
   width: auto;
 }
 
@@ -367,14 +361,14 @@ body {
 }
 
 .grid-item {
-  width: 91px;
-  height: 91px;
+  width: 64px;
+  height: 64px;
   text-align: center;
   font-size: 1.5rem;
   color: #ffffff;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .container-stats {
@@ -404,11 +398,11 @@ body {
 .stats {
   padding: 50px;
   position: absolute;
-  top: 88px;
-  right: 60px;
+  top: 150px;
+  right: 83px;
   background-color: #353535;
-  width: 400px;
-  height: 820px;
+  width: 200px;
+  height: 578px;
   color: white;
 }
 

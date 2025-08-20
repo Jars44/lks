@@ -1,4 +1,4 @@
-document.getElementById("home").style.display = "block";
+document.getElementById("game").style.display = "block";
 
 // Game state variables
 let isPaused = false;
