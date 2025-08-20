@@ -7,26 +7,48 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <section id="home" style="display: block">
+    <!-- Loading Screen Section -->
+    <section id="loading" style="display: none">
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <h2 class="loading-text">Loading Game...</h2>
+        <p class="loading-subtext">Preparing your adventure</p>
+      </div>
+    </section>
+
+    <section id="home" style="display: none">
       <div class="form-container">
         <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo.png" alt="logo" class="logo-root" />
         <form class="form">
           <div class="form-input">
             <input class="input-username" type="text" placeholder="Input Username" id="username" required />
             <select id="level" class="input" required>
-              <option class="input" value="0" disabled selected hidden>Select Difficulty</option>
-              <option class="input" id="difficulty" value="1">Easy</option>
-              <option class="input" id="difficulty" value="2">Medium</option>
-              <option class="input" id="difficulty" value="3">Hard</option>
+              <option class="option" value="0" disabled selected hidden>Select Difficulty</option>
+              <option class="option" id="difficulty" value="1">Easy</option>
+              <option class="option" id="difficulty" value="2">Medium</option>
+              <option class="option" id="difficulty" value="3">Hard</option>
             </select>
             <div class="button-form">
-              <button class="button-root" id="button-play" onclick="Play()">Play</button>
+              <button type="button" class="button-root" id="button-play" onclick="Play()">Play</button>
               <button class="button-root" id="button-instruction" onclick="Instruction()">Instruction</button>
             </div>
           </div>
         </form>
       </div>
     </section>
+
+    <!-- Pause Overlay -->
+    <section id="pause-overlay" style="display: none">
+      <div class="pause-container">
+        <h1 class="pause-title">Game Paused</h1>
+        <p class="pause-subtitle">Press ESC to resume</p>
+        <div class="pause-buttons">
+          <button class="pause-button" onclick="resumeGame()">Resume</button>
+          <button class="pause-button" onclick="goToHome()">Main Menu</button>
+        </div>
+      </div>
+    </section>
+
     <section id="instruction" style="display: none">
       <div class="container-instruction">
         <div class="container-text-instruction">
@@ -58,9 +80,12 @@
         </form>
       </div>
     </section>
-    <section id="game" style="display: none">
-      <div class="container">
+
+    <!-- Game Section with Pause Button -->
+    <section id="game" style="display: block">
+      <div class="container-game">
         <img class="background" src="/web-technology/MODULE_CLIENT_MEDIA/Images/background.jpg" alt="background" />
+        <button class="pause-game-button" onclick="pauseGame()" title="Press ESC to pause">⏸</button>
         <div class="grid-container">
           <div class="grid-item">1</div>
           <div class="grid-item">2</div>
@@ -165,21 +190,41 @@
           <div class="grid-item">63</div>
         </div>
         <div class="stats">
-          <h1>Game Stats</h1>
-          <p>Player :David</p>
-          <p>Time :01:22</p>
+          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo_white.png" alt="" class="logo-game">
+          <div class="stat">
+            <p class="name">Player :David</p>
+            <p class="time">Time :01:22</p>
+          </div>
           <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png" alt="health indicator" />
-          <img
-            src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
-            alt="wall_crack"
-            id="wall-crack-1"
-            class="gameover-images"
-          />
-          <h2>= 4</h2>
-          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-1" class="gameover-images" />
-          <h2>= 0</h2>
-          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-1" class="gameover-images" />
-          <h2>= 1</h2>
+          <div class="container-stats">
+            <div class="wall-score">
+              <img
+                src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
+                alt="wall_crack"
+                id="wall-crack-1"
+                class="game-images"
+              />
+              <h2>= 4</h2>
+            </div>
+            <div class="tnt-score">
+              <img
+                src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png"
+                alt="tnt"
+                id="tnt-1"
+                class="game-images"
+              />
+              <h2>= 0</h2>
+            </div>
+            <div class="ice-score">
+              <img
+                src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png"
+                alt="ice"
+                id="ice-1"
+                class="game-images"
+              />
+              <h2>= 1</h2>
+            </div>
+          </div>
         </div>
       </div>
     </section>
