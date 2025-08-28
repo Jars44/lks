@@ -46,7 +46,11 @@ target_entropy = entropy(target)
 print(f"Target entropy: {target_entropy}")
 
 # Visualization
-numerical_features = ['age', 'trestbps', 'chol']
+numerical_features = df.select_dtypes(include=[np.number]).columns.tolist()
+
+if 'target' in numerical_features:
+    numerical_features.remove('target')
+
 df[numerical_features].hist(bins=15, figsize=(15, 5))
 plt.suptitle('Distribusi Fitur Numerik')
 plt.show()
