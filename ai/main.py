@@ -17,18 +17,18 @@ target = df['target']
 # EDA
 descriptive_stats = df.describe()
 
-print("Informasi Dataset:")
-print(f"Bentuk dataset: {df.shape}")
-print(f"Bentuk Fitur: {features.shape}")
-print(f"Bentuk Target: {target.shape}")
+print("Dataset information:")
+print(f"Dataset shape: {df.shape}")
+print(f"Features shape: {features.shape}")
+print(f"Target shape: {target.shape}")
 
-print("\nNilai yang Hilang:")
+print("\nMissing values:")
 print(missing_values)
 
-print("\nStatistik Deskriptif:")
+print("\Descirptive statistics:")
 print(descriptive_stats)
 
-print("\nDistribusi Target:")
+print("\Target distribution:")
 print(target.value_counts())
 
 def entropy(df):
@@ -43,24 +43,23 @@ def entropy(df):
     return entrophy
 
 target_entropy = entropy(target)
-print(f"\nEntropi Target: {target_entropy}")
+print(f"Target entropy: {target_entropy}")
 
-# Visualisasi Distribusi Fitur Numerik
+# Visualization
 numerical_features = ['age', 'trestbps', 'chol']
 df[numerical_features].hist(bins=15, figsize=(15, 5))
 plt.suptitle('Distribusi Fitur Numerik')
 plt.show()
 
-# Visualisasi Korelasi antar Fitur
 plt.figure(figsize=(12, 10))
 correlation_matrix = df.corr()
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
 plt.title('Heatmap Korelasi Fitur')
 plt.show()
 
-# Visualisasi Distribusi Target
 plt.figure(figsize=(6, 4))
 sns.countplot(x=target)
-plt.title('Distribusi Target')
+plt.title('Target Distribution')
 plt.xlabel('Target')
 plt.ylabel('Jumlah')
+plt.show()
