@@ -25,25 +25,11 @@ print(f"Target shape: {target.shape}")
 print("\nMissing values:")
 print(missing_values)
 
-print("\Descirptive statistics:")
+print("\Descriptive statistics:")
 print(descriptive_stats)
 
 print("\Target distribution:")
 print(target.value_counts())
-
-def entropy(df):
-    total = len(df)
-    counter = Counter(df)
-    entrophy = 0
-
-    for jumlah in counter.values():
-        p = jumlah / total
-        entrophy -= p * log2(p)
-
-    return entrophy
-
-target_entropy = entropy(target)
-print(f"Target entropy: {target_entropy}")
 
 # Visualization
 numerical_features = df.select_dtypes(include=[np.number]).columns.tolist()
@@ -67,3 +53,17 @@ plt.title('Target Distribution')
 plt.xlabel('Target')
 plt.ylabel('Jumlah')
 plt.show()
+
+def entropy(df):
+    total = len(df)
+    counter = Counter(df)
+    entrophy = 0
+
+    for jumlah in counter.values():
+        p = jumlah / total
+        entrophy -= p * log2(p)
+
+    return entrophy
+
+target_entropy = entropy(target)
+print(f"Target entropy: {target_entropy}")
