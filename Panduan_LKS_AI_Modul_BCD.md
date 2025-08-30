@@ -1,38 +1,4 @@
-# Panduan Teknis LKS AI Kabupaten Malang 2025 - Modul B, C, dan D
-
-## 📋 Daftar Isi
-
-- [Prasyarat Teknis](#-prasyarat-teknis)
-- [Modul B: Data Classification](#-modul-b-data-classification)
-- [Modul C: Evaluasi Model](#-modul-c-evaluasi-model)
-- [Modul D: GUI untuk Uji Coba Data Baru](#-modul-d-gui-untuk-uji-coba-data-baru)
-- [Tips dan Strategi](#-tips-dan-strategi)
-
----
-
-## 🛠 Prasyarat Teknis
-
-### Software yang Diperlukan:
-
-- **Python 3.9+**
-- **Visual Studio Code** (IDE yang disarankan)
-- **Anaconda** (opsional, untuk package management)
-- **Jupyter Notebook** (opsional)
-
-### Library Python yang Diperbolehkan:
-
-```bash
-pip install numpy pandas scikit-learn matplotlib seaborn tkinter
-```
-
-### Spesifikasi Hardware Minimal:
-
-- Processor: Intel i5 atau setara
-- RAM: 8GB
-- Storage: 500GB
-- OS: Windows 10 atau lebih baru
-
----
+# Panduan pengerjaan module b, c, dan d
 
 ## 📊 Modul B: Data Classification (120 Menit)
 
@@ -47,9 +13,6 @@ Melakukan klasifikasi data menggunakan algoritma decision tree untuk memprediksi
 ```python
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
 import matplotlib.pyplot as plt
 
 # Load dataset hasil dari Modul A
@@ -59,56 +22,145 @@ data = pd.read_csv('dataset_preprocessed.csv')
 X = data.drop('target_column', axis=1)  # Ganti 'target_column' dengan nama kolom target
 y = data['target_column']
 
-# Split data 80% training, 20% testing
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Split data 80% training, 20% testing (manual implementation)
+def manual_train_test_split(X, y, test_size=0.2, random_state=42):
+    """
+    Manual implementation of train-test split
+    """
+    np.random.seed(random_state)
+    indices = np.arange(len(X))
+    np.random.shuffle(indices)
+    
+    test_count = int(len(X) * test_size)
+    test_indices = indices[:test_count]
+    train_indices = indices[test_count:]
+    
+    X_train = X.iloc[train_indices]
+    X_test = X.iloc[test_indices]
+    y_train = y.iloc[train_indices]
+    y_test = y.iloc[test_indices]
+    
+    return X_train, X_test, y_train, y_test
+
+X_train, X_test, y_train, y_test = manual_train_test_split(X, y, test_size=0.2, random_state=42)
 ```
 
-#### 2. Implementasi Decision Tree
+#### 2. Implementasi Decision Tree (Manual)
+**Catatan Penting**: Karena scikit-learn tidak termasuk dalam library yang diperbolehkan, peserta perlu mengimplementasikan decision tree secara manual menggunakan numpy dan pandas.
 
 ```python
-# Buat model decision tree dengan parameter optimal
-model = DecisionTreeClassifier(
-    max_depth=5,           # Batas kedalaman pohon
-    min_samples_split=2,   # Minimal sampel untuk split
-    min_samples_leaf=1,    # Minimal sampel di leaf node
-    random_state=42,       # Untuk reproducibility
-    criterion='gini'       # Kriteria split: 'gini' atau 'entropy'
-)
+# Implementasi manual decision tree (contoh sederhana)
+import numpy as np
+import pandas as pd
 
-# Train model
-model.fit(X_train, y_train)
+def manual_decision_tree(X_train, y_train, X_test, max_depth=5):
+    """
+    Implementasi sederhana decision tree manual
+    Ini adalah contoh dasar - peserta perlu mengembangkan sesuai kebutuhan
+    """
+    # Hitung entropy atau gini untuk setiap fitur
+    # Implementasi split criteria manual
+    # Bangun pohon secara rekursif
+    
+    # Contoh sederhana: majority voting untuk klasifikasi
+    unique_classes, counts = np.unique(y_train, return_counts=True)
+    majority_class = unique_classes[np.argmax(counts)]
+    
+    # Prediksi sederhana (harus dikembangkan lebih lanjut)
+    predictions = [majority_class] * len(X_test)
+    
+    return predictions
 
-# Prediksi pada data test
-y_pred = model.predict(X_test)
+# Gunakan implementasi manual
+y_pred = manual_decision_tree(X_train, y_train, X_test)
 ```
 
-#### 3. Visualisasi Decision Tree
-
+#### 3. Visualisasi Decision Tree (Manual)
 ```python
-# Visualisasi pohon keputusan
-plt.figure(figsize=(20,10))
-tree.plot_tree(model,
-               feature_names=X.columns,
-               class_names=[str(x) for x in model.classes_],
-               filled=True,
-               rounded=True,
-               proportion=True)
-plt.title("Visualisasi Decision Tree")
-plt.savefig('decision_tree_visualization.png', dpi=300, bbox_inches='tight')
-plt.show()
+# Karena tidak ada scikit-learn, buat visualisasi manual sederhana
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+
+def visualize_manual_tree():
+    """
+    Visualisasi sederhana struktur decision tree
+    Peserta dapat mengembangkan visualisasi yang lebih detail
+    """
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    # Contoh visualisasi node sederhana
+    nodes = [
+        ("Root", (0.5, 0.9), "Feature X <= 0.5"),
+        ("Left", (0.3, 0.6), "Class A"),
+        ("Right", (0.7, 0.6), "Feature Y <= 1.0"),
+        ("Right-Left", (0.5, 0.3), "Class B"),
+        ("Right-Right", (0.9, 0.3), "Class C")
+    ]
+    
+    for node_name, pos, decision in nodes:
+        circle = patches.Circle(pos, 0.05, fill=True, color='lightblue')
+        ax.add_patch(circle)
+        ax.text(pos[0], pos[1], node_name, ha='center', va='center', fontsize=8)
+        ax.text(pos[0], pos[1]-0.07, decision, ha='center', va='center', fontsize=6)
+    
+    # Tambahkan garis penghubung
+    connections = [((0.5, 0.9), (0.3, 0.6)), ((0.5, 0.9), (0.7, 0.6)), 
+                  ((0.7, 0.6), (0.5, 0.3)), ((0.7, 0.6), (0.9, 0.3))]
+    
+    for start, end in connections:
+        ax.plot([start[0], end[0]], [start[1], end[1]], 'k-', lw=1)
+    
+    plt.title("Visualisasi Manual Decision Tree")
+    plt.axis('off')
+    plt.savefig('manual_decision_tree.png', dpi=300, bbox_inches='tight')
+    plt.show()
+
+visualize_manual_tree()
 ```
 
-#### 4. Penjelasan Matematis (Opsional untuk Bonus)
-
+#### 4. Penjelasan Matematis (Wajib)
 ```python
-# Hitung importance feature
-feature_importance = pd.DataFrame({
-    'feature': X.columns,
-    'importance': model.feature_importances_
-}).sort_values('importance', ascending=False)
+# Hitung importance feature manual (contoh menggunakan information gain)
+def calculate_information_gain(X, y, feature):
+    """
+    Hitung information gain untuk suatu feature secara manual
+    """
+    # Hitung entropy total
+    total_entropy = calculate_entropy(y)
+    
+    # Hitung entropy untuk setiap nilai feature
+    feature_values = X[feature].unique()
+    weighted_entropy = 0
+    
+    for value in feature_values:
+        subset_y = y[X[feature] == value]
+        weight = len(subset_y) / len(y)
+        weighted_entropy += weight * calculate_entropy(subset_y)
+    
+    information_gain = total_entropy - weighted_entropy
+    return information_gain
 
-print("Feature Importance:")
-print(feature_importance)
+def calculate_entropy(labels):
+    """
+    Hitung entropy untuk sekumpulan labels
+    """
+    from collections import Counter
+    counts = Counter(labels)
+    probabilities = [count / len(labels) for count in counts.values()]
+    entropy = -sum(p * np.log2(p) for p in probabilities if p > 0)
+    return entropy
+
+# Hitung information gain untuk semua features
+feature_importance = {}
+for feature in X.columns:
+    ig = calculate_information_gain(X, y, feature)
+    feature_importance[feature] = ig
+
+# Urutkan berdasarkan importance
+sorted_importance = sorted(feature_importance.items(), key=lambda x: x[1], reverse=True)
+print("Feature Importance (Information Gain):")
+for feature, importance in sorted_importance:
+    print(f"{feature}: {importance:.4f}")
 ```
 
 ### ✅ Checklist Modul B
@@ -129,74 +181,125 @@ Mengevaluasi model klasifikasi menggunakan confusion matrix dan metrik evaluasi.
 
 ### 📝 Langkah-langkah Pengerjaan
 
-#### 1. Evaluasi dengan Confusion Matrix
-
+#### 1. Evaluasi dengan Confusion Matrix (Manual)
 ```python
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-import seaborn as sns
+# Implementasi manual confusion matrix
+def manual_confusion_matrix(y_true, y_pred, classes):
+    """
+    Buat confusion matrix secara manual
+    """
+    cm = np.zeros((len(classes), len(classes)), dtype=int)
+    
+    # Map classes to indices
+    class_to_idx = {cls: idx for idx, cls in enumerate(classes)}
+    
+    for true, pred in zip(y_true, y_pred):
+        true_idx = class_to_idx[true]
+        pred_idx = class_to_idx[pred]
+        cm[true_idx][pred_idx] += 1
+    
+    return cm
 
-# Hitung confusion matrix
-cm = confusion_matrix(y_test, y_pred)
+# Dapatkan classes unik
+unique_classes = sorted(np.unique(np.concatenate([y_test, y_pred])))
+cm = manual_confusion_matrix(y_test, y_pred, unique_classes)
 
-# Visualisasi confusion matrix
+# Visualisasi manual confusion matrix
 plt.figure(figsize=(8,6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-            xticklabels=model.classes_,
-            yticklabels=model.classes_)
-plt.title('Confusion Matrix')
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=unique_classes, 
+            yticklabels=unique_classes)
+plt.title('Confusion Matrix (Manual Implementation)')
 plt.ylabel('Actual Label')
 plt.xlabel('Predicted Label')
-plt.savefig('confusion_matrix.png', dpi=300, bbox_inches='tight')
+plt.savefig('confusion_matrix_manual.png', dpi=300, bbox_inches='tight')
 plt.show()
 ```
 
-#### 2. Hitung Metrik Evaluasi
-
+#### 2. Hitung Metrik Evaluasi (Manual)
 ```python
-# Hitung accuracy
-accuracy = accuracy_score(y_test, y_pred)
+# Hitung accuracy manual
+def manual_accuracy(y_true, y_pred):
+    correct = sum(1 for true, pred in zip(y_true, y_pred) if true == pred)
+    return correct / len(y_true)
+
+accuracy = manual_accuracy(y_test, y_pred)
 print(f"Accuracy: {accuracy:.4f}")
 
-# Classification report lengkap
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
+# Hitung precision, recall, f1 manual
+def manual_classification_report(y_true, y_pred, classes):
+    report = {}
+    
+    for cls in classes:
+        # True positives
+        tp = sum(1 for true, pred in zip(y_true, y_pred) if true == cls and pred == cls)
+        # False positives
+        fp = sum(1 for true, pred in zip(y_true, y_pred) if true != cls and pred == cls)
+        # False negatives
+        fn = sum(1 for true, pred in zip(y_true, y_pred) if true == cls and pred != cls)
+        
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+        f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+        
+        report[cls] = {
+            'precision': precision,
+            'recall': recall,
+            'f1-score': f1,
+            'support': sum(1 for label in y_true if label == cls)
+        }
+    
+    return report
 
-# Hitung metrik manual
-precision = cm[1,1] / (cm[1,1] + cm[0,1]) if (cm[1,1] + cm[0,1]) > 0 else 0
-recall = cm[1,1] / (cm[1,1] + cm[1,0]) if (cm[1,1] + cm[1,0]) > 0 else 0
-f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
-
-print(f"Precision: {precision:.4f}")
-print(f"Recall: {recall:.4f}")
-print(f"F1-Score: {f1:.4f}")
+# Generate manual classification report
+report = manual_classification_report(y_test, y_pred, unique_classes)
+print("\nManual Classification Report:")
+for cls, metrics in report.items():
+    print(f"Class {cls}:")
+    print(f"  Precision: {metrics['precision']:.4f}")
+    print(f"  Recall: {metrics['recall']:.4f}")
+    print(f"  F1-Score: {metrics['f1-score']:.4f}")
+    print(f"  Support: {metrics['support']}")
 ```
 
-#### 3. Optimasi Model (Jika Diperlukan)
-
+#### 3. Optimasi Model Manual (Jika Diperlukan)
 ```python
 if accuracy < 0.8:  # Threshold bisa disesuaikan
-    print("Melakukan optimasi model...")
-
-    # Coba hyperparameter tuning
-    model_optimized = DecisionTreeClassifier(
-        max_depth=7,
-        min_samples_split=5,
-        min_samples_leaf=2,
-        random_state=42
-    )
-
-    model_optimized.fit(X_train, y_train)
-    y_pred_optimized = model_optimized.predict(X_test)
-    accuracy_optimized = accuracy_score(y_test, y_pred_optimized)
-
-    print(f"Accuracy sebelum optimasi: {accuracy:.4f}")
-    print(f"Accuracy setelah optimasi: {accuracy_optimized:.4f}")
-
-    # Update model jika lebih baik
-    if accuracy_optimized > accuracy:
-        model = model_optimized
-        y_pred = y_pred_optimized
-        accuracy = accuracy_optimized
+    print("Melakukan optimasi model manual...")
+    
+    # Contoh optimasi sederhana: coba threshold yang berbeda untuk splitting
+    # Peserta dapat mengembangkan teknik optimasi yang lebih canggih
+    
+    # Simpan hasil terbaik
+    best_accuracy = accuracy
+    best_predictions = y_pred
+    
+    # Coba beberapa strategi sederhana
+    strategies = ['majority', 'feature_based', 'random']
+    
+    for strategy in strategies:
+        if strategy == 'majority':
+            # Majority voting sederhana
+            optimized_pred = [np.bincount(y_train).argmax()] * len(y_test)
+        elif strategy == 'feature_based':
+            # Berdasarkan feature importance
+            # Implementasi sesuai feature yang paling penting
+            pass  # Peserta implementasi
+        else:
+            # Random prediction (baseline)
+            optimized_pred = np.random.choice(y_train.unique(), len(y_test))
+        
+        current_accuracy = manual_accuracy(y_test, optimized_pred)
+        
+        if current_accuracy > best_accuracy:
+            best_accuracy = current_accuracy
+            best_predictions = optimized_pred
+            print(f"Strategi '{strategy}' meningkatkan accuracy menjadi: {current_accuracy:.4f}")
+    
+    # Update dengan hasil terbaik
+    y_pred = best_predictions
+    accuracy = best_accuracy
+    print(f"Accuracy akhir setelah optimasi: {accuracy:.4f}")
 ```
 
 ### ✅ Checklist Modul C
@@ -328,10 +431,25 @@ def run_gui_app(model, feature_columns):
     app = PredictionApp(root, model, feature_columns)
     root.mainloop()
 
-# Save model for GUI
-import joblib
-joblib.dump(model, 'trained_model.pkl')
-print("Model saved as 'trained_model.pkl'")
+# Simpan parameter model untuk GUI (karena tidak ada scikit-learn)
+def save_model_parameters(model_params, filename='model_parameters.txt'):
+    """
+    Simpan parameter model secara manual
+    """
+    with open(filename, 'w') as f:
+        for key, value in model_params.items():
+            f.write(f"{key}: {value}\n")
+    print(f"Model parameters saved as '{filename}'")
+
+# Contoh parameter yang perlu disimpan
+model_params = {
+    'feature_importance': feature_importance,
+    'majority_class': np.bincount(y_train).argmax(),
+    'training_data_size': len(X_train),
+    # Tambahkan parameter lain yang diperlukan
+}
+
+save_model_parameters(model_params)
 ```
 
 #### 2. File Utama untuk Menjalankan GUI
@@ -342,8 +460,19 @@ import joblib
 import pandas as pd
 from gui_app import run_gui_app
 
-# Load trained model
-model = joblib.load('trained_model.pkl')
+# Load model parameters untuk GUI
+def load_model_parameters(filename='model_parameters.txt'):
+    """
+    Load parameter model secara manual
+    """
+    params = {}
+    with open(filename, 'r') as f:
+        for line in f:
+            key, value = line.strip().split(': ', 1)
+            params[key] = value
+    return params
+
+model_params = load_model_parameters()
 
 # Load dataset to get feature names
 data = pd.read_csv('dataset_preprocessed.csv')
