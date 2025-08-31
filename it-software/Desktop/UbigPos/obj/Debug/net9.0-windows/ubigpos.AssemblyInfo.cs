@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ubigpos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+69fc0620a3858caa495538b5f638b38b65e297ee")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c1519788db45b862780a2a83bf8051a9fb31603")]
 [assembly: System.Reflection.AssemblyProductAttribute("ubigpos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ubigpos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
