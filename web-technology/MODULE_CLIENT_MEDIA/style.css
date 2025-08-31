@@ -37,7 +37,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,7 +97,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -110,7 +110,7 @@ body {
   border-radius: 15px;
   text-align: center;
   color: white;
-  box-shadow: 0 0 20px rgba(203, 48, 0, 0.5);
+  box-shadow: 0 0 20px #cb300080;
 }
 
 .pause-title {
@@ -151,7 +151,7 @@ body {
   left: 20px;
   padding: 10px 15px;
   font-size: 1.2rem;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #000000b3;
   color: white;
   border: none;
   border-radius: 5px;
@@ -160,7 +160,7 @@ body {
 }
 
 .pause-game-button:hover {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: #000000e6;
 }
 
 /* home page */
@@ -460,7 +460,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 93vh;
+  background-color: #353535;
 }
 
 .title-gameover {
