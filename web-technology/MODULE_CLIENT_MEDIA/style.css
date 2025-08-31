@@ -6,23 +6,6 @@ html {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Responsive adjustments */
-/* @media (max-height: 800px) {
-  .stats {
-    padding: 30px;
-    width: 180px;
-  }
-  
-  .logo-game {
-    margin-top: 20px;
-    height: 30px;
-  }
-  
-  .heart-indicator {
-    height: 100px;
-  }
-} */
-
 body {
   display: flex;
   flex-direction: column;
@@ -461,6 +444,13 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #353535;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
 }
 
 .title-gameover {

@@ -4,6 +4,11 @@ let isPaused = false;
 let gameInterval;
 let countdownInterval;
 
+const username = document.getElementById("username");
+const difficulty = document.getElementById("level");
+
+document.getElementById("nickname").textContent = "Player: " + username.value;
+
 function showLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "flex";
   let countdown = 3;
@@ -27,13 +32,15 @@ function hideLoadingScreen() {
 }
 
 const timer = document.getElementById("time");
-let timeLeft = 5;
+let timeLeft = 180; 
 let timerInterval;
 
 function startTimer() {
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    timer.textContent = timeLeft;
+  if (timerInterval) clearInterval(timerInterval);
+  const updateTimer = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
     if (timeLeft <= 5) {
       timer.style.color = "red";
     }
@@ -41,13 +48,18 @@ function startTimer() {
       clearInterval(timerInterval);
       document.getElementById("game").style.display = "none";
       document.getElementById("gameover").style.display = "block";
+      return;
     }
-  }, 1000);
+    timeLeft--;
+    timerInterval = setTimeout(updateTimer, 1000);
+  };
+  updateTimer();
 }
 
 function pauseGame() {
   if (!isPaused) {
     isPaused = true;
+    clearInterval(timerInterval);
     document.getElementById("pause-overlay").style.display = "flex";
     console.log("Game paused");
   }
@@ -69,9 +81,6 @@ function goToHome() {
 }
 
 function Play() {
-  var username = document.getElementById("username");
-  var difficulty = document.getElementById("level");
-
   if (!username.checkValidity()) {
     username.reportValidity();
     return;
@@ -85,6 +94,7 @@ function Play() {
     difficulty.setCustomValidity("");
   }
 
+  document.getElementById("nickname").textContent = "Player: " + username.value;
   showLoadingScreen();
 
   setTimeout(() => {
