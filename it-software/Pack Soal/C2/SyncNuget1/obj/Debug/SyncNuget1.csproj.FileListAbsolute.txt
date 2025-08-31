@@ -1,9 +1,0 @@
-D:\C2\SyncNuget1\bin\Debug\SyncNuget1.exe.config
-D:\C2\SyncNuget1\bin\Debug\SyncNuget1.exe
-D:\C2\SyncNuget1\bin\Debug\SyncNuget1.pdb
-D:\C2\SyncNuget1\obj\Debug\SyncNuget1.csproj.AssemblyReference.cache
-D:\C2\SyncNuget1\obj\Debug\SyncNuget1.Properties.Resources.resources
-D:\C2\SyncNuget1\obj\Debug\SyncNuget1.csproj.GenerateResource.cache
-D:\C2\SyncNuget1\obj\Debug\SyncNuget1.csproj.CoreCompileInputs.cache
-D:\C2\SyncNuget1\obj\Debug\SyncNuget1.exe
-D:\C2\SyncNuget1\obj\Debug\SyncNuget1.pdb
