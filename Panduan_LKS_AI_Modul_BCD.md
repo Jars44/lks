@@ -44,7 +44,7 @@ def manual_train_test_split(X, y, test_size=0.2, random_state=42):
 
 **Pseudocode Implementasi**:
 
-```
+```python
 def build_tree(data, depth=0):
     if stopping_criteria_met(data, depth):
         return leaf_node(majority_class(data))
@@ -74,13 +74,13 @@ def build_tree(data, depth=0):
 
 **Information Gain Calculation**:
 
-```
+```text
 Information Gain = Entropy(parent) - Weighted Average × Entropy(children)
 ```
 
 **Entropy Formula**:
 
-```
+```text
 Entropy(S) = -Σ pᵢ × log₂(pᵢ)
 ```
 
@@ -136,25 +136,25 @@ def manual_confusion_matrix(y_true, y_pred, classes):
 
 **Accuracy**: Proporsi prediksi yang benar dari total prediksi
 
-```
+```text
 Accuracy = (TP + TN) / (TP + TN + FP + FN)
 ```
 
 **Precision**: Proporsi prediksi positif yang benar
 
-```
+```text
 Precision = TP / (TP + FP)
 ```
 
 **Recall (Sensitivity)**: Proporsi actual positif yang terprediksi benar
 
-```
+```text
 Recall = TP / (TP + FN)
 ```
 
 **F1-Score**: Harmonic mean dari precision dan recall
 
-```
+```text
 F1-Score = 2 × (Precision × Recall) / (Precision + Recall)
 ```
 
@@ -328,7 +328,7 @@ except ImportError:
 
 ## 📁 Struktur File Final
 
-```
+```!/bin/bash
 project_folder/
 ├── dataset_preprocessed.csv
 ├── decision_tree_visualization.png
