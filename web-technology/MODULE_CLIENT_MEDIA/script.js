@@ -1,12 +1,14 @@
-document.getElementById("home").style.display = "block";
-
 let isPaused = false;
 let gameInterval;
 let countdownInterval;
 
 const username = document.getElementById("username");
 const difficulty = document.getElementById("level");
+const timerElement = document.getElementById("time");
+let timeLeft = 180;
+let timerInterval;
 
+document.getElementById("home").style.display = "block";
 document.getElementById("nickname").textContent = "Player: " + username.value;
 
 function showLoadingScreen() {
@@ -31,16 +33,12 @@ function hideLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "none";
 }
 
-const timerElement = document.getElementById("time");
-let timeLeft = 180;
-let timerInterval;
-
 function startTimer() {
   if (timerInterval) clearTimeout(timerInterval);
   const updateTimer = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    timerElement.textContent = "Time: " + `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    timerElement.textContent = "Time: " + `${minutes}:${seconds.toString().padStart(2, "0")}`;
     if (timeLeft <= 10) {
       timerElement.style.color = "red";
     }
