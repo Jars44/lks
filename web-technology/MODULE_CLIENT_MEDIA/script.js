@@ -31,21 +31,21 @@ function hideLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "none";
 }
 
-const timer = document.getElementById("time");
-let timeLeft = 180; 
+const timerElement = document.getElementById("time");
+let timeLeft = 180;
 let timerInterval;
 
 function startTimer() {
-  if (timerInterval) clearInterval(timerInterval);
+  if (timerInterval) clearTimeout(timerInterval);
   const updateTimer = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    timer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    if (timeLeft <= 5) {
-      timer.style.color = "red";
+    timerElement.textContent = "Time: " + `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    if (timeLeft <= 10) {
+      timerElement.style.color = "red";
     }
     if (timeLeft <= 0) {
-      clearInterval(timerInterval);
+      clearTimeout(timerInterval);
       document.getElementById("game").style.display = "none";
       document.getElementById("gameover").style.display = "block";
       return;
@@ -59,7 +59,7 @@ function startTimer() {
 function pauseGame() {
   if (!isPaused) {
     isPaused = true;
-    clearInterval(timerInterval);
+    clearTimeout(timerInterval);
     document.getElementById("pause-overlay").style.display = "flex";
     console.log("Game paused");
   }
