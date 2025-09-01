@@ -214,7 +214,16 @@
             ResumeLayout(false);
             PerformLayout();
         }
-
+        // Add this method to the Form2 class to fix CS1061
+        private void label3_Click(object sender, EventArgs e)
+        {
+            // You can add any desired logic here, or leave it empty if not needed
+        }
+        // Add this method to the Form2 class to fix CS1061
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            // You can add any desired logic here, or leave it empty if not needed
+        }
         #endregion
 
         private FontDialog fontDialog1;

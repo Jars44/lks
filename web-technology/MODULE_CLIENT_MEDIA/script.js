@@ -125,6 +125,10 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
+// document.addEventListener("click", function (event) {
+//   if (event)
+// })
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".form");
   if (form) {
