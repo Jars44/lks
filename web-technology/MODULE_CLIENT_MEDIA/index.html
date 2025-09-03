@@ -69,15 +69,15 @@
         <form action="" class="form-instruction">
           <div class="form-input-instruction">
             <input class="input-instruction" type="text" placeholder="Input Username" />
-            <select id="level" class="input-instruction" required>
+            <select class="input-instruction" required>
               <option class="input-instruction" value="level" disabled selected hidden>Select Level</option>
               <option class="option" value="1">Level 1</option>
               <option class="option" value="2">Level 2</option>
               <option class="option" value="3">Level 3</option>
             </select>
             <div class="button-form-instruction">
-              <button class="button-instruction">Play</button>
-              <button class="button-instruction">Instruction</button>
+              <button type="button" class="button-instruction">Play</button>
+              <button type="button" class="button-instruction">Instruction</button>
             </div>
           </div>
         </form>
@@ -198,8 +198,8 @@
         <div class="stats">
           <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo_white.png" alt="" class="logo-game" />
           <div class="stat">
-            <p class="name" id="nickname"></p>
-            <p class="time" id="time"></p>
+            <p class="name">Player: <span id="nickname"></span></p>
+            <p class="time">Time: <span id="time"></span></p>
           </div>
           <img
             src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png"
@@ -239,30 +239,25 @@
             id="wall-crack-gameover"
             class="gameover-images"
           />
-          <h2>= </h2>
+          <h2>=</h2>
           <img
             src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png"
             alt="tnt"
             id="tnt-gameover"
             class="game\over-images"
           />
-          <h2>= </h2>
+          <h2>=</h2>
           <img
             src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png"
             alt="ice"
             id="ice-gameover"
             class="gameover-images"
           />
-          <h2>= </h2>
+          <h2>=</h2>
         </div>
         <div class="buttons-gameover">
           <button class="save-gameover">Save Score</button>
-          <button
-            class="leaderboard-gameover"
-            onclick="document.location='/web-technology/MODULE_CLIENT_MEDIA/leaderboard'"
-          >
-            Leaderboard
-          </button>
+          <button class="leaderboard-gameover" onclick="leaderboard()">Leaderboard</button>
         </div>
       </div>
     </section>

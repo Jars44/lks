@@ -9,7 +9,6 @@ let timeLeft = 180;
 let timerInterval;
 
 document.getElementById("home").style.display = "block";
-document.getElementById("nickname").textContent = "Player: " + username.value;
 
 function showLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "flex";
@@ -38,7 +37,7 @@ function startTimer() {
   const updateTimer = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    timerElement.textContent = "Time: " + `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
     if (timeLeft <= 10) {
       timerElement.style.color = "red";
     }
@@ -92,7 +91,7 @@ function Play() {
     difficulty.setCustomValidity("");
   }
 
-  document.getElementById("nickname").textContent = "Player: " + username.value;
+  document.getElementById("nickname").textContent = username.value;
   showLoadingScreen();
 
   setTimeout(() => {

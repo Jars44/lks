@@ -1,3 +1,4 @@
+/* Global Styles */
 *,
 html {
   box-sizing: border-box;
@@ -14,6 +15,7 @@ body {
   height: 100vh;
 }
 
+/* Loading Overlay Styles */
 #loading-overlay {
   position: fixed;
   top: 0;
@@ -146,8 +148,7 @@ body {
   background-color: #000000e6;
 }
 
-/* home page */
-
+/* Home Page Styles */
 .form-container {
   width: 100%;
   min-height: 100vh;
@@ -217,8 +218,7 @@ body {
   text-decoration: none;
 }
 
-/* instruction page */
-
+/* Instruction Page Styles */
 .container-instruction {
   position: absolute;
   top: 50%;
@@ -303,8 +303,7 @@ body {
   cursor: pointer;
 }
 
-/* game page */
-
+/* Game Page Styles */
 .container-game {
   display: flex;
   justify-content: center;
@@ -340,7 +339,7 @@ body {
 .stat {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  justify-content: space-between;
   margin: 20px 0px 0px 0px;
   font-size: 1.5em;
   font-weight: bold;
@@ -413,11 +412,13 @@ body {
   align-items: center;
   gap: 20px;
 }
+
 .tnt-score {
   display: flex;
   align-items: center;
   gap: 20px;
 }
+
 .ice-score {
   display: flex;
   align-items: center;
@@ -436,8 +437,7 @@ body {
   height: auto;
 }
 
-/* gameover page */
-
+/* Gameover Page Styles */
 .container-gameover {
   display: flex;
   flex-direction: column;
@@ -532,8 +532,7 @@ body {
   font-size: 1.3rem;
 }
 
-/* leaderboard page */
-
+/* Leaderboard Page Styles */
 .container-leaderboard {
   display: flex;
   flex-direction: column;
