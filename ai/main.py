@@ -64,6 +64,3 @@ def entropy(df):
         entrophy -= p * log2(p)
 
     return entrophy
-
-target_entropy = entropy(target)
-print(f"Target entropy: {target_entropy}")
