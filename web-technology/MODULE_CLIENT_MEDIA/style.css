@@ -337,12 +337,21 @@ body {
 }
 
 .stat {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   margin: 20px 0px 0px 0px;
   font-size: 1.5em;
   font-weight: bold;
+}
+
+.name {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 30px;
+}
+
+.time {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 25px;
 }
 
 .logo-game {
