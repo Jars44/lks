@@ -137,7 +137,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 651);
+            ClientSize = new Size(1147, 651);
             Controls.Add(panel1);
             Name = "Form6";
             Text = "UbigPos - Add Category";
