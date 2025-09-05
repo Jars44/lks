@@ -8,6 +8,16 @@ const timerElement = document.getElementById("time");
 let timeLeft = 180;
 let timerInterval;
 
+const map = [x][x][x][x][x][x][x][x][x][x][x]
+[x][0][0][0][0][0][0][0][0][0][x]
+[x][0][x][0][x][0][x][0][x][0][x]
+[x][0][0][0][0][0][0][0][0][0][x]
+[x][0][x][0][x][0][x][0][x][0][x]
+[x][0][0][0][0][0][0][0][0][0][x]
+[x][0][x][0][x][0][x][0][x][0][x]
+[x][0][0][0][0][0][0][0][0][0][x]
+[x][x][x][x][x][x][x][x][x][x][x]
+
 document.getElementById("home").style.display = "block";
 
 function showLoadingScreen() {
@@ -131,10 +141,6 @@ document.addEventListener("keydown", function (event) {
     }
   }
 });
-
-// document.addEventListener("click", function (event) {
-//   if (event)
-// })
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".form");
