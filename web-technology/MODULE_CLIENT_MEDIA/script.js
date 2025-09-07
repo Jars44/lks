@@ -8,15 +8,142 @@ const timerElement = document.getElementById("time");
 let timeLeft = 180;
 let timerInterval;
 
-const map = [x][x][x][x][x][x][x][x][x][x][x]
-[x][0][0][0][0][0][0][0][0][0][x]
-[x][0][x][0][x][0][x][0][x][0][x]
-[x][0][0][0][0][0][0][0][0][0][x]
-[x][0][x][0][x][0][x][0][x][0][x]
-[x][0][0][0][0][0][0][0][0][0][x]
-[x][0][x][0][x][0][x][0][x][0][x]
-[x][0][0][0][0][0][0][0][0][0][x]
-[x][x][x][x][x][x][x][x][x][x][x]
+let playerPosition = 10;
+let gridSize = 9;
+let playerDirection = "down";
+const gridItems = document.querySelectorAll(".grid-item");
+
+const map = [
+  [x][x][x][x][x][x][x][x][x][x][x]
+  [x][0][0][0][0][0][0][0][0][0][x]
+  [x][0][x][0][x][0][x][0][x][0][x]
+  [x][0][0][0][0][0][0][0][0][0][x]
+  [x][0][x][0][x][0][x][0][x][0][x]
+  [x][0][0][0][0][0][0][0][0][0][x]
+  [x][0][x][0][x][0][x][0][x][0][x]
+  [x][0][0][0][0][0][0][0][0][0][x]
+  [x][x][x][x][x][x][x][x][x][x][x]
+]
+
+function getCoords(index) {
+  return {
+    row: Math.floor(index / gridSize),
+    col: index % gridSize,
+  };
+}
+
+function placeRandomElements() {
+  const totalGrid = gridItems.length;
+  gridItems.forEach((item) => {
+    const dog = item.querySelector(".dog");
+    if (dog) dog.remove();
+    const wall = item.querySelector(".wall");
+    if (wall) wall.remove();
+  });
+
+  function getRandomPosition() {
+    let pos;
+    do {
+      pos = Math.floor(Math.random() * totalGrid);
+    } while (excludePositions.includes(pos));
+    return pos;
+  }
+
+  const dogCount = 1;
+  const wallCount = 10;
+  const occupiedPositions = [playerPosition];
+
+  for (let i = 0; i < dogCount; i++) {
+    const pos = getRandomPosition(occupiedPositions);
+    occupiedPositions.push(pos);
+    const dogImg = document.createElement("img");
+    dogImg.className = "dog";
+    dogImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/char_down.png";
+    dogImg.alt = "dog";
+    gridItems[pos].appendChild(dogImg);
+  }
+
+  for (let i = 0; i < wallCount; i++) {
+    const pos = getRandomPosition(occupiedPositions);
+    occupiedPositions.push(pos);
+    const wallImg = document.createElement("img");
+    wallImg.className = "wall";
+    wallImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png";
+    wallImg.alt = "wall";
+    gridItems[pos].appendChild(wallImg);
+  }
+}
+
+function getIndex(row, col) {
+  return row * gridSize + col;
+}
+
+function isValidMove(newIndex) {
+  if (newIndex < 0 || newIndex >= 63) return false;
+  const targetItem = gridItems[newIndex];
+  return !targetItem.querySelector(".wall") && !targetItem.querySelector(".dog")
+}
+
+function movePlayer(direction) {
+  const { row, col } = getCoords(playerPosition);
+  let newRow = row;
+  let newCol = col;
+
+  switch (direction) {
+    case "up":
+      newRow--;
+      break;
+    case "down":
+      newRow++;
+      break;
+    case "left":
+      newCol--;
+      break;
+    case "right":
+      newCol++;
+      break;
+  }
+
+  const newIndex = getIndex(newRow, newCol);
+  if (isValidMove(newIndex)) {
+    const playerImg = document.querySelector(".player");
+    const targetItem = gridItems[newIndex];
+    targetItem.appendChild(playerImg);
+
+    playerDirection = direction;
+    playerImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/char_${direction}.png`;
+
+    playerPosition = newIndex;
+    console.log(`Player moved to ${direction}, new position: ${playerPosition}`);
+  } else {
+    console.log(`Invalid move in direction ${direction}: wall, dog, or out of bounds`);
+  }
+}
+
+document.addEventListener("keydown", function (event) {
+  if (document.getElementById("game").style.display !== "block") return;
+  if (isPaused) return;
+
+  switch (event.key) {
+    case "w":
+    case "ArrowUp":
+      movePlayer("up");
+      break;
+    case "s":
+    case "ArrowDown":
+      movePlayer("down");
+      break;
+    case "a":
+    case "ArrowLeft":
+      movePlayer("left");
+      break;
+    case "d":
+    case "ArrowRight":
+      movePlayer("right");
+      break;
+  }
+  event.preventDefault();
+})
 
 document.getElementById("home").style.display = "block";
 
@@ -115,6 +242,7 @@ function Play() {
     document.getElementById("home").style.display = "none";
     document.getElementById("game").style.display = "block";
     assignTileIds();
+    placeRandomElements();
     startTimer();
     console.log("Game started with username:", username.value, "and difficulty:", difficulty.value);
   }, 3000);
