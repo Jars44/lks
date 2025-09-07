@@ -191,13 +191,6 @@ function goToHome() {
   document.getElementById("home").style.display = "block";
 }
 
-function assignTileIds() {
-  const gridItems = document.querySelectorAll(".grid-item");
-  gridItems.forEach((item, index) => {
-    item.id = `tile-${index + 1}`;
-  });
-}
-
 function Play() {
   if (!username.checkValidity()) {
     username.reportValidity();
@@ -221,7 +214,6 @@ function Play() {
     placeRandomElements();
     const playerImg = document.querySelector(".player");
     gridItems[playerPosition].appendChild(playerImg);
-    assignTileIds();
     startTimer();
     console.log("Game started with username:", username.value, "and difficulty:", difficulty.value);
   }, 3000);
