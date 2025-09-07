@@ -8,22 +8,10 @@ const timerElement = document.getElementById("time");
 let timeLeft = 180;
 let timerInterval;
 
-let playerPosition = 12; // row 1, col 1 in 11x9 grid
+let playerPosition = 23;
 let gridSize = 11;
 let playerDirection = "down";
 const gridItems = document.querySelectorAll(".grid-item");
-
-// const map = [
-//   [x][x][x][x][x][x][x][x][x][x][x]
-//   [x][0][0][0][0][0][0][0][0][0][x]
-//   [x][0][x][0][x][0][x][0][x][0][x]
-//   [x][0][0][0][0][0][0][0][0][0][x]
-//   [x][0][x][0][x][0][x][0][x][0][x]
-//   [x][0][0][0][0][0][0][0][0][0][x]
-//   [x][0][x][0][x][0][x][0][x][0][x]
-//   [x][0][0][0][0][0][0][0][0][0][x]
-//   [x][x][x][x][x][x][x][x][x][x][x]
-// ]
 
 function getCoords(index) {
   return {
@@ -37,6 +25,18 @@ function isWall(row, col) {
   if (col === 0 || col === 10) return true;
   if (row % 2 === 0 && col % 2 === 0) return true;
   return false;
+}
+
+function getIndex(row, col) {
+  return row * gridSize + col;
+}
+
+function isValidMove(newIndex) {
+  if (newIndex < 0 || newIndex >= 99) return false;
+  const { row, col } = getCoords(newIndex);
+  if (isWall(row, col)) return false;
+  const targetItem = gridItems[newIndex];
+  return !targetItem.querySelector(".wall") && !targetItem.querySelector(".dog");
 }
 
 function placeRandomElements() {
@@ -60,7 +60,6 @@ function placeRandomElements() {
   const wallCount = 10;
   const occupiedPositions = [playerPosition];
 
-  // Exclude all wall positions from random placement
   for (let i = 0; i < totalGrid; i++) {
     const { row, col } = getCoords(i);
     if (isWall(row, col)) {
@@ -87,18 +86,6 @@ function placeRandomElements() {
     wallImg.alt = "wall";
     gridItems[pos].appendChild(wallImg);
   }
-}
-
-function getIndex(row, col) {
-  return row * gridSize + col;
-}
-
-function isValidMove(newIndex) {
-  if (newIndex < 0 || newIndex >= 99) return false;
-  const { row, col } = getCoords(newIndex);
-  if (isWall(row, col)) return false;
-  const targetItem = gridItems[newIndex];
-  return !targetItem.querySelector(".wall") && !targetItem.querySelector(".dog")
 }
 
 function movePlayer(direction) {
@@ -136,33 +123,6 @@ function movePlayer(direction) {
     console.log(`Invalid move in direction ${direction}: wall, dog, or out of bounds`);
   }
 }
-
-document.addEventListener("keydown", function (event) {
-  if (document.getElementById("game").style.display !== "block") return;
-  if (isPaused) return;
-
-  switch (event.key) {
-    case "w":
-    case "ArrowUp":
-      movePlayer("up");
-      break;
-    case "s":
-    case "ArrowDown":
-      movePlayer("down");
-      break;
-    case "a":
-    case "ArrowLeft":
-      movePlayer("left");
-      break;
-    case "d":
-    case "ArrowRight":
-      movePlayer("right");
-      break;
-  }
-  event.preventDefault();
-})
-
-document.getElementById("game").style.display = "block";
 
 function showLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "flex";
@@ -278,6 +238,31 @@ function CloseInstruction() {
 }
 
 document.addEventListener("keydown", function (event) {
+  if (document.getElementById("game").style.display !== "block") return;
+  if (isPaused) return;
+
+  switch (event.key) {
+    case "w":
+    case "ArrowUp":
+      movePlayer("up");
+      break;
+    case "s":
+    case "ArrowDown":
+      movePlayer("down");
+      break;
+    case "a":
+    case "ArrowLeft":
+      movePlayer("left");
+      break;
+    case "d":
+    case "ArrowRight":
+      movePlayer("right");
+      break;
+  }
+  event.preventDefault();
+});
+
+document.addEventListener("keydown", function (event) {
   if (event.key === "Escape") {
     if (document.getElementById("game").style.display === "block") {
       if (isPaused) {
@@ -298,3 +283,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+document.getElementById("home").style.display = "block";

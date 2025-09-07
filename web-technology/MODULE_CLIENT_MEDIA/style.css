@@ -333,7 +333,6 @@ body {
   width: 100%;
   background-size: cover;
   background-repeat: no-repeat;
-  /* background-position: center; */
   object-fit: cover;
   background-image: url(/web-technology/MODULE_CLIENT_MEDIA/Images/background.jpg);
 }
@@ -376,6 +375,7 @@ body {
 .wall {
   width: 100%;
   height: auto;
+  object-fit: contain;
 }
 
 .dog {
@@ -437,7 +437,7 @@ body {
 }
 
 .stats {
-  padding: 20px 40px 0px 40px;
+  padding: 40px 40px 0px 40px;
   background-color: #353535;
   color: white;
   height: 100%;
