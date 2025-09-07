@@ -333,6 +333,8 @@ body {
   width: 100%;
   background-size: cover;
   background-repeat: no-repeat;
+  /* background-position: center; */
+  object-fit: cover;
   background-image: url(/web-technology/MODULE_CLIENT_MEDIA/Images/background.jpg);
 }
 
@@ -389,16 +391,16 @@ body {
 .grid-container {
   position: absolute;
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: repeat(7, 1fr);
-  top: 70px;
-  left: 70px;
+  grid-template-columns: repeat(11, 1fr);
+  grid-template-rows: repeat(9, 1fr);
   z-index: 10;
+  width: 100%;
+  height: 100%;
 }
 
 .grid-item {
-  width: 69px;
-  height: 69px;
+  width: 66.5px;
+  height: 66.5px;
   text-align: center;
   font-size: 1.5em;
   color: #ffffff;
@@ -435,7 +437,7 @@ body {
 }
 
 .stats {
-  padding: 20px 20px 0px 20px;
+  padding: 20px 40px 0px 40px;
   background-color: #353535;
   color: white;
   height: 100%;

@@ -8,28 +8,35 @@ const timerElement = document.getElementById("time");
 let timeLeft = 180;
 let timerInterval;
 
-let playerPosition = 10;
-let gridSize = 9;
+let playerPosition = 12; // row 1, col 1 in 11x9 grid
+let gridSize = 11;
 let playerDirection = "down";
 const gridItems = document.querySelectorAll(".grid-item");
 
-const map = [
-  [x][x][x][x][x][x][x][x][x][x][x]
-  [x][0][0][0][0][0][0][0][0][0][x]
-  [x][0][x][0][x][0][x][0][x][0][x]
-  [x][0][0][0][0][0][0][0][0][0][x]
-  [x][0][x][0][x][0][x][0][x][0][x]
-  [x][0][0][0][0][0][0][0][0][0][x]
-  [x][0][x][0][x][0][x][0][x][0][x]
-  [x][0][0][0][0][0][0][0][0][0][x]
-  [x][x][x][x][x][x][x][x][x][x][x]
-]
+// const map = [
+//   [x][x][x][x][x][x][x][x][x][x][x]
+//   [x][0][0][0][0][0][0][0][0][0][x]
+//   [x][0][x][0][x][0][x][0][x][0][x]
+//   [x][0][0][0][0][0][0][0][0][0][x]
+//   [x][0][x][0][x][0][x][0][x][0][x]
+//   [x][0][0][0][0][0][0][0][0][0][x]
+//   [x][0][x][0][x][0][x][0][x][0][x]
+//   [x][0][0][0][0][0][0][0][0][0][x]
+//   [x][x][x][x][x][x][x][x][x][x][x]
+// ]
 
 function getCoords(index) {
   return {
     row: Math.floor(index / gridSize),
     col: index % gridSize,
   };
+}
+
+function isWall(row, col) {
+  if (row === 0 || row === 8) return true;
+  if (col === 0 || col === 10) return true;
+  if (row % 2 === 0 && col % 2 === 0) return true;
+  return false;
 }
 
 function placeRandomElements() {
@@ -41,7 +48,7 @@ function placeRandomElements() {
     if (wall) wall.remove();
   });
 
-  function getRandomPosition() {
+  function getRandomPosition(excludePositions) {
     let pos;
     do {
       pos = Math.floor(Math.random() * totalGrid);
@@ -53,12 +60,20 @@ function placeRandomElements() {
   const wallCount = 10;
   const occupiedPositions = [playerPosition];
 
+  // Exclude all wall positions from random placement
+  for (let i = 0; i < totalGrid; i++) {
+    const { row, col } = getCoords(i);
+    if (isWall(row, col)) {
+      occupiedPositions.push(i);
+    }
+  }
+
   for (let i = 0; i < dogCount; i++) {
     const pos = getRandomPosition(occupiedPositions);
     occupiedPositions.push(pos);
     const dogImg = document.createElement("img");
     dogImg.className = "dog";
-    dogImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/char_down.png";
+    dogImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/dog_down.png";
     dogImg.alt = "dog";
     gridItems[pos].appendChild(dogImg);
   }
@@ -79,7 +94,9 @@ function getIndex(row, col) {
 }
 
 function isValidMove(newIndex) {
-  if (newIndex < 0 || newIndex >= 63) return false;
+  if (newIndex < 0 || newIndex >= 99) return false;
+  const { row, col } = getCoords(newIndex);
+  if (isWall(row, col)) return false;
   const targetItem = gridItems[newIndex];
   return !targetItem.querySelector(".wall") && !targetItem.querySelector(".dog")
 }
@@ -145,7 +162,7 @@ document.addEventListener("keydown", function (event) {
   event.preventDefault();
 })
 
-document.getElementById("home").style.display = "block";
+document.getElementById("game").style.display = "block";
 
 function showLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "flex";
@@ -241,8 +258,10 @@ function Play() {
   setTimeout(() => {
     document.getElementById("home").style.display = "none";
     document.getElementById("game").style.display = "block";
-    assignTileIds();
     placeRandomElements();
+    const playerImg = document.querySelector(".player");
+    gridItems[playerPosition].appendChild(playerImg);
+    assignTileIds();
     startTimer();
     console.log("Game started with username:", username.value, "and difficulty:", difficulty.value);
   }, 3000);
