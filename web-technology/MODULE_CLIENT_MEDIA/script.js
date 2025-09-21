@@ -57,7 +57,7 @@ function placeRandomElements() {
   }
 
   const dogCount = 1;
-  const wallCount = 10;
+  const wallCount = 15;
   const occupiedPositions = [playerPosition];
 
   for (let i = 0; i < totalGrid; i++) {
