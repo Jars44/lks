@@ -229,6 +229,81 @@ function CloseInstruction() {
   document.getElementById("home").style.display = "block";
 }
 
+function placeBombAtPlayerPosition() {
+  const bomb = document.createElement("img");
+  bomb.src = "Images/bomb.png";
+  bomb.classList.add("bomb");
+  const cell = getGridCell(player.x, player.y);
+  if (!cell.querySelector(".bomb")) {
+    cell.appendChild(bomb);
+    scheduleExplosion(bomb, cell);
+  }
+}
+
+function destroyWall(cell) {
+  const wall = cell.querySelector(".wall");
+  if (wall) {
+    cell.removeChild(wall);
+    maybeRevealItem(cell);
+  }
+}
+
+function maybeRevealItem(cell) {
+  const items = ["heart", "tnt", "ice"];
+  if (Math.random() < 0.3) {
+    const itemType = items[Math.floor(Math.random() * items.length)];
+    const item = document.createElement("img");
+    item.src = `Images/${itemType}.png`;
+    item.classList.add("item", itemType);
+    cell.appendChild(item);
+  }
+}
+
+function applyExplosionEffect(cell) {
+  if (cell.querySelector(".wall")) {
+    destroyWall(cell);
+  }
+}
+
+function applyItemEffect(type) {
+  switch (type) {
+    case "heart":
+      player.hearts = Math.max(0, player.hearts - 1);
+      updateHeartUI();
+      break;
+    case "tnt":
+      player.explosionRange += 1;
+      showStatusMark("tnt");
+      break;
+    case "ice":
+      freezePlayerMovement(5000);
+      showStatusMark("ice");
+      break;
+  }
+}
+
+function checkItemPickup() {
+  const item = cell.querySelector(".item");
+  if (item) {
+    applyItemEffect(item);
+    cell.removeChild(item);
+  }
+}
+
+function explodeBomb(bomb, cell) {
+  bomb.src = "Images/bomb_explode.png";
+  applyExplosionEffect(cell);
+  setTimeout(() => {
+    clearExplosion(cell);
+  }, 1000);
+}
+
+function scheduleExplosion(bomb, cell) {
+  setTimeout(() => {
+    explodeBomb(bomb, cell);
+  }, 5000);
+}
+
 document.addEventListener("keydown", function (event) {
   if (document.getElementById("game").style.display !== "block") return;
   if (isPaused) return;
@@ -263,6 +338,12 @@ document.addEventListener("keydown", function (event) {
         pauseGame();
       }
     }
+  }
+});
+
+document.addEventListener("keydown", function (event) {
+  if (event.code == "Space") {
+    placeBombAtPlayerPosition();
   }
 });
 
