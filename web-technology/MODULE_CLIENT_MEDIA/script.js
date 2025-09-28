@@ -90,7 +90,13 @@ function distance(dog, player) {
   return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
 }
 
-// INITIALIZATION
+function clearGrid() {
+  gridItems.forEach(cell => {
+    const elementsToRemove = cell.querySelectorAll('.wall, .dog, .item, .bomb, .explosion, .tnt-mark, .ice-mark');
+    elementsToRemove.forEach(el => cell.removeChild(el));
+  });
+}
+
 function placeRandomElements() {
   const totalGrid = gridItems.length;
 
@@ -559,6 +565,8 @@ function Play() {
   setTimeout(() => {
     document.getElementById("home").style.display = "none";
     document.getElementById("game").style.display = "block";
+    clearGrid();
+    dogs = [];
     placeRandomElements();
     const playerImg = document.querySelector(".player");
     gridItems[player.position].appendChild(playerImg);
@@ -636,6 +644,7 @@ function leaderboard() {
 }
 
 function playAgain() {
+  player.position = config.playerStartPosition;
   player.hearts = config.maxHearts;
   player.explosionRange = config.initialExplosionRange;
   player.frozenUntil = 0;
@@ -644,10 +653,22 @@ function playAgain() {
   icesCollected = 0;
   timeLeft = config.initialTime;
   dogs = [];
+  updateHeartUI();
+  updateWallUI();
+  updateTNTUI();
+  updateIceUI();
   document.getElementById("leaderboard").style.display = "none";
   document.getElementById("gameover").style.display = "none";
-  document.getElementById("home").style.display = "block";
-  Play();
+  showLoadingScreen();
+  setTimeout(() => {
+    document.getElementById("game").style.display = "block";
+    clearGrid();
+    placeRandomElements();
+    const playerImg = document.querySelector(".player");
+    gridItems[player.position].appendChild(playerImg);
+    startTimer();
+    gameInterval = setInterval(updateDogs, 1000);
+  }, 3000);
 }
 
 function resetLeaderboard() {
@@ -708,7 +729,7 @@ document.addEventListener("keydown", function (event) {
 });
 
 // INITIALIZATION
-document.getElementById("leaderboard").style.display = "block";
+document.getElementById("home").style.display = "block";
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".form");
