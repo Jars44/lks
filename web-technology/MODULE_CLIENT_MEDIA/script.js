@@ -69,12 +69,6 @@ function distance(dog, player) {
 
 function placeRandomElements() {
   const totalGrid = gridItems.length;
-  gridItems.forEach((item) => {
-    const dog = item.querySelector(".dog");
-    if (dog) dog.remove();
-    const wall = item.querySelector(".wall");
-    if (wall) wall.remove();
-  });
 
   function getRandomPosition(excludePositions) {
     let pos;
@@ -91,6 +85,17 @@ function placeRandomElements() {
   for (let i = 0; i < totalGrid; i++) {
     const { row, col } = getCoords(i);
     if (isWall(row, col)) {
+      occupiedPositions.push(i);
+    }
+  }
+
+  // Exclude positions within radius 2 of player to prevent trapping
+  const playerCoords = getCoords(playerPosition);
+  const radius = 2;
+  for (let i = 0; i < totalGrid; i++) {
+    const { row, col } = getCoords(i);
+    const dist = Math.abs(row - playerCoords.row) + Math.abs(col - playerCoords.col);
+    if (dist <= radius && !occupiedPositions.includes(i)) {
       occupiedPositions.push(i);
     }
   }
@@ -171,9 +176,26 @@ function movePlayer(direction) {
     playerPosition = newIndex;
     player.position = newIndex;
     checkItemPickup(gridItems[playerPosition]);
-    console.log(`Player moved to ${direction}, new position: ${playerPosition}`);
+
+    // Check for dog collision after player move
+    const dog = gridItems[playerPosition].querySelector(".dog");
+    if (dog) {
+      playerHit();
+    }
   } else {
-    console.log(`Invalid move in direction ${direction}: wall, dog, or out of bounds`);
+  }
+}
+
+function animateCollect(element, cell, remove = true) {
+  element.classList.add("collecting");
+  if (remove) {
+    setTimeout(() => {
+      if (cell.contains(element)) cell.removeChild(element);
+    }, 500);
+  } else {
+    setTimeout(() => {
+      element.classList.remove("collecting");
+    }, 500);
   }
 }
 
@@ -181,28 +203,60 @@ function checkItemPickup(cell) {
   const item = cell.querySelector(".item");
   if (item) {
     const type = item.classList[1];
-    applyItemEffect(type);
-    cell.removeChild(item);
+    animateCollect(item, cell);
+    setTimeout(() => applyItemEffect(type), 500);
+  }
+
+  const bomb = cell.querySelector(".bomb");
+  if (bomb) {
+    bomb.classList.add("passed");
+    setTimeout(() => bomb.classList.remove("passed"), 500);
   }
 }
 
 function applyItemEffect(type) {
+  const playerImg = document.querySelector(".player");
   switch (type) {
     case "heart":
       player.hearts = Math.max(0, player.hearts - 1);
       updateHeartUI();
+      if (player.hearts <= 0) {
+        triggerGameOver();
+      }
       break;
     case "tnt":
-      player.explosionRange *= 2;
+      player.explosionRange += 1;
       tntsCollected++;
       updateTNTUI();
-      showStatusMark("tnt");
+      // Add mark if not present
+      if (!playerImg.querySelector(".tnt-mark")) {
+        const tntMark = document.createElement("img");
+        tntMark.src = "Images/tnt.png";
+        tntMark.classList.add("tnt-mark", "item-mark");
+        tntMark.style.width = "20px";
+        tntMark.style.height = "auto";
+        tntMark.style.position = "absolute";
+        tntMark.style.top = "0";
+        tntMark.style.right = "0";
+        playerImg.parentElement.appendChild(tntMark);
+      }
       break;
     case "ice":
       freezePlayerMovement(5000);
       icesCollected++;
       updateIceUI();
-      showStatusMark("ice");
+      // Add mark if not present
+      if (!playerImg.querySelector(".ice-mark")) {
+        const iceMark = document.createElement("img");
+        iceMark.src = "Images/ice.png";
+        iceMark.classList.add("ice-mark", "item-mark");
+        iceMark.style.width = "20px";
+        iceMark.style.height = "auto";
+        iceMark.style.position = "absolute";
+        iceMark.style.top = "0";
+        iceMark.style.left = "0";
+        playerImg.parentElement.appendChild(iceMark);
+      }
       break;
   }
 }
@@ -218,7 +272,8 @@ function flashPlayer() {
 }
 
 function playerHit() {
-  player.hearts--;
+  player.hearts = Math.max(0, player.hearts - 1);
+  updateHeartUI();
   flashPlayer();
   if (player.hearts <= 0) {
     triggerGameOver();
@@ -304,13 +359,13 @@ function destroyWall(cell) {
     cell.removeChild(wall);
     wallsDestroyed++;
     updateWallUI();
-    maybeRevealItem(cell);
+    setTimeout(() => maybeRevealItem(cell), 1000);
   }
 }
 
 function maybeRevealItem(cell) {
   const items = ["heart", "tnt", "ice"];
-  if (Math.random() < 0.7) {
+  if (Math.random() < 0.8) {
     const itemType = items[Math.floor(Math.random() * items.length)];
     const item = document.createElement("img");
     item.src = `Images/${itemType}.png`;
@@ -340,19 +395,35 @@ function explodeBomb(bomb, cell) {
   bomb.src = "Images/bomb_explode.png";
   const index = Array.from(gridItems).indexOf(cell);
   const { row, col } = getCoords(index);
+  const affectedCells = [];
   for (let r = row - player.explosionRange; r <= row + player.explosionRange; r++) {
     for (let c = col - player.explosionRange; c <= col + player.explosionRange; c++) {
       if (r === row || c === col) {
         const adjIndex = getIndex(r, c);
         if (adjIndex >= 0 && adjIndex < gridItems.length) {
-          applyExplosionEffect(gridItems[adjIndex]);
+          const adjCell = gridItems[adjIndex];
+          applyExplosionEffect(adjCell);
           if (adjIndex === player.position) playerHit();
+          // Add explosion visual to affected cells, but not the bomb cell itself
+          if (adjIndex !== index && !adjCell.querySelector(".explosion")) {
+            const explosionImg = document.createElement("img");
+            explosionImg.src = "Images/bomb_explode.png";
+            explosionImg.classList.add("explosion");
+            explosionImg.style.width = "100%";
+            explosionImg.style.height = "auto";
+            adjCell.appendChild(explosionImg);
+            affectedCells.push(adjCell);
+          }
         }
       }
     }
   }
   setTimeout(() => {
     clearExplosion(cell);
+    affectedCells.forEach(cell => {
+      const explosion = cell.querySelector(".explosion");
+      if (explosion) cell.removeChild(explosion);
+    });
   }, 1000);
 }
 
@@ -363,13 +434,15 @@ function scheduleExplosion(bomb, cell) {
 }
 
 function updateHeartUI() {
-  for (let i = 1; i <= 3; i++) {
-    const heart = document.getElementById(`heart${i}`);
-    if (i <= player.hearts) {
-      heart.style.display = "block";
-    } else {
-      heart.style.display = "none";
-    }
+  const heartIndicator = document.querySelector(".heart-indicator");
+  if (player.hearts === 3) {
+    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png";
+  } else if (player.hearts === 2) {
+    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator1.png";
+  } else if (player.hearts === 1) {
+    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator2.png";
+  } else {
+    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator3.png";
   }
 }
 
@@ -385,13 +458,6 @@ function updateIceUI() {
   document.getElementById("ice").textContent = "= " + icesCollected;
 }
 
-function showStatusMark(type) {
-  const mark = document.createElement("img");
-  mark.src = `Images/${type}.png`;
-  mark.classList.add("status-mark");
-  gridItems[player.position].appendChild(mark);
-  mark.remove();
-}
 
 function startTimer() {
   if (timerInterval) clearTimeout(timerInterval);
@@ -418,7 +484,6 @@ function pauseGame() {
     isPaused = true;
     clearTimeout(timerInterval);
     document.getElementById("pause-overlay").style.display = "flex";
-    console.log("Game paused");
   }
 }
 
@@ -426,7 +491,6 @@ function resumeGame() {
   if (isPaused) {
     isPaused = false;
     document.getElementById("pause-overlay").style.display = "none";
-    console.log("Game resumed");
     startTimer();
   }
 }
@@ -463,7 +527,6 @@ function Play() {
     matchData.username = username.value;
     startTimer();
     gameInterval = setInterval(updateDogs, 1000);
-    console.log("Game started with username:", username.value, "and difficulty:", difficulty.value);
   }, 3000);
 }
 
@@ -540,9 +603,19 @@ function resetLeaderboard() {
 }
 
 document.addEventListener("keydown", function (event) {
-  if (document.getElementById("game").style.display !== "block") return;
-  if (isPaused) return;
-  if (Date.now() < player.frozenUntil) return;
+  if (document.getElementById("game").style.display !== "block") {
+    if (event.key === "Escape") {
+      if (isPaused) {
+        resumeGame();
+      } else {
+        pauseGame();
+      }
+    }
+    return;
+  }
+
+  if (isPaused && event.key !== "Escape") return;
+  if (Date.now() < player.frozenUntil && event.code !== "Space" && event.key !== "Escape") return;
 
   switch (event.key) {
     case "w":
@@ -562,24 +635,21 @@ document.addEventListener("keydown", function (event) {
       movePlayer("right");
       break;
   }
-  event.preventDefault();
-});
 
-document.addEventListener("keydown", function (event) {
   if (event.key === "Escape") {
-    if (document.getElementById("game").style.display === "block") {
-      if (isPaused) {
-        resumeGame();
-      } else {
-        pauseGame();
-      }
+    if (isPaused) {
+      resumeGame();
+    } else {
+      pauseGame();
     }
   }
-});
 
-document.addEventListener("keydown", function (event) {
   if (event.code == "Space") {
     placeBombAtPlayerPosition();
+  }
+
+  if (["w", "s", "a", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+    event.preventDefault();
   }
 });
 
