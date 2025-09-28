@@ -140,6 +140,7 @@ function movePlayer(direction) {
     playerImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/char_${direction}.png`;
 
     playerPosition = newIndex;
+    checkItemPickup(gridItems[playerPosition]);
     console.log(`Player moved to ${direction}, new position: ${playerPosition}`);
   } else {
     console.log(`Invalid move in direction ${direction}: wall, dog, or out of bounds`);
@@ -287,6 +288,61 @@ function applyExplosionEffect(cell) {
   }
 }
 
+function updateHeartUI() {
+  for (let i = 1; i <= 3; i++) {
+    const heart = document.getElementById(`heart${i}`);
+    if (i <= player.hearts) {
+      heart.style.display = "block";
+    } else {
+      heart.style.display = "none";
+    }
+  }
+}
+
+function updateWallUI() {
+  document.getElementById("walls").textContent = ": " + wallsDestroyed;
+}
+
+function updateTNTUI() {
+  document.getElementById("tnt").textContent = ": " + tntUsed;
+}
+
+function updateIceUI() {
+  document.getElementById("ice").textContent = ": " + iceUsed;
+}
+
+function triggerGameOver() {
+  clearInterval(gameInterval);
+  clearTimeout(timerInterval);
+  matchData.username = username.value;
+  matchData.time = timeLeft;
+  matchData.walls = wallsDestroyed;
+  matchData.tnts = tntsCollected;
+  matchData.ices = icesCollected;
+  let matches = JSON.parse(localStorage.getItem("matches")) || [];
+  matches.push(matchData);
+  localStorage.setItem("matches", JSON.stringify(matches));
+  document.getElementById("game").style.display = "none";
+  document.getElementById("gameover").style.display = "block";
+}
+
+function displayLeaderboard() {
+  const matches = JSON.parse(localStorage.getItem("matches") || "[]");
+  matches.sort((a, b) => b.walls * 10 + b.tnts * 20 + b.ices * 5 - (a.walls * 10 + a.tnts * 20 + a.ices * 5));
+  const tbody = document.querySelector("#leaderboard tbody");
+  tbody.innerHTML = "";
+  matches.forEach((match) => {
+    const row = `<tr>
+      <td>${match.username}</td>
+      <td>${match.walls}</td>
+      <td>${match.tnts}</td>
+      <td>${match.ices}</td>
+      <td>${match.time}</td>
+    </tr>`;
+    tbody.innerHTML += row;
+  });
+}
+
 function showStatusMark(type) {
   const mark = document.createElement("img");
   mark.src = `Images/${type}.png`;
@@ -355,13 +411,59 @@ function freezePlayerMovement(duration) {
   player.frozenUntil = Date.now() + duration;
 }
 
+function attemptDogMove(dog, dir) {
+  const { row, col } = getCoords(dog.position);
+  let newRow = row;
+  let newCol = col;
+  switch (dir) {
+    case "up":
+      newRow--;
+      break;
+    case "down":
+      newRow++;
+      break;
+    case "left":
+      newCol--;
+      break;
+    case "right":
+      newCol++;
+      break;
+  }
+  const newIndex = getIndex(newRow, newCol);
+  if (isValidMove(newIndex)) {
+    gridItems[dog.position].removeChild(dog.element);
+    gridItems[newIndex].appendChild(dog.element);
+    dog.position = newIndex;
+    dog.direction = dir;
+  }
+}
+
+function moveDogTowardsPlayer(dog) {
+  const dogCoords = getCoords(dog.position);
+  const playerCoords = getCoords(player.position);
+  let dir = "down";
+  if (Math.abs(playerCoords.row - dogCoords.row) > Math.abs(playerCoords.col - dogCoords.col)) {
+    dir = playerCoords.row > dogCoords.row ? "down" : "up";
+  } else {
+    dir = playerCoords.col > dogCoords.col ? "right" : "left";
+  }
+  attemptDogMove(dog, dir);
+}
+
 function moveDogRandomly(dog) {
   const directions = ["up", "down", "left", "right"];
   const dir = directions[Math.floor(Math.random() * directions.length)];
   attemptDogMove(dog, dir);
 }
 
+function distance(dog, player) {
+  const dogCoords = getCoords(dog.position);
+  const playerCoords = getCoords(player.position);
+  return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
+}
+
 function dogChasePlayer(dog) {
+  const detectionRange = 5;
   if (distance(dog, player) < detectionRange) {
     moveDogTowardsPlayer(dog);
   }

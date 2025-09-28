@@ -578,6 +578,309 @@ This guide provides detailed step-by-step instructions to implement the client-s
 
 ---
 
+## 15. Integrating Item Pickup in Player Movement
+
+- **Fix checkItemPickup function:**
+
+  - The function currently has an undefined `cell` variable. Update it to accept `cell` as a parameter.
+  - Example:
+
+  ```javascript
+  function checkItemPickup(cell) {
+    const item = cell.querySelector(".item");
+    if (item) {
+      const type = item.classList[1];
+      applyItemEffect(type);
+      cell.removeChild(item);
+    }
+  }
+  ```
+
+- **Integrate in movePlayer:**
+
+  - After successfully moving the player and updating `playerPosition`, call `checkItemPickup(gridItems[playerPosition]);`
+  - This ensures items are picked up when the player steps on them.
+  - Example: Add `checkItemPickup(gridItems[playerPosition]);` after `playerPosition = newIndex;`
+
+---
+
+## 16. Populating Dogs Array and Starting Dog AI
+
+- **Update placeRandomElements:**
+
+  - Instead of just appending dog images, create dog objects and push to the `dogs` array.
+  - Each dog object should have `position`, `direction`, and `element` (the img).
+  - Example:
+
+  ```javascript
+  for (let i = 0; i < dogCount; i++) {
+    const pos = getRandomPosition(occupiedPositions);
+    occupiedPositions.push(pos);
+    const dogImg = document.createElement("img");
+    dogImg.className = "dog";
+    dogImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/dog_down.png";
+    dogImg.alt = "dog";
+    gridItems[pos].appendChild(dogImg);
+    dogs.push({ position: pos, direction: 'down', element: dogImg });
+  }
+  ```
+
+- **Start dog AI in Play:**
+
+  - After starting the timer, set `gameInterval = setInterval(updateDogs, 1000);`
+  - This will periodically update dog movements.
+
+- **Clear interval in game over:**
+
+  - In `triggerGameOver`, add `clearInterval(gameInterval);`
+
+---
+
+## 17. Defining Missing Dog AI Functions
+
+- **Define detectionRange:**
+
+  - Add `const detectionRange = 5;` at the top with other constants.
+
+- **Define distance function:**
+
+  - A simple distance based on grid positions.
+  - Example:
+
+  ```javascript
+  function distance(dog, player) {
+    const dogCoords = getCoords(dog.position);
+    const playerCoords = getCoords(player.position);
+    return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
+  }
+  ```
+
+- **Implement attemptDogMove:**
+
+  - Similar to movePlayer, but for dogs. Update position and direction if valid.
+  - Example:
+
+  ```javascript
+  function attemptDogMove(dog, dir) {
+    const { row, col } = getCoords(dog.position);
+    let newRow = row;
+    let newCol = col;
+    switch (dir) {
+      case "up": newRow--; break;
+      case "down": newRow++; break;
+      case "left": newCol--; break;
+      case "right": newCol++; break;
+    }
+    const newIndex = getIndex(newRow, newCol);
+    if (isValidMove(newIndex)) {
+      gridItems[dog.position].removeChild(dog.element);
+      gridItems[newIndex].appendChild(dog.element);
+      dog.position = newIndex;
+      dog.direction = dir;
+    }
+  }
+  ```
+
+- **Implement moveTowardsPlayer:**
+
+  - Calculate the direction towards the player and attempt to move.
+  - Example:
+
+  ```javascript
+  function moveTowardsPlayer(dog) {
+    const dogCoords = getCoords(dog.position);
+    const playerCoords = getCoords(player.position);
+    let dir = 'down';
+    if (Math.abs(playerCoords.row - dogCoords.row) > Math.abs(playerCoords.col - dogCoords.col)) {
+      dir = playerCoords.row > dogCoords.row ? 'down' : 'up';
+    } else {
+      dir = playerCoords.col > dogCoords.col ? 'right' : 'left';
+    }
+    attemptDogMove(dog, dir);
+  }
+  ```
+
+- **Update updateDogs:**
+
+  - Ensure it calls the correct functions. Currently, it has `moveDogTowardsPlayer`, but we defined `moveTowardsPlayer`. Adjust accordingly.
+
+---
+
+## 18. Implementing UI Update Functions
+
+- **Implement updateHeartUI:**
+
+  - Update the heart indicators based on `player.hearts`.
+  - Assuming there are elements with ids like 'heart1', 'heart2', 'heart3'.
+  - Example:
+
+  ```javascript
+  function updateHeartUI() {
+    for (let i = 1; i <= 3; i++) {
+      const heart = document.getElementById(`heart${i}`);
+      if (i <= player.hearts) {
+        heart.style.display = 'block';
+      } else {
+        heart.style.display = 'none';
+      }
+    }
+  }
+  ```
+
+- **Implement updateWallUI, updateTNTUI, updateIceUI:**
+
+  - Display the counters in UI elements.
+  - Example:
+
+  ```javascript
+  function updateWallUI() {
+    document.getElementById('walls').textContent = wallsDestroyed;
+  }
+  function updateTNTUI() {
+    document.getElementById('tnts').textContent = tntsCollected;
+  }
+  function updateIceUI() {
+    document.getElementById('ices').textContent = icesCollected;
+  }
+  ```
+
+- **Call these functions:**
+
+  - In `applyItemEffect`, after updating counters.
+  - In `destroyWall`, after incrementing wallsDestroyed.
+
+---
+
+## 19. Implementing Game Over and Leaderboard
+
+- **Implement triggerGameOver:**
+
+  - Stop the game, show gameover screen, update matchData, save to localStorage.
+  - Example:
+
+  ```javascript
+  function triggerGameOver() {
+    clearInterval(gameInterval);
+    clearTimeout(timerInterval);
+    matchData.username = username.value;
+    matchData.time = timeLeft;
+    matchData.walls = wallsDestroyed;
+    matchData.tnts = tntsCollected;
+    matchData.ices = icesCollected;
+    let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+    matches.push(matchData);
+    localStorage.setItem('matches', JSON.stringify(matches));
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('gameover').style.display = 'block';
+  }
+  ```
+
+- **Implement displayLeaderboard:**
+
+  - Load matches, sort by score (e.g., walls * 10 + tnts * 20 + ices * 5), render in a table.
+  - Example:
+
+  ```javascript
+  function displayLeaderboard() {
+    const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+    matches.sort((a, b) => (b.walls * 10 + b.tnts * 20 + b.ices * 5) - (a.walls * 10 + a.tnts * 20 + a.ices * 5));
+    const tbody = document.querySelector('#leaderboard tbody');
+    tbody.innerHTML = '';
+    matches.forEach(match => {
+      const row = `<tr><td>${match.username}</td><td>${match.walls}</td><td>${match.tnts}</td><td>${match.ices}</td><td>${match.time}</td></tr>`;
+      tbody.innerHTML += row;
+    });
+  }
+  ```
+
+- **Implement playAgain:**
+
+  - Reset variables, call Play().
+  - Example:
+
+  ```javascript
+  function playAgain() {
+    // Reset variables
+    player.hearts = 3;
+    player.explosionRange = 1;
+    player.frozenUntil = 0;
+    wallsDestroyed = 0;
+    tntsCollected = 0;
+    icesCollected = 0;
+    timeLeft = 180;
+    dogs = [];
+    // Hide gameover, call Play
+    document.getElementById('gameover').style.display = 'none';
+    Play();
+  }
+  ```
+
+- **Implement resetLeaderboard:**
+
+  - `localStorage.removeItem('matches'); displayLeaderboard();`
+
+---
+
+## 20. Hit Detection and Player Health
+
+- **Player hit in explosion:**
+
+  - In `explodeBomb`, after applying effects to adjacent cells, check if any affected cell is the player's position.
+  - Example: Add after the loop: `if (gridItems[adjIndex] === gridItems[player.position]) playerHit();`
+
+- **Player hit by dog:**
+
+  - In `attemptDogMove`, after moving, if `dog.position === player.position`, call `playerHit()`.
+
+- **Remove dogs in explosion:**
+
+  - In `applyExplosionEffect`, add:
+
+  ```javascript
+  const dog = cell.querySelector('.dog');
+  if (dog) {
+    cell.removeChild(dog);
+    const index = dogs.findIndex(d => d.element === dog);
+    if (index > -1) dogs.splice(index, 1);
+  }
+  ```
+
+---
+
+## 21. Updating Counters and Item Effects
+
+- **Update applyItemEffect:**
+
+  - For 'tnt': `player.explosionRange *= 2; tntsCollected++; updateTNTUI();`
+  - For 'ice': `icesCollected++; updateIceUI();`
+  - For 'heart': already decreases hearts.
+
+- **Update destroyWall:**
+
+  - After removing wall: `wallsDestroyed++; updateWallUI();`
+
+---
+
+## 22. Fixing Bugs and Final Integrations
+
+- **Fix checkItemPickup:**
+
+  - As in section 15.
+
+- **Ensure frozen check in keydown:**
+
+  - In the keydown for movement: `if (Date.now() < player.frozenUntil) return;`
+
+- **Update matchData in Play:**
+
+  - In Play: `matchData.username = username.value;`
+
+- **Call displayLeaderboard on page load or in home.**
+
+- **Add event listeners for play again and reset buttons.**
+
+---
+
 ## Extending Existing Code
 
 - Add bomb placement and explosion logic inside the keydown event handler for the Space key in `script.js`.
