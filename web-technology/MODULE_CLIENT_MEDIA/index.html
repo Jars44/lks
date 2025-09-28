@@ -212,6 +212,11 @@
             alt="health indicator"
             class="heart-indicator"
           />
+          <div class="hearts">
+            <img id="heart1" src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart.png" alt="heart" />
+            <img id="heart2" src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart.png" alt="heart" />
+            <img id="heart3" src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart.png" alt="heart" />
+          </div>
           <div class="container-stats">
             <div class="wall-score">
               <img
@@ -220,15 +225,15 @@
                 id="wall-crack-1"
                 class="game-images"
               />
-              <h2>= 0</h2>
+              <h2 id="walls">= 0</h2>
             </div>
             <div class="tnt-score">
               <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-1" class="game-images" />
-              <h2>= 0</h2>
+              <h2 id="tnt">= 0</h2>
             </div>
             <div class="ice-score">
               <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-1" class="game-images" />
-              <h2>= 0</h2>
+              <h2 id="ice">= 0</h2>
             </div>
           </div>
         </div>
@@ -247,21 +252,21 @@
             id="wall-crack-gameover"
             class="gameover-images"
           />
-          <h2>=</h2>
+          <h2 id="gameover-walls">= 0</h2>
           <img
             src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png"
             alt="tnt"
             id="tnt-gameover"
-            class="game\over-images"
+            class="gameover-images"
           />
-          <h2>=</h2>
+          <h2 id="gameover-tnt">= 0</h2>
           <img
             src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png"
             alt="ice"
             id="ice-gameover"
             class="gameover-images"
           />
-          <h2>=</h2>
+          <h2 id="gameover-ice">= 0</h2>
         </div>
         <div class="buttons-gameover">
           <button class="save-gameover">Save Score</button>
@@ -293,6 +298,7 @@
                 <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" class="image-leaderboard" />
               </th>
             </tr>
+            <tbody>
             <tr>
               <td>David</td>
               <td class="stat-leaderboard">05:30</td>
@@ -314,11 +320,12 @@
               <td class="stats-leaderboard">2</td>
               <td class="stats-leaderboard">0</td>
             </tr>
+            </tbody>
           </table>
         </div>
         <div class="button-leaderboard">
-          <button class="play-leaderboard">Play Again</button>
-          <button class="reset-leaderboard">Reset</button>
+          <button class="play-leaderboard" onclick="playAgain()">Play Again</button>
+          <button class="reset-leaderboard" onclick="resetLeaderboard()">Reset</button>
         </div>
       </div>
     </section>

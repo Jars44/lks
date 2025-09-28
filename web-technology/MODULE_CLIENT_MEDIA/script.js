@@ -1,3 +1,7 @@
+// =========================================
+// GLOBAL VARIABLES AND CONSTANTS
+// =========================================
+
 let isPaused = false;
 let gameInterval;
 let countdownInterval;
@@ -35,6 +39,10 @@ let matchData = {
 
 let dogs = [];
 
+// =========================================
+// UTILITY FUNCTIONS
+// =========================================
+
 function getCoords(index) {
   return {
     row: Math.floor(index / gridSize),
@@ -60,6 +68,16 @@ function isValidMove(newIndex) {
   const targetItem = gridItems[newIndex];
   return !targetItem.querySelector(".wall") && !targetItem.querySelector(".dog");
 }
+
+function distance(dog, player) {
+  const dogCoords = getCoords(dog.position);
+  const playerCoords = getCoords(player.position);
+  return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
+}
+
+// =========================================
+// INITIALIZATION FUNCTIONS
+// =========================================
 
 function placeRandomElements() {
   const totalGrid = gridItems.length;
@@ -97,6 +115,7 @@ function placeRandomElements() {
     dogImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/dog_down.png";
     dogImg.alt = "dog";
     gridItems[pos].appendChild(dogImg);
+    dogs.push({ position: pos, direction: 'down', element: dogImg });
   }
 
   for (let i = 0; i < wallCount; i++) {
@@ -109,6 +128,32 @@ function placeRandomElements() {
     gridItems[pos].appendChild(wallImg);
   }
 }
+
+function showLoadingScreen() {
+  document.getElementById("loading-overlay").style.display = "flex";
+  let countdown = 3;
+  const countdownElement = document.querySelector(".countdown");
+
+  countdownElement.textContent = countdown;
+
+  countdownInterval = setInterval(() => {
+    countdown--;
+    countdownElement.textContent = countdown;
+
+    if (countdown <= 0) {
+      clearInterval(countdownInterval);
+      hideLoadingScreen();
+    }
+  }, 1000);
+}
+
+function hideLoadingScreen() {
+  document.getElementById("loading-overlay").style.display = "none";
+}
+
+// =========================================
+// PLAYER-RELATED FUNCTIONS
+// =========================================
 
 function movePlayer(direction) {
   const { row, col } = getCoords(playerPosition);
@@ -140,6 +185,7 @@ function movePlayer(direction) {
     playerImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/char_${direction}.png`;
 
     playerPosition = newIndex;
+    player.position = newIndex;
     checkItemPickup(gridItems[playerPosition]);
     console.log(`Player moved to ${direction}, new position: ${playerPosition}`);
   } else {
@@ -147,27 +193,237 @@ function movePlayer(direction) {
   }
 }
 
-function showLoadingScreen() {
-  document.getElementById("loading-overlay").style.display = "flex";
-  let countdown = 3;
-  const countdownElement = document.querySelector(".countdown");
+function checkItemPickup(cell) {
+  const item = cell.querySelector(".item");
+  if (item) {
+    const type = item.classList[1];
+    applyItemEffect(type);
+    cell.removeChild(item);
+  }
+}
 
-  countdownElement.textContent = countdown;
+function applyItemEffect(type) {
+  switch (type) {
+    case "heart":
+      player.hearts = Math.max(0, player.hearts - 1);
+      updateHeartUI();
+      break;
+    case "tnt":
+      player.explosionRange *= 2;
+      tntsCollected++;
+      updateTNTUI();
+      showStatusMark("tnt");
+      break;
+    case "ice":
+      freezePlayerMovement(5000);
+      icesCollected++;
+      updateIceUI();
+      showStatusMark("ice");
+      break;
+  }
+}
 
-  countdownInterval = setInterval(() => {
-    countdown--;
-    countdownElement.textContent = countdown;
+function freezePlayerMovement(duration) {
+  player.frozenUntil = Date.now() + duration;
+}
 
-    if (countdown <= 0) {
-      clearInterval(countdownInterval);
-      hideLoadingScreen();
+function flashPlayer() {
+  const img = document.querySelector(".player");
+  img.classList.add("hit");
+  setTimeout(() => img.classList.remove("hit"), 500);
+}
+
+function playerHit() {
+  player.hearts--;
+  flashPlayer();
+  if (player.hearts <= 0) {
+    triggerGameOver();
+  }
+}
+
+// =========================================
+// DOG-RELATED FUNCTIONS
+// =========================================
+
+function attemptDogMove(dog, dir) {
+  const { row, col } = getCoords(dog.position);
+  let newRow = row;
+  let newCol = col;
+  switch (dir) {
+    case "up":
+      newRow--;
+      break;
+    case "down":
+      newRow++;
+      break;
+    case "left":
+      newCol--;
+      break;
+    case "right":
+      newCol++;
+      break;
+  }
+  const newIndex = getIndex(newRow, newCol);
+  if (isValidMove(newIndex)) {
+    gridItems[dog.position].removeChild(dog.element);
+    gridItems[newIndex].appendChild(dog.element);
+    dog.position = newIndex;
+    dog.direction = dir;
+    if (dog.position === player.position) playerHit();
+  }
+}
+
+function moveDogTowardsPlayer(dog) {
+  const dogCoords = getCoords(dog.position);
+  const playerCoords = getCoords(player.position);
+  let dir = "down";
+  if (Math.abs(playerCoords.row - dogCoords.row) > Math.abs(playerCoords.col - dogCoords.col)) {
+    dir = playerCoords.row > dogCoords.row ? "down" : "up";
+  } else {
+    dir = playerCoords.col > dogCoords.col ? "right" : "left";
+  }
+  attemptDogMove(dog, dir);
+}
+
+function moveDogRandomly(dog) {
+  const directions = ["up", "down", "left", "right"];
+  const dir = directions[Math.floor(Math.random() * directions.length)];
+  attemptDogMove(dog, dir);
+}
+
+function updateDogImage(dog) {
+  const dogImg = dog.element;
+  dogImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/dog_${dog.direction}.png`;
+}
+
+function updateDogs() {
+  dogs.forEach((dog) => {
+    if (Math.random() < 0.5) {
+      moveDogTowardsPlayer(dog);
+    } else {
+      moveDogRandomly(dog);
     }
+    updateDogImage(dog);
+  });
+}
+
+// =========================================
+// BOMB AND EXPLOSION FUNCTIONS
+// =========================================
+
+function placeBombAtPlayerPosition() {
+  const bomb = document.createElement("img");
+  bomb.src = "Images/bomb.png";
+  bomb.classList.add("bomb");
+  const cell = gridItems[player.position];
+  if (!cell.querySelector(".bomb")) {
+    cell.appendChild(bomb);
+    scheduleExplosion(bomb, cell);
+  }
+}
+
+function destroyWall(cell) {
+  const wall = cell.querySelector(".wall");
+  if (wall) {
+    cell.removeChild(wall);
+    wallsDestroyed++;
+    updateWallUI();
+    maybeRevealItem(cell);
+  }
+}
+
+function maybeRevealItem(cell) {
+  const items = ["heart", "tnt", "ice"];
+  if (Math.random() < 0.7) {
+    const itemType = items[Math.floor(Math.random() * items.length)];
+    const item = document.createElement("img");
+    item.src = `Images/${itemType}.png`;
+    item.classList.add("item", itemType);
+    cell.appendChild(item);
+  }
+}
+
+function applyExplosionEffect(cell) {
+  if (cell.querySelector(".wall")) {
+    destroyWall(cell);
+  }
+  const dog = cell.querySelector('.dog');
+  if (dog) {
+    cell.removeChild(dog);
+    const index = dogs.findIndex(d => d.element === dog);
+    if (index > -1) dogs.splice(index, 1);
+  }
+}
+
+function clearExplosion(cell) {
+  const explosion = cell.querySelector(".bomb");
+  if (explosion) cell.removeChild(explosion);
+}
+
+function explodeBomb(bomb, cell) {
+  bomb.src = "Images/bomb_explode.png";
+  const index = Array.from(gridItems).indexOf(cell);
+  const { row, col } = getCoords(index);
+  for (let r = row - player.explosionRange; r <= row + player.explosionRange; r++) {
+    for (let c = col - player.explosionRange; c <= col + player.explosionRange; c++) {
+      if (r === row || c === col) {
+        const adjIndex = getIndex(r, c);
+        if (adjIndex >= 0 && adjIndex < gridItems.length) {
+          applyExplosionEffect(gridItems[adjIndex]);
+          if (adjIndex === player.position) playerHit();
+        }
+      }
+    }
+  }
+  setTimeout(() => {
+    clearExplosion(cell);
   }, 1000);
 }
 
-function hideLoadingScreen() {
-  document.getElementById("loading-overlay").style.display = "none";
+function scheduleExplosion(bomb, cell) {
+  setTimeout(() => {
+    explodeBomb(bomb, cell);
+  }, 5000);
 }
+
+// =========================================
+// UI UPDATE FUNCTIONS
+// =========================================
+
+function updateHeartUI() {
+  for (let i = 1; i <= 3; i++) {
+    const heart = document.getElementById(`heart${i}`);
+    if (i <= player.hearts) {
+      heart.style.display = "block";
+    } else {
+      heart.style.display = "none";
+    }
+  }
+}
+
+function updateWallUI() {
+  document.getElementById("walls").textContent = "= " + wallsDestroyed;
+}
+
+function updateTNTUI() {
+  document.getElementById("tnt").textContent = "= " + tntsCollected;
+}
+
+function updateIceUI() {
+  document.getElementById("ice").textContent = "= " + icesCollected;
+}
+
+function showStatusMark(type) {
+  const mark = document.createElement("img");
+  mark.src = `Images/${type}.png`;
+  mark.classList.add("status-mark");
+  gridItems[player.position].appendChild(mark);
+  mark.remove();
+}
+
+// =========================================
+// GAME CONTROL FUNCTIONS
+// =========================================
 
 function startTimer() {
   if (timerInterval) clearTimeout(timerInterval);
@@ -180,8 +436,7 @@ function startTimer() {
     }
     if (timeLeft <= 0) {
       clearTimeout(timerInterval);
-      document.getElementById("game").style.display = "none";
-      document.getElementById("gameover").style.display = "block";
+      triggerGameOver();
       return;
     }
     timeLeft--;
@@ -237,7 +492,9 @@ function Play() {
     placeRandomElements();
     const playerImg = document.querySelector(".player");
     gridItems[playerPosition].appendChild(playerImg);
+    matchData.username = username.value;
     startTimer();
+    gameInterval = setInterval(updateDogs, 1000);
     console.log("Game started with username:", username.value, "and difficulty:", difficulty.value);
   }, 3000);
 }
@@ -252,69 +509,9 @@ function CloseInstruction() {
   document.getElementById("home").style.display = "block";
 }
 
-function placeBombAtPlayerPosition() {
-  const bomb = document.createElement("img");
-  bomb.src = "Images/bomb.png";
-  bomb.classList.add("bomb");
-  const cell = gridItems[player.position];
-  if (!cell.querySelector(".bomb")) {
-    cell.appendChild(bomb);
-    scheduleExplosion(bomb, cell);
-  }
-}
-
-function destroyWall(cell) {
-  const wall = cell.querySelector(".wall");
-  if (wall) {
-    cell.removeChild(wall);
-    maybeRevealItem(cell);
-  }
-}
-
-function maybeRevealItem(cell) {
-  const items = ["heart", "tnt", "ice"];
-  if (Math.random() < 0.3) {
-    const itemType = items[Math.floor(Math.random() * items.length)];
-    const item = document.createElement("img");
-    item.src = `Images/${itemType}.png`;
-    item.classList.add("item", itemType);
-    cell.appendChild(item);
-  }
-}
-
-function applyExplosionEffect(cell) {
-  if (cell.querySelector(".wall")) {
-    destroyWall(cell);
-  }
-}
-
-function updateHeartUI() {
-  for (let i = 1; i <= 3; i++) {
-    const heart = document.getElementById(`heart${i}`);
-    if (i <= player.hearts) {
-      heart.style.display = "block";
-    } else {
-      heart.style.display = "none";
-    }
-  }
-}
-
-function updateWallUI() {
-  document.getElementById("walls").textContent = ": " + wallsDestroyed;
-}
-
-function updateTNTUI() {
-  document.getElementById("tnt").textContent = ": " + tntUsed;
-}
-
-function updateIceUI() {
-  document.getElementById("ice").textContent = ": " + iceUsed;
-}
-
 function triggerGameOver() {
   clearInterval(gameInterval);
   clearTimeout(timerInterval);
-  matchData.username = username.value;
   matchData.time = timeLeft;
   matchData.walls = wallsDestroyed;
   matchData.tnts = tntsCollected;
@@ -322,6 +519,11 @@ function triggerGameOver() {
   let matches = JSON.parse(localStorage.getItem("matches")) || [];
   matches.push(matchData);
   localStorage.setItem("matches", JSON.stringify(matches));
+  // Update gameover UI
+  document.querySelector('.subtitle-gameover').textContent = `Good job ${matchData.username}! Your time ${Math.floor((180 - timeLeft) / 60)}:${((180 - timeLeft) % 60).toString().padStart(2, '0')} with result:`;
+  document.getElementById('gameover-walls').textContent = '= ' + wallsDestroyed;
+  document.getElementById('gameover-tnt').textContent = '= ' + tntsCollected;
+  document.getElementById('gameover-ice').textContent = '= ' + icesCollected;
   document.getElementById("game").style.display = "none";
   document.getElementById("gameover").style.display = "block";
 }
@@ -343,165 +545,40 @@ function displayLeaderboard() {
   });
 }
 
-function showStatusMark(type) {
-  const mark = document.createElement("img");
-  mark.src = `Images/${type}.png`;
-  mark.classList.add("status-mark");
-  gridItems[player.position].appendChild(mark);
-  setTimeout(() => mark.remove(), 3000);
+function leaderboard() {
+  document.getElementById('gameover').style.display = 'none';
+  document.getElementById('leaderboard').style.display = 'block';
+  displayLeaderboard();
 }
 
-function applyItemEffect(type) {
-  switch (type) {
-    case "heart":
-      player.hearts = Math.max(0, player.hearts - 1);
-      updateHeartUI();
-      break;
-    case "tnt":
-      player.explosionRange *= 1;
-      showStatusMark("tnt");
-      break;
-    case "ice":
-      freezePlayerMovement(5000);
-      showStatusMark("ice");
-      break;
-  }
+function playAgain() {
+  // Reset variables
+  player.hearts = 3;
+  player.explosionRange = 1;
+  player.frozenUntil = 0;
+  wallsDestroyed = 0;
+  tntsCollected = 0;
+  icesCollected = 0;
+  timeLeft = 180;
+  dogs = [];
+  // Hide leaderboard, call Play
+  document.getElementById('leaderboard').style.display = 'none';
+  Play();
 }
 
-function checkItemPickup() {
-  const item = cell.querySelector(".item");
-  if (item) {
-    const type = item.classList[1];
-    applyItemEffect(type);
-    cell.removeChild(item);
-  }
+function resetLeaderboard() {
+  localStorage.removeItem('matches');
+  displayLeaderboard();
 }
 
-function clearExplosion(cell) {
-  const explosion = cell.querySelector(".bomb");
-  if (explosion) cell.removeChild(explosion);
-}
-
-function explodeBomb(bomb, cell) {
-  bomb.src = "Images/bomb_explode.png";
-  const index = Array.from(gridItems).indexOf(cell);
-  const { row, col } = getCoords(index);
-  for (let r = row - player.explosionRange; r <= row + player.explosionRange; r++) {
-    for (let c = col - player.explosionRange; c <= col + player.explosionRange; c++) {
-      if (r === row || c === col) {
-        const adjIndex = getIndex(r, c);
-        if (adjIndex >= 0 && adjIndex < gridItems.length) {
-          applyExplosionEffect(gridItems[adjIndex]);
-        }
-      }
-    }
-  }
-  setTimeout(() => {
-    clearExplosion(cell);
-  }, 1000);
-}
-
-function scheduleExplosion(bomb, cell) {
-  setTimeout(() => {
-    explodeBomb(bomb, cell);
-  }, 5000);
-}
-
-function freezePlayerMovement(duration) {
-  player.frozenUntil = Date.now() + duration;
-}
-
-function attemptDogMove(dog, dir) {
-  const { row, col } = getCoords(dog.position);
-  let newRow = row;
-  let newCol = col;
-  switch (dir) {
-    case "up":
-      newRow--;
-      break;
-    case "down":
-      newRow++;
-      break;
-    case "left":
-      newCol--;
-      break;
-    case "right":
-      newCol++;
-      break;
-  }
-  const newIndex = getIndex(newRow, newCol);
-  if (isValidMove(newIndex)) {
-    gridItems[dog.position].removeChild(dog.element);
-    gridItems[newIndex].appendChild(dog.element);
-    dog.position = newIndex;
-    dog.direction = dir;
-  }
-}
-
-function moveDogTowardsPlayer(dog) {
-  const dogCoords = getCoords(dog.position);
-  const playerCoords = getCoords(player.position);
-  let dir = "down";
-  if (Math.abs(playerCoords.row - dogCoords.row) > Math.abs(playerCoords.col - dogCoords.col)) {
-    dir = playerCoords.row > dogCoords.row ? "down" : "up";
-  } else {
-    dir = playerCoords.col > dogCoords.col ? "right" : "left";
-  }
-  attemptDogMove(dog, dir);
-}
-
-function moveDogRandomly(dog) {
-  const directions = ["up", "down", "left", "right"];
-  const dir = directions[Math.floor(Math.random() * directions.length)];
-  attemptDogMove(dog, dir);
-}
-
-function distance(dog, player) {
-  const dogCoords = getCoords(dog.position);
-  const playerCoords = getCoords(player.position);
-  return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
-}
-
-function dogChasePlayer(dog) {
-  const detectionRange = 5;
-  if (distance(dog, player) < detectionRange) {
-    moveDogTowardsPlayer(dog);
-  }
-}
-
-function flashPlayer() {
-  const img = document.querySelector(".player");
-  img.classList.add("hit");
-  setTimeout(() => img.classList.remove("hit"), 500);
-}
-
-function playerHit() {
-  player.hearts--;
-  flashPlayer();
-  if (player.hearts <= 0) {
-    triggerGameOver();
-  }
-}
-
-function updateDogImage(dog) {
-  const dogImg = dog.element;
-  dogImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/dog_${dog.direction}.png`;
-}
-
-function updateDogs() {
-  dogs.forEach((dog) => {
-    if (Math.random() < 0.5) {
-      moveDogTowardsPlayer(dog);
-    } else {
-      moveDogRandomly(dog);
-    }
-    updateDogImage(dog);
-  });
-}
+// =========================================
+// EVENT LISTENERS
+// =========================================
 
 document.addEventListener("keydown", function (event) {
   if (document.getElementById("game").style.display !== "block") return;
   if (isPaused) return;
+  if (Date.now() < player.frozenUntil) return;
 
   switch (event.key) {
     case "w":
@@ -551,5 +628,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// =========================================
+// INITIAL SETUP
+// =========================================
 
 document.getElementById("home").style.display = "block";
