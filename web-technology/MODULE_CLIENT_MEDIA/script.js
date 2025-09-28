@@ -7,6 +7,7 @@ const difficulty = document.getElementById("level");
 const timerElement = document.getElementById("time");
 let timeLeft = 180;
 let timerInterval;
+let difficultyLevel = 1;
 
 let playerPosition = 23;
 let gridSize = 11;
@@ -78,7 +79,7 @@ function placeRandomElements() {
     return pos;
   }
 
-  const dogCount = 1;
+  const dogCount = difficultyLevel;
   const wallCount = 15;
   const occupiedPositions = [playerPosition];
 
@@ -361,6 +362,9 @@ function destroyWall(cell) {
     cell.removeChild(wall);
     wallsDestroyed++;
     updateWallUI();
+    if (wallsDestroyed === 15) {
+      triggerGameOver();
+    }
     setTimeout(() => maybeRevealItem(cell), 1000);
   }
 }
@@ -574,6 +578,8 @@ function Play() {
   } else {
     difficulty.setCustomValidity("");
   }
+
+  difficultyLevel = parseInt(difficulty.value);
 
   document.getElementById("nickname").textContent = ": " + username.value;
   showLoadingScreen();
