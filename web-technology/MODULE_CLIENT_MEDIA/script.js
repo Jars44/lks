@@ -1,3 +1,4 @@
+// CONFIGURATION
 const config = {
   gridSize: 11,
   gridHeight: 9,
@@ -19,6 +20,7 @@ const config = {
   winWallsRequired: 15,
 };
 
+// GAME STATE
 let isPaused = false;
 let gameInterval;
 let countdownInterval;
@@ -55,6 +57,7 @@ let matchData = {
 
 let dogs = [];
 
+// UTILITY FUNCTIONS
 function getCoords(index) {
   return {
     row: Math.floor(index / config.gridSize),
@@ -87,6 +90,7 @@ function distance(dog, player) {
   return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
 }
 
+// INITIALIZATION
 function placeRandomElements() {
   const totalGrid = gridItems.length;
 
@@ -109,7 +113,6 @@ function placeRandomElements() {
     }
   }
 
-  // Exclude positions within radius 2 of player to prevent trapping
   const playerCoords = getCoords(player.position);
   const radius = config.exclusionRadius;
   for (let i = 0; i < totalGrid; i++) {
@@ -164,6 +167,7 @@ function hideLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "none";
 }
 
+// PLAYER MECHANICS
 function movePlayer(direction) {
   const { row, col } = getCoords(player.position);
   let newRow = row;
@@ -196,7 +200,6 @@ function movePlayer(direction) {
     player.position = newIndex;
     checkItemPickup(gridItems[player.position]);
 
-    // Check for dog collision after player move
     const dog = gridItems[player.position].querySelector(".dog");
     if (dog) {
       playerHit();
@@ -242,7 +245,6 @@ function applyItemEffect(type) {
       player.explosionRange += 1;
       tntsCollected++;
       updateTNTUI();
-      // Add mark if not present
       if (!playerImg.querySelector(".tnt-mark")) {
         const tntMark = document.createElement("img");
         tntMark.src = `${config.imageBasePath}tnt.png`;
@@ -261,7 +263,6 @@ function applyItemEffect(type) {
       freezePlayerMovement(config.freezeDuration);
       icesCollected++;
       updateIceUI();
-      // Add mark if not present
       if (!playerImg.querySelector(".ice-mark")) {
         const iceMark = document.createElement("img");
         iceMark.src = `${config.imageBasePath}ice.png`;
@@ -301,6 +302,7 @@ function playerHit() {
   }
 }
 
+// ENEMY MECHANICS
 function attemptDogMove(dog, dir) {
   const { row, col } = getCoords(dog.position);
   let newRow = row;
@@ -363,6 +365,7 @@ function updateDogs() {
   });
 }
 
+// BOMB MECHANICS
 function placeBombAtPlayerPosition() {
   const bomb = document.createElement("img");
   bomb.src = `${config.imageBasePath}bomb.png`;
@@ -409,6 +412,7 @@ function applyExplosionEffect(cell) {
     if (index > -1) dogs.splice(index, 1);
   }
 }
+
 function clearExplosion(cell) {
   const explosion = cell.querySelector(".bomb");
   if (explosion) cell.removeChild(explosion);
@@ -467,6 +471,7 @@ function scheduleExplosion(bomb, cell) {
   }, config.bombTimer);
 }
 
+// UI UPDATES
 function updateHeartUI() {
   const heartIndicator = document.querySelector(".heart-indicator");
   const heartImages = [
@@ -490,6 +495,7 @@ function updateIceUI() {
   document.getElementById("ice").textContent = "= " + icesCollected;
 }
 
+// GAME CONTROL
 function startTimer() {
   const updateTimer = () => {
     const minutes = Math.floor(timeLeft / 60);
@@ -617,7 +623,6 @@ function leaderboard() {
 }
 
 function playAgain() {
-  // Reset variables
   player.hearts = config.maxHearts;
   player.explosionRange = config.initialExplosionRange;
   player.frozenUntil = 0;
@@ -626,9 +631,8 @@ function playAgain() {
   icesCollected = 0;
   timeLeft = config.initialTime;
   dogs = [];
-  // Hide leaderboard, call Play
-  document.getElementById("leaderboard").style.display = "none";
   Play();
+  document.getElementById("leaderboard").style.display = "none";
 }
 
 function resetLeaderboard() {
@@ -636,6 +640,7 @@ function resetLeaderboard() {
   displayLeaderboard();
 }
 
+// EVENT HANDLING
 document.addEventListener("keydown", function (event) {
   if (document.getElementById("game").style.display !== "block") {
     if (event.key === "Escape") {
@@ -687,6 +692,9 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
+document.getElementById("home").style.display = "block";
+
+// INITIALIZATION
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".form");
   if (form) {
@@ -696,5 +704,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-
-document.getElementById("home").style.display = "block";
