@@ -271,14 +271,310 @@ This guide provides detailed step-by-step instructions to implement the client-s
 
 ---
 
-## 9. Local Storage Usage for Match History and Leaderboard Sorting
+## 7. Defining Player Object and Global Variables
 
-- **Save match data:**  
-  Store player match data (username, time, score, items collected) in local storage as an array of match objects.
-- **Retrieve leaderboard:**  
-  Load the match data from local storage and sort it based on the criteria (walls destroyed, TNTs, ice cubes).
-- **Display leaderboard:**  
-  Render the sorted leaderboard in a popup or dedicated UI section.
+- **Player object:**
+
+  - Replace the simple `playerPosition` variable with a player object to hold more properties.
+  - Example:
+
+  ```javascript
+  let player = {
+    position: 23,
+    hearts: 3,
+    explosionRange: 1,
+    direction: 'down',
+    frozenUntil: 0
+  };
+  ```
+
+- **Global counters:**
+
+  - Add counters for game statistics.
+  - Example:
+
+  ```javascript
+  let wallsDestroyed = 0;
+  let tntsCollected = 0;
+  let icesCollected = 0;
+  ```
+
+- **Match data object:**
+
+  - Store match information for leaderboards.
+  - Example:
+
+  ```javascript
+  let matchData = {
+    username: '',
+    time: 180,
+    walls: 0,
+    tnts: 0,
+    ices: 0
+  };
+  ```
+
+- **Update references:**
+
+  - Change all `playerPosition` to `player.position`.
+  - In `Play()`: Set `matchData.username = username.value; matchData.time = timeLeft;`
+
+---
+
+## 8. Enhancing Bomb Explosion with Range
+
+- **Fix placeBombAtPlayerPosition:**
+
+  - Use `gridItems[player.position]` instead of undefined `player.x, player.y`.
+  - Example:
+
+  ```javascript
+  function placeBombAtPlayerPosition() {
+    const bomb = document.createElement("img");
+    bomb.src = "Images/bomb.png";
+    bomb.classList.add("bomb");
+    const cell = gridItems[player.position];
+    if (!cell.querySelector(".bomb")) {
+      cell.appendChild(bomb);
+      scheduleExplosion(bomb, cell);
+    }
+  }
+  ```
+
+- **Add getGridCell function:**
+
+  - If needed, but since gridItems is an array, use index directly.
+
+- **Enhance explodeBomb:**
+
+  - Propagate explosion to adjacent cells based on `player.explosionRange`.
+  - Example:
+
+  ```javascript
+  function explodeBomb(bomb, cell) {
+    bomb.src = "Images/bomb_explode.png";
+    const index = Array.from(gridItems).indexOf(cell);
+    const { row, col } = getCoords(index);
+    for (let r = row - player.explosionRange; r <= row + player.explosionRange; r++) {
+      for (let c = col - player.explosionRange; c <= col + player.explosionRange; c++) {
+        if (r === row || c === col) {
+          const adjIndex = getIndex(r, c);
+          if (adjIndex >= 0 && adjIndex < gridItems.length) {
+            applyExplosionEffect(gridItems[adjIndex]);
+          }
+        }
+      }
+    }
+    setTimeout(() => {
+      clearExplosion(cell);
+    }, 1000);
+  }
+  ```
+
+- **Add clearExplosion:**
+
+  - Remove explosion image after delay.
+  - Example:
+
+  ```javascript
+  function clearExplosion(cell) {
+    const explosion = cell.querySelector(".bomb");
+    if (explosion) cell.removeChild(explosion);
+  }
+  ```
+
+- **Update range on TNT:**
+
+  - In `applyItemEffect`, for 'tnt': `player.explosionRange *= 2;`
+
+---
+
+## 9. Item Pickup Integration and Freeze Movement
+
+- **Integrate checkItemPickup in movePlayer:**
+
+  - After moving, check the new cell for items.
+  - Example: In `movePlayer`, after `playerPosition = newIndex;`, add `checkItemPickup(gridItems[newIndex]);`
+
+- **Fix checkItemPickup:**
+
+  - Take cell as parameter.
+  - Example:
+
+  ```javascript
+  function checkItemPickup(cell) {
+    const item = cell.querySelector(".item");
+    if (item) {
+      const type = item.classList[1];
+      applyItemEffect(type);
+      cell.removeChild(item);
+    }
+  }
+  ```
+
+- **Update applyItemEffect:**
+
+  - For 'tnt': `player.explosionRange *= 2; tntsCollected++;`
+  - For 'ice': `freezePlayerMovement(5000); icesCollected++;`
+
+- **Implement freezePlayerMovement:**
+
+  - Set `player.frozenUntil = Date.now() + duration;`
+  - Example:
+
+  ```javascript
+  function freezePlayerMovement(duration) {
+    player.frozenUntil = Date.now() + duration;
+  }
+  ```
+
+- **Check frozen in keydown:**
+
+  - In keydown event, before handling keys: `if (Date.now() < player.frozenUntil) return;`
+
+- **Update counters and UI:**
+
+  - Implement `updateWallUI()`, `updateTNTUI()`, `updateIceUI()` to display counters.
+
+---
+
+## 10. Dog AI Movement
+
+- **Dogs array:**
+
+  - Add `let dogs = [];`
+
+- **Update placeRandomElements:**
+
+  - Push dog objects to dogs array.
+  - Example: Instead of appending img, `dogs.push({ position: pos, direction: 'down' });` and append img.
+
+- **Add gameInterval:**
+
+  - `gameInterval = setInterval(updateDogs, 1000);`
+
+- **Implement updateDogs:**
+
+  - For each dog, decide to chase or random move.
+  - Example:
+
+  ```javascript
+  function updateDogs() {
+    dogs.forEach(dog => {
+      if (Math.random() < 0.5) {
+        moveTowardsPlayer(dog);
+      } else {
+        moveDogRandomly(dog);
+      }
+      updateDogImage(dog);
+    });
+  }
+  ```
+
+- **Implement moveDogRandomly and moveTowardsPlayer:**
+
+  - Similar to player move, but for dogs, check if move to player position triggers hit.
+
+- **Update dog img:**
+
+  - `function updateDogImage(dog) { const img = gridItems[dog.position].querySelector('.dog'); img.src = `Images/dog_${dog.direction}.png`; }`
+
+- **Remove dogs in explosion:**
+
+  - In `applyExplosionEffect`, if cell has dog, remove and splice from dogs array.
+
+---
+
+## 11. Player Health and Hit Detection
+
+- **Implement playerHit:**
+
+  - As above.
+
+- **In explosion:**
+
+  - If player's position is in affected cells, call `playerHit()`.
+
+- **In dog move:**
+
+  - If dog moves to `player.position`, call `playerHit()`.
+
+- **Implement flashPlayer:**
+
+  - Toggle a class or change img briefly.
+  - Example:
+
+  ```javascript
+  function flashPlayer() {
+    const img = document.querySelector('.player');
+    img.classList.add('hit');
+    setTimeout(() => img.classList.remove('hit'), 500);
+  }
+  ```
+
+- **Implement updateHeartUI:**
+
+  - Show/hide heart images based on `player.hearts`.
+
+---
+
+## 12. UI Updates and Counters
+
+- **Implement update functions:**
+
+  - `function updateWallUI() { document.getElementById('walls').textContent = wallsDestroyed; }`
+  - Similarly for TNT and Ice.
+
+- **In gameover:**
+
+  - Update matchData with final values, save to localStorage.
+
+- **Implement triggerGameOver:**
+
+  - Show gameover screen, stop intervals.
+
+---
+
+## 13. Local Storage for Leaderboards
+
+- **Save in gameover:**
+
+  - `let matches = JSON.parse(localStorage.getItem('matches') || '[]'); matches.push(matchData); localStorage.setItem('matches', JSON.stringify(matches));`
+
+- **Implement leaderboard:**
+
+  - Load, sort by score (e.g., walls + tnts*10 + ices*5), render table.
+
+- **Reset function:**
+
+  - `localStorage.removeItem('matches');`
+
+- **Play Again:**
+
+  - Reset variables, call Play().
+
+---
+
+## 14. Other Fixes
+
+- **showStatusMark:**
+
+  - Append img to player cell, remove after duration.
+  - Example:
+
+  ```javascript
+  function showStatusMark(type) {
+    const mark = document.createElement('img');
+    mark.src = `Images/${type}.png`;
+    mark.classList.add('status-mark');
+    gridItems[player.position].appendChild(mark);
+    setTimeout(() => mark.remove(), 3000);
+  }
+  ```
+
+- **Timer end:**
+
+  - In startTimer, when timeLeft <=0, call `triggerGameOver()`.
 
 ---
 

@@ -13,6 +13,28 @@ let gridSize = 11;
 let playerDirection = "down";
 const gridItems = document.querySelectorAll(".grid-item");
 
+let player = {
+  position: playerPosition,
+  hearts: 3,
+  explosionRange: 1,
+  direction: playerDirection,
+  frozenUntil: 0,
+};
+
+let wallsDestroyed = 0;
+let tntsCollected = 0;
+let icesCollected = 0;
+
+let matchData = {
+  username: "",
+  time: 180,
+  walls: 0,
+  tnts: 0,
+  ices: 0,
+};
+
+let dogs = [];
+
 function getCoords(index) {
   return {
     row: Math.floor(index / gridSize),
@@ -233,7 +255,7 @@ function placeBombAtPlayerPosition() {
   const bomb = document.createElement("img");
   bomb.src = "Images/bomb.png";
   bomb.classList.add("bomb");
-  const cell = getGridCell(player.x, player.y);
+  const cell = gridItems[player.position];
   if (!cell.querySelector(".bomb")) {
     cell.appendChild(bomb);
     scheduleExplosion(bomb, cell);
@@ -265,6 +287,14 @@ function applyExplosionEffect(cell) {
   }
 }
 
+function showStatusMark(type) {
+  const mark = document.createElement("img");
+  mark.src = `Images/${type}.png`;
+  mark.classList.add("status-mark");
+  gridItems[player.position].appendChild(mark);
+  setTimeout(() => mark.remove(), 3000);
+}
+
 function applyItemEffect(type) {
   switch (type) {
     case "heart":
@@ -272,7 +302,7 @@ function applyItemEffect(type) {
       updateHeartUI();
       break;
     case "tnt":
-      player.explosionRange += 1;
+      player.explosionRange *= 1;
       showStatusMark("tnt");
       break;
     case "ice":
@@ -285,14 +315,31 @@ function applyItemEffect(type) {
 function checkItemPickup() {
   const item = cell.querySelector(".item");
   if (item) {
-    applyItemEffect(item);
+    const type = item.classList[1];
+    applyItemEffect(type);
     cell.removeChild(item);
   }
 }
 
+function clearExplosion(cell) {
+  const explosion = cell.querySelector(".bomb");
+  if (explosion) cell.removeChild(explosion);
+}
+
 function explodeBomb(bomb, cell) {
   bomb.src = "Images/bomb_explode.png";
-  applyExplosionEffect(cell);
+  const index = Array.from(gridItems).indexOf(cell);
+  const { row, col } = getCoords(index);
+  for (let r = row - player.explosionRange; r <= row + player.explosionRange; r++) {
+    for (let c = col - player.explosionRange; c <= col + player.explosionRange; c++) {
+      if (r === row || c === col) {
+        const adjIndex = getIndex(r, c);
+        if (adjIndex >= 0 && adjIndex < gridItems.length) {
+          applyExplosionEffect(gridItems[adjIndex]);
+        }
+      }
+    }
+  }
   setTimeout(() => {
     clearExplosion(cell);
   }, 1000);
@@ -302,6 +349,52 @@ function scheduleExplosion(bomb, cell) {
   setTimeout(() => {
     explodeBomb(bomb, cell);
   }, 5000);
+}
+
+function freezePlayerMovement(duration) {
+  player.frozenUntil = Date.now() + duration;
+}
+
+function moveDogRandomly(dog) {
+  const directions = ["up", "down", "left", "right"];
+  const dir = directions[Math.floor(Math.random() * directions.length)];
+  attemptDogMove(dog, dir);
+}
+
+function dogChasePlayer(dog) {
+  if (distance(dog, player) < detectionRange) {
+    moveDogTowardsPlayer(dog);
+  }
+}
+
+function flashPlayer() {
+  const img = document.querySelector(".player");
+  img.classList.add("hit");
+  setTimeout(() => img.classList.remove("hit"), 500);
+}
+
+function playerHit() {
+  player.hearts--;
+  flashPlayer();
+  if (player.hearts <= 0) {
+    triggerGameOver();
+  }
+}
+
+function updateDogImage(dog) {
+  const dogImg = dog.element;
+  dogImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/dog_${dog.direction}.png`;
+}
+
+function updateDogs() {
+  dogs.forEach((dog) => {
+    if (Math.random() < 0.5) {
+      moveDogTowardsPlayer(dog);
+    } else {
+      moveDogRandomly(dog);
+    }
+    updateDogImage(dog);
+  });
 }
 
 document.addEventListener("keydown", function (event) {
