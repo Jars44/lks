@@ -1,7 +1,3 @@
-// =========================================
-// GLOBAL VARIABLES AND CONSTANTS
-// =========================================
-
 let isPaused = false;
 let gameInterval;
 let countdownInterval;
@@ -39,10 +35,6 @@ let matchData = {
 
 let dogs = [];
 
-// =========================================
-// UTILITY FUNCTIONS
-// =========================================
-
 function getCoords(index) {
   return {
     row: Math.floor(index / gridSize),
@@ -74,10 +66,6 @@ function distance(dog, player) {
   const playerCoords = getCoords(player.position);
   return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
 }
-
-// =========================================
-// INITIALIZATION FUNCTIONS
-// =========================================
 
 function placeRandomElements() {
   const totalGrid = gridItems.length;
@@ -150,10 +138,6 @@ function showLoadingScreen() {
 function hideLoadingScreen() {
   document.getElementById("loading-overlay").style.display = "none";
 }
-
-// =========================================
-// PLAYER-RELATED FUNCTIONS
-// =========================================
 
 function movePlayer(direction) {
   const { row, col } = getCoords(playerPosition);
@@ -241,10 +225,6 @@ function playerHit() {
   }
 }
 
-// =========================================
-// DOG-RELATED FUNCTIONS
-// =========================================
-
 function attemptDogMove(dog, dir) {
   const { row, col } = getCoords(dog.position);
   let newRow = row;
@@ -306,10 +286,6 @@ function updateDogs() {
     updateDogImage(dog);
   });
 }
-
-// =========================================
-// BOMB AND EXPLOSION FUNCTIONS
-// =========================================
 
 function placeBombAtPlayerPosition() {
   const bomb = document.createElement("img");
@@ -386,10 +362,6 @@ function scheduleExplosion(bomb, cell) {
   }, 5000);
 }
 
-// =========================================
-// UI UPDATE FUNCTIONS
-// =========================================
-
 function updateHeartUI() {
   for (let i = 1; i <= 3; i++) {
     const heart = document.getElementById(`heart${i}`);
@@ -420,10 +392,6 @@ function showStatusMark(type) {
   gridItems[player.position].appendChild(mark);
   mark.remove();
 }
-
-// =========================================
-// GAME CONTROL FUNCTIONS
-// =========================================
 
 function startTimer() {
   if (timerInterval) clearTimeout(timerInterval);
@@ -571,10 +539,6 @@ function resetLeaderboard() {
   displayLeaderboard();
 }
 
-// =========================================
-// EVENT LISTENERS
-// =========================================
-
 document.addEventListener("keydown", function (event) {
   if (document.getElementById("game").style.display !== "block") return;
   if (isPaused) return;
@@ -628,9 +592,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-
-// =========================================
-// INITIAL SETUP
-// =========================================
 
 document.getElementById("home").style.display = "block";
