@@ -493,7 +493,19 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 93vh;
+  background-color: #353535;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.container-leaderboard h1 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .table-leaderboard {
@@ -501,6 +513,11 @@ body {
   width: 550px;
   border-collapse: collapse;
   margin-top: 30px;
+}
+
+.table-leaderboard th {
+  padding: 10px;
+  text-align: center;
 }
 
 .image-leaderboard {
@@ -513,12 +530,12 @@ body {
 }
 
 .row-mid-leaderboard {
-  border-top: 1px solid #818181;
-  border-bottom: 1px solid #818181;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
 }
 
 .stat-leaderboard {
-  text-align: center;
+  text-align: left;
 }
 
 .stats-leaderboard {
@@ -633,8 +650,14 @@ body {
 
 /* ANIMATIONS */
 @keyframes flash {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0.3;
+  }
 }
 
 @keyframes collect {

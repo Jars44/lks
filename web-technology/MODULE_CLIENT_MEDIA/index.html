@@ -219,7 +219,7 @@
     <section id="gameover" style="display: none">
       <div class="container-gameover">
         <h1 class="title-gameover">Game Over!</h1>
-        <h2 class="subtitle-gameover">Good job David! Your time 01:22 with result:</h2>
+        <h2 class="subtitle-gameover"></h2>
         <div class="stats-gameover">
           <img
             src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
@@ -244,7 +244,7 @@
           <h2 id="gameover-ice">= 0</h2>
         </div>
         <div class="buttons-gameover">
-          <button class="save-gameover">Save Score</button>
+          <button class="save-gameover" onclick="saveScore()">Save Score</button>
           <button class="leaderboard-gameover" onclick="leaderboard()">Leaderboard</button>
         </div>
       </div>
@@ -256,45 +256,34 @@
         <h1 style="font-size: 4rem">Leaderboards</h1>
         <div class="table-container">
           <table class="table-leaderboard">
-            <tr>
-              <th style="text-align: left">Player Name</th>
-              <th>Time</th>
-              <th>
-                <img
-                  src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
-                  alt="wall_crack"
-                  class="image-leaderboard"
-                />
-              </th>
-              <th>
-                <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" class="image-leaderboard" />
-              </th>
-              <th>
-                <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" class="image-leaderboard" />
-              </th>
-            </tr>
+            <thead>
+              <tr>
+                <th style="text-align: left">Player Name</th>
+                <th>Time</th>
+                <th>
+                  <img
+                    src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
+                    alt="wall_crack"
+                    class="image-leaderboard"
+                  />
+                </th>
+                <th>
+                  <img
+                    src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png"
+                    alt="tnt"
+                    class="image-leaderboard"
+                  />
+                </th>
+                <th>
+                  <img
+                    src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png"
+                    alt="ice"
+                    class="image-leaderboard"
+                  />
+                </th>
+              </tr>
+            </thead>
             <tbody>
-            <tr>
-              <td>David</td>
-              <td class="stat-leaderboard">05:30</td>
-              <td class="stats-leaderboard">9</td>
-              <td class="stats-leaderboard">1</td>
-              <td class="stats-leaderboard">1</td>
-            </tr>
-            <tr class="row-mid-leaderboard">
-              <td>Joni</td>
-              <td class="stat-leaderboard">01:20</td>
-              <td class="stats-leaderboard">4</td>
-              <td class="stats-leaderboard">0</td>
-              <td class="stats-leaderboard">1</td>
-            </tr>
-            <tr class="row-leaderboard">
-              <td>Hikmat</td>
-              <td class="stat-leaderboard">00:50</td>
-              <td class="stats-leaderboard">1</td>
-              <td class="stats-leaderboard">2</td>
-              <td class="stats-leaderboard">0</td>
-            </tr>
             </tbody>
           </table>
         </div>

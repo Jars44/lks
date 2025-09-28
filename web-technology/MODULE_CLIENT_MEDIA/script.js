@@ -581,17 +581,14 @@ function CloseInstruction() {
 function triggerGameOver() {
   clearInterval(gameInterval);
   clearTimeout(timerInterval);
-  matchData.time = timeLeft;
+  matchData.time = config.initialTime - timeLeft;
   matchData.walls = wallsDestroyed;
   matchData.tnts = tntsCollected;
   matchData.ices = icesCollected;
-  let matches = JSON.parse(localStorage.getItem("matches")) || [];
-  matches.push(matchData);
-  localStorage.setItem("matches", JSON.stringify(matches));
   // Update gameover UI
   document.querySelector(".subtitle-gameover").textContent = `Good job ${matchData.username}! Your time ${Math.floor(
-    (config.initialTime - timeLeft) / 60
-  )}:${((config.initialTime - timeLeft) % 60).toString().padStart(2, "0")} with result:`;
+    matchData.time / 60
+  )}:${(matchData.time % 60).toString().padStart(2, "0")} with result:`;
   document.getElementById("gameover-walls").textContent = "= " + wallsDestroyed;
   document.getElementById("gameover-tnt").textContent = "= " + tntsCollected;
   document.getElementById("gameover-ice").textContent = "= " + icesCollected;
@@ -599,21 +596,37 @@ function triggerGameOver() {
   document.getElementById("gameover").style.display = "block";
 }
 
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${minutes}:${secs.toString().padStart(2, "0")}`;
+}
+
 function displayLeaderboard() {
-  const matches = JSON.parse(localStorage.getItem("matches") || "[]");
-  matches.sort((a, b) => b.walls * 10 + b.tnts * 20 + b.ices * 5 - (a.walls * 10 + a.tnts * 20 + a.ices * 5));
+  let matches = JSON.parse(localStorage.getItem("matches") || "[]");
+  const score = (match) => match.walls * 10 + match.tnts * 20 + match.ices * 5;
+  matches.sort((a, b) => score(b) - score(a));
+  const topMatches = matches.slice(0, 3);
   const tbody = document.querySelector("#leaderboard tbody");
   tbody.innerHTML = "";
-  matches.forEach((match) => {
-    const row = `<tr>
-      <td>${match.username}</td>
-      <td>${match.walls}</td>
-      <td>${match.tnts}</td>
-      <td>${match.ices}</td>
-      <td>${match.time}</td>
+  topMatches.forEach((match, index) => {
+    const rowClass = index === 1 ? 'class="row-mid-leaderboard"' : '';
+    const row = `<tr ${rowClass}>
+      <td class="stat-leaderboard">${match.username}</td>
+      <td class="stats-leaderboard">${formatTime(match.time)}</td>
+      <td class="stats-leaderboard">${match.walls}</td>
+      <td class="stats-leaderboard">${match.tnts}</td>
+      <td class="stats-leaderboard">${match.ices}</td>
     </tr>`;
     tbody.innerHTML += row;
   });
+}
+
+function saveScore() {
+  let matches = JSON.parse(localStorage.getItem("matches")) || [];
+  matches.push(matchData);
+  localStorage.setItem("matches", JSON.stringify(matches));
+  leaderboard();
 }
 
 function leaderboard() {
@@ -631,8 +644,10 @@ function playAgain() {
   icesCollected = 0;
   timeLeft = config.initialTime;
   dogs = [];
-  Play();
   document.getElementById("leaderboard").style.display = "none";
+  document.getElementById("gameover").style.display = "none";
+  document.getElementById("home").style.display = "block";
+  Play();
 }
 
 function resetLeaderboard() {
@@ -693,7 +708,7 @@ document.addEventListener("keydown", function (event) {
 });
 
 // INITIALIZATION
-document.getElementById("home").style.display = "block";
+document.getElementById("leaderboard").style.display = "block";
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".form");
