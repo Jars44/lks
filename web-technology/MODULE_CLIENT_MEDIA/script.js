@@ -1,3 +1,24 @@
+const config = {
+  gridSize: 11,
+  gridHeight: 9,
+  playerStartPosition: 23,
+  wallCount: 15,
+  exclusionRadius: 2,
+  initialTime: 180,
+  maxHearts: 3,
+  initialExplosionRange: 1,
+  itemRevealProbability: 0.9,
+  dogChaseProbability: 0.5,
+  bombTimer: 5000,
+  freezeDuration: 5000,
+  explosionDisplayTime: 1000,
+  collectAnimationTime: 500,
+  loadingCountdown: 3000,
+  dogUpdateInterval: 1000,
+  imageBasePath: "Images/",
+  winWallsRequired: 15,
+};
+
 let isPaused = false;
 let gameInterval;
 let countdownInterval;
@@ -5,19 +26,17 @@ let countdownInterval;
 const username = document.getElementById("username");
 const difficulty = document.getElementById("level");
 const timerElement = document.getElementById("time");
-let timeLeft = 180;
+let timeLeft = config.initialTime;
 let timerInterval;
 let difficultyLevel = 1;
 
-let playerPosition = 23;
-let gridSize = 11;
 let playerDirection = "down";
 const gridItems = document.querySelectorAll(".grid-item");
 
 let player = {
-  position: playerPosition,
-  hearts: 3,
-  explosionRange: 1,
+  position: config.playerStartPosition,
+  hearts: config.maxHearts,
+  explosionRange: config.initialExplosionRange,
   direction: playerDirection,
   frozenUntil: 0,
 };
@@ -28,7 +47,7 @@ let icesCollected = 0;
 
 let matchData = {
   username: "",
-  time: 180,
+  time: config.initialTime,
   walls: 0,
   tnts: 0,
   ices: 0,
@@ -38,24 +57,24 @@ let dogs = [];
 
 function getCoords(index) {
   return {
-    row: Math.floor(index / gridSize),
-    col: index % gridSize,
+    row: Math.floor(index / config.gridSize),
+    col: index % config.gridSize,
   };
 }
 
 function isWall(row, col) {
-  if (row === 0 || row === 8) return true;
-  if (col === 0 || col === 10) return true;
+  if (row === 0 || row === config.gridHeight - 1) return true;
+  if (col === 0 || col === config.gridSize - 1) return true;
   if (row % 2 === 0 && col % 2 === 0) return true;
   return false;
 }
 
 function getIndex(row, col) {
-  return row * gridSize + col;
+  return row * config.gridSize + col;
 }
 
 function isValidMove(newIndex) {
-  if (newIndex < 0 || newIndex >= 99) return false;
+  if (newIndex < 0 || newIndex >= config.gridSize * config.gridHeight) return false;
   const { row, col } = getCoords(newIndex);
   if (isWall(row, col)) return false;
   const targetItem = gridItems[newIndex];
@@ -80,8 +99,8 @@ function placeRandomElements() {
   }
 
   const dogCount = difficultyLevel;
-  const wallCount = 15;
-  const occupiedPositions = [playerPosition];
+  const wallCount = config.wallCount;
+  const occupiedPositions = [player.position];
 
   for (let i = 0; i < totalGrid; i++) {
     const { row, col } = getCoords(i);
@@ -91,8 +110,8 @@ function placeRandomElements() {
   }
 
   // Exclude positions within radius 2 of player to prevent trapping
-  const playerCoords = getCoords(playerPosition);
-  const radius = 2;
+  const playerCoords = getCoords(player.position);
+  const radius = config.exclusionRadius;
   for (let i = 0; i < totalGrid; i++) {
     const { row, col } = getCoords(i);
     const dist = Math.abs(row - playerCoords.row) + Math.abs(col - playerCoords.col);
@@ -106,7 +125,7 @@ function placeRandomElements() {
     occupiedPositions.push(pos);
     const dogImg = document.createElement("img");
     dogImg.className = "dog";
-    dogImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/dog_down.png";
+    dogImg.src = `${config.imageBasePath}dog_down.png`;
     dogImg.alt = "dog";
     gridItems[pos].appendChild(dogImg);
     dogs.push({ position: pos, direction: "down", element: dogImg });
@@ -117,7 +136,7 @@ function placeRandomElements() {
     occupiedPositions.push(pos);
     const wallImg = document.createElement("img");
     wallImg.className = "wall";
-    wallImg.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/wall.png";
+    wallImg.src = `${config.imageBasePath}wall.png`;
     wallImg.alt = "wall";
     gridItems[pos].appendChild(wallImg);
   }
@@ -146,7 +165,7 @@ function hideLoadingScreen() {
 }
 
 function movePlayer(direction) {
-  const { row, col } = getCoords(playerPosition);
+  const { row, col } = getCoords(player.position);
   let newRow = row;
   let newCol = col;
 
@@ -172,18 +191,16 @@ function movePlayer(direction) {
     targetItem.appendChild(playerImg);
 
     playerDirection = direction;
-    playerImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/char_${direction}.png`;
+    playerImg.src = `${config.imageBasePath}char_${direction}.png`;
 
-    playerPosition = newIndex;
     player.position = newIndex;
-    checkItemPickup(gridItems[playerPosition]);
+    checkItemPickup(gridItems[player.position]);
 
     // Check for dog collision after player move
-    const dog = gridItems[playerPosition].querySelector(".dog");
+    const dog = gridItems[player.position].querySelector(".dog");
     if (dog) {
       playerHit();
     }
-  } else {
   }
 }
 
@@ -192,11 +209,11 @@ function animateCollect(element, cell, remove = true) {
   if (remove) {
     setTimeout(() => {
       if (cell.contains(element)) cell.removeChild(element);
-    }, 500);
+    }, config.collectAnimationTime);
   } else {
     setTimeout(() => {
       element.classList.remove("collecting");
-    }, 500);
+    }, config.collectAnimationTime);
   }
 }
 
@@ -204,8 +221,9 @@ function checkItemPickup(cell) {
   const item = cell.querySelector(".item");
   if (item) {
     const type = item.classList[1];
+
     animateCollect(item, cell);
-    setTimeout(() => applyItemEffect(type), 500);
+    setTimeout(() => applyItemEffect(type), config.collectAnimationTime);
   }
 }
 
@@ -227,7 +245,7 @@ function applyItemEffect(type) {
       // Add mark if not present
       if (!playerImg.querySelector(".tnt-mark")) {
         const tntMark = document.createElement("img");
-        tntMark.src = "Images/tnt.png";
+        tntMark.src = `${config.imageBasePath}tnt.png`;
         tntMark.classList.add("tnt-mark", "item-mark");
         tntMark.style.width = "20px";
         tntMark.style.height = "auto";
@@ -240,13 +258,13 @@ function applyItemEffect(type) {
       }
       break;
     case "ice":
-      freezePlayerMovement(5000);
+      freezePlayerMovement(config.freezeDuration);
       icesCollected++;
       updateIceUI();
       // Add mark if not present
       if (!playerImg.querySelector(".ice-mark")) {
         const iceMark = document.createElement("img");
-        iceMark.src = "Images/ice.png";
+        iceMark.src = `${config.imageBasePath}ice.png`;
         iceMark.classList.add("ice-mark", "item-mark");
         iceMark.style.width = "20px";
         iceMark.style.height = "auto";
@@ -271,7 +289,7 @@ function freezePlayerMovement(duration) {
 function flashPlayer() {
   const img = document.querySelector(".player");
   img.classList.add("hit");
-  setTimeout(() => img.classList.remove("hit"), 500);
+  setTimeout(() => img.classList.remove("hit"), config.collectAnimationTime);
 }
 
 function playerHit() {
@@ -331,12 +349,12 @@ function moveDogRandomly(dog) {
 
 function updateDogImage(dog) {
   const dogImg = dog.element;
-  dogImg.src = `/web-technology/MODULE_CLIENT_MEDIA/Images/dog_${dog.direction}.png`;
+  dogImg.src = `${config.imageBasePath}dog_${dog.direction}.png`;
 }
 
 function updateDogs() {
   dogs.forEach((dog) => {
-    if (Math.random() < 0.5) {
+    if (Math.random() < config.dogChaseProbability) {
       moveDogTowardsPlayer(dog);
     } else {
       moveDogRandomly(dog);
@@ -347,7 +365,7 @@ function updateDogs() {
 
 function placeBombAtPlayerPosition() {
   const bomb = document.createElement("img");
-  bomb.src = "Images/bomb.png";
+  bomb.src = `${config.imageBasePath}bomb.png`;
   bomb.classList.add("bomb");
   const cell = gridItems[player.position];
   if (!cell.querySelector(".bomb")) {
@@ -362,19 +380,19 @@ function destroyWall(cell) {
     cell.removeChild(wall);
     wallsDestroyed++;
     updateWallUI();
-    if (wallsDestroyed === 15) {
+    if (wallsDestroyed === config.winWallsRequired) {
       triggerGameOver();
     }
-    setTimeout(() => maybeRevealItem(cell), 1000);
+    setTimeout(() => maybeRevealItem(cell), config.explosionDisplayTime);
   }
 }
 
 function maybeRevealItem(cell) {
   const items = ["heart", "tnt", "ice"];
-  if (Math.random() < 0.9) {
+  if (Math.random() < config.itemRevealProbability) {
     const itemType = items[Math.floor(Math.random() * items.length)];
     const item = document.createElement("img");
-    item.src = `Images/${itemType}.png`;
+    item.src = `${config.imageBasePath}${itemType}.png`;
     item.classList.add("item", itemType);
     cell.appendChild(item);
   }
@@ -391,97 +409,48 @@ function applyExplosionEffect(cell) {
     if (index > -1) dogs.splice(index, 1);
   }
 }
-
 function clearExplosion(cell) {
   const explosion = cell.querySelector(".bomb");
   if (explosion) cell.removeChild(explosion);
 }
 
+function explodeInDirection(row, col, deltaRow, deltaCol, range, index, affectedCells) {
+  for (let i = 1; i <= range; i++) {
+    const r = row + deltaRow * i;
+    const c = col + deltaCol * i;
+    if (isWall(r, c)) break;
+    const adjIndex = getIndex(r, c);
+    if (adjIndex >= 0 && adjIndex < gridItems.length) {
+      const adjCell = gridItems[adjIndex];
+      applyExplosionEffect(adjCell);
+      if (adjIndex === player.position) playerHit();
+      if (adjIndex !== index && !adjCell.querySelector(".explosion")) {
+        const explosionImg = document.createElement("img");
+        explosionImg.src = `${config.imageBasePath}bomb_explode.png`;
+        explosionImg.classList.add("explosion");
+        explosionImg.style.width = "100%";
+        explosionImg.style.height = "auto";
+        adjCell.appendChild(explosionImg);
+        affectedCells.push(adjCell);
+      }
+    }
+  }
+}
+
 function explodeBomb(bomb, cell) {
-  bomb.src = "Images/bomb_explode.png";
+  bomb.src = `${config.imageBasePath}bomb_explode.png`;
   const index = Array.from(gridItems).indexOf(cell);
   const { row, col } = getCoords(index);
   const affectedCells = [];
 
   // Up
-  for (let r = row - 1; r >= row - player.explosionRange; r--) {
-    if (isWall(r, col)) break;
-    const adjIndex = getIndex(r, col);
-    if (adjIndex >= 0 && adjIndex < gridItems.length) {
-      const adjCell = gridItems[adjIndex];
-      applyExplosionEffect(adjCell);
-      if (adjIndex === player.position) playerHit();
-      if (adjIndex !== index && !adjCell.querySelector(".explosion")) {
-        const explosionImg = document.createElement("img");
-        explosionImg.src = "Images/bomb_explode.png";
-        explosionImg.classList.add("explosion");
-        explosionImg.style.width = "100%";
-        explosionImg.style.height = "auto";
-        adjCell.appendChild(explosionImg);
-        affectedCells.push(adjCell);
-      }
-    }
-  }
-
+  explodeInDirection(row, col, -1, 0, player.explosionRange, index, affectedCells);
   // Down
-  for (let r = row + 1; r <= row + player.explosionRange; r++) {
-    if (isWall(r, col)) break;
-    const adjIndex = getIndex(r, col);
-    if (adjIndex >= 0 && adjIndex < gridItems.length) {
-      const adjCell = gridItems[adjIndex];
-      applyExplosionEffect(adjCell);
-      if (adjIndex === player.position) playerHit();
-      if (adjIndex !== index && !adjCell.querySelector(".explosion")) {
-        const explosionImg = document.createElement("img");
-        explosionImg.src = "Images/bomb_explode.png";
-        explosionImg.classList.add("explosion");
-        explosionImg.style.width = "100%";
-        explosionImg.style.height = "auto";
-        adjCell.appendChild(explosionImg);
-        affectedCells.push(adjCell);
-      }
-    }
-  }
-
+  explodeInDirection(row, col, 1, 0, player.explosionRange, index, affectedCells);
   // Left
-  for (let c = col - 1; c >= col - player.explosionRange; c--) {
-    if (isWall(row, c)) break;
-    const adjIndex = getIndex(row, c);
-    if (adjIndex >= 0 && adjIndex < gridItems.length) {
-      const adjCell = gridItems[adjIndex];
-      applyExplosionEffect(adjCell);
-      if (adjIndex === player.position) playerHit();
-      if (adjIndex !== index && !adjCell.querySelector(".explosion")) {
-        const explosionImg = document.createElement("img");
-        explosionImg.src = "Images/bomb_explode.png";
-        explosionImg.classList.add("explosion");
-        explosionImg.style.width = "100%";
-        explosionImg.style.height = "auto";
-        adjCell.appendChild(explosionImg);
-        affectedCells.push(adjCell);
-      }
-    }
-  }
-
+  explodeInDirection(row, col, 0, -1, player.explosionRange, index, affectedCells);
   // Right
-  for (let c = col + 1; c <= col + player.explosionRange; c++) {
-    if (isWall(row, c)) break;
-    const adjIndex = getIndex(row, c);
-    if (adjIndex >= 0 && adjIndex < gridItems.length) {
-      const adjCell = gridItems[adjIndex];
-      applyExplosionEffect(adjCell);
-      if (adjIndex === player.position) playerHit();
-      if (adjIndex !== index && !adjCell.querySelector(".explosion")) {
-        const explosionImg = document.createElement("img");
-        explosionImg.src = "Images/bomb_explode.png";
-        explosionImg.classList.add("explosion");
-        explosionImg.style.width = "100%";
-        explosionImg.style.height = "auto";
-        adjCell.appendChild(explosionImg);
-        affectedCells.push(adjCell);
-      }
-    }
-  }
+  explodeInDirection(row, col, 0, 1, player.explosionRange, index, affectedCells);
 
   setTimeout(() => {
     clearExplosion(cell);
@@ -489,26 +458,24 @@ function explodeBomb(bomb, cell) {
       const explosion = cell.querySelector(".explosion");
       if (explosion) cell.removeChild(explosion);
     });
-  }, 1000);
+  }, config.explosionDisplayTime);
 }
 
 function scheduleExplosion(bomb, cell) {
   setTimeout(() => {
     explodeBomb(bomb, cell);
-  }, 5000);
+  }, config.bombTimer);
 }
 
 function updateHeartUI() {
   const heartIndicator = document.querySelector(".heart-indicator");
-  if (player.hearts === 3) {
-    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png";
-  } else if (player.hearts === 2) {
-    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator1.png";
-  } else if (player.hearts === 1) {
-    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator2.png";
-  } else {
-    heartIndicator.src = "/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator3.png";
-  }
+  const heartImages = [
+    `${config.imageBasePath}heart_indicator3.png`, // 0 hearts
+    `${config.imageBasePath}heart_indicator2.png`, // 1 heart
+    `${config.imageBasePath}heart_indicator1.png`, // 2 hearts
+    `${config.imageBasePath}heart_indicator.png`, // 3 hearts
+  ];
+  heartIndicator.src = heartImages[player.hearts] || heartImages[0];
 }
 
 function updateWallUI() {
@@ -524,7 +491,6 @@ function updateIceUI() {
 }
 
 function startTimer() {
-  if (timerInterval) clearTimeout(timerInterval);
   const updateTimer = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
@@ -589,7 +555,7 @@ function Play() {
     document.getElementById("game").style.display = "block";
     placeRandomElements();
     const playerImg = document.querySelector(".player");
-    gridItems[playerPosition].appendChild(playerImg);
+    gridItems[player.position].appendChild(playerImg);
     matchData.username = username.value;
     startTimer();
     gameInterval = setInterval(updateDogs, 1000);
@@ -618,8 +584,8 @@ function triggerGameOver() {
   localStorage.setItem("matches", JSON.stringify(matches));
   // Update gameover UI
   document.querySelector(".subtitle-gameover").textContent = `Good job ${matchData.username}! Your time ${Math.floor(
-    (180 - timeLeft) / 60
-  )}:${((180 - timeLeft) % 60).toString().padStart(2, "0")} with result:`;
+    (config.initialTime - timeLeft) / 60
+  )}:${((config.initialTime - timeLeft) % 60).toString().padStart(2, "0")} with result:`;
   document.getElementById("gameover-walls").textContent = "= " + wallsDestroyed;
   document.getElementById("gameover-tnt").textContent = "= " + tntsCollected;
   document.getElementById("gameover-ice").textContent = "= " + icesCollected;
@@ -652,13 +618,13 @@ function leaderboard() {
 
 function playAgain() {
   // Reset variables
-  player.hearts = 3;
-  player.explosionRange = 1;
+  player.hearts = config.maxHearts;
+  player.explosionRange = config.initialExplosionRange;
   player.frozenUntil = 0;
   wallsDestroyed = 0;
   tntsCollected = 0;
   icesCollected = 0;
-  timeLeft = 180;
+  timeLeft = config.initialTime;
   dogs = [];
   // Hide leaderboard, call Play
   document.getElementById("leaderboard").style.display = "none";
