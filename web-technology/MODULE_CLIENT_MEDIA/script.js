@@ -692,9 +692,9 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
+// INITIALIZATION
 document.getElementById("home").style.display = "block";
 
-// INITIALIZATION
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".form");
   if (form) {
