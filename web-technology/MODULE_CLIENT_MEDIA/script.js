@@ -593,7 +593,6 @@ function triggerGameOver() {
   matchData.walls = wallsDestroyed;
   matchData.tnts = tntsCollected;
   matchData.ices = icesCollected;
-  // Update gameover UI
   document.querySelector(".subtitle-gameover").textContent = `Good job ${matchData.username}! Your time ${Math.floor(
     matchData.time / 60
   )}:${(matchData.time % 60).toString().padStart(2, "0")} with result:`;
