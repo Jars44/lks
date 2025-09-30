@@ -46,5 +46,12 @@ namespace ubigpos
         {
 
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UbigPos loginForm = new();
+            loginForm.Show();
+            this.Hide();
+        }
     }
 }

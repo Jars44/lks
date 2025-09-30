@@ -147,9 +147,7 @@
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(label1);
-            FormBorderStyle = FormBorderStyle.None;
             Name = "Form4";
-            Text = "Form4";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);

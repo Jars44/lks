@@ -39,12 +39,26 @@ namespace ubigpos
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            Form4 dashboardForm = new();
+            dashboardForm.Show();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form5 addItemForm = new();
+            addItemForm.Show();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            UbigPos loginForm = new();
+            loginForm.Show();
+            this.Hide();
         }
     }
 }
