@@ -83,7 +83,7 @@ class Node:
         self.threshold = threshold
         self.left = left
         self.right = right
-        self.value = value  # For leaf nodes
+        self.value = value
 
 def find_best_split(X, y):
     best_gain = 0
