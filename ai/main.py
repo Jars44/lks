@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from collections import Counter
 
-df = pd.read_csv(r"ai/assets/Datasset-LKS-AI-Kabupaten-Malang-2025.csv.xls")
+df = pd.read_csv(r"ai/assets/dataset.csv")
 
 # Data Preparation
 missing_values = df.isnull().sum()
@@ -25,10 +25,10 @@ print(f"Target shape: {target.shape}")
 print("\nMissing values:")
 print(missing_values)
 
-print("\Descriptive statistics:")
+print("\nDescriptive statistics:")
 print(descriptive_stats)
 
-print("\Target distribution:")
+print("\nTarget distribution:")
 print(target.value_counts())
 
 # Visualization
@@ -57,13 +57,13 @@ plt.show()
 def entropy(df):
     total = len(df)
     counter = Counter(df)
-    entrophy = 0
+    entropy_val = 0
 
     for jumlah in counter.values():
         p = jumlah / total
-        entrophy -= p * log2(p)
+        entropy_val -= p * log2(p)
 
-    return entrophy
+    return entropy_val
 
 # Data Classification
 np.random.seed(42)
@@ -131,4 +131,94 @@ def print_tree(node, depth=0):
     print_tree(node.right, depth + 1)
 
 print("\nDecision Tree Structure:")
+
+# Model Evaluation
+def predict(tree, X):
+    predictions = []
+    for _, row in X.iterrows():
+        node = tree
+        while node.value is None:
+            if row[node.feature] <= node.threshold:
+                node = node.left
+            else:
+                node = node.right
+        predictions.append(node.value)
+    return np.array(predictions)
+
+def compute_confusion_matrix(y_true, y_pred):
+    classes = np.unique(np.concatenate((y_true, y_pred)))
+    cm = np.zeros((len(classes), len(classes)), dtype=int)
+    class_to_index = {cls: i for i, cls in enumerate(classes)}
+    for true, pred in zip(y_true, y_pred):
+        cm[class_to_index[true], class_to_index[pred]] += 1
+    return cm, classes
+
+def accuracy(cm):
+    return np.trace(cm) / np.sum(cm)
+
+def precision(cm):
+    precisions = []
+    for i in range(len(cm)):
+        tp = cm[i, i]
+        fp = np.sum(cm[:, i]) - tp
+        if tp + fp == 0:
+            precisions.append(0)
+        else:
+            precisions.append(tp / (tp + fp))
+    return np.mean(precisions)
+
+def recall(cm):
+    recalls = []
+    for i in range(len(cm)):
+        tp = cm[i, i]
+        fn = np.sum(cm[i, :]) - tp
+        if tp + fn == 0:
+            recalls.append(0)
+        else:
+            recalls.append(tp / (tp + fn))
+    return np.mean(recalls)
+
+def f1_score(cm):
+    p = precision(cm)
+    r = recall(cm)
+    if p + r == 0:
+        return 0
+    return 2 * p * r / (p + r)
+
+def evaluate_model(tree, X_test, y_test):
+    y_pred = predict(tree, X_test)
+    cm, classes = compute_confusion_matrix(y_test, y_pred)
+    acc = accuracy(cm)
+    prec = precision(cm)
+    rec = recall(cm)
+    f1 = f1_score(cm)
+    return cm, classes, acc, prec, rec, f1
+
+def plot_confusion_matrix(cm, classes):
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=classes, yticklabels=classes)
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.show()
+
+def adjust_model_if_needed(tree, X_train, y_train, X_test, y_test, current_max_depth=5):
+    cm, classes, acc, prec, rec, f1 = evaluate_model(tree, X_test, y_test)
+    print(f"Accuracy: {acc:.4f}")
+    print(f"Precision: {prec:.4f}")
+    print(f"Recall: {rec:.4f}")
+    print(f"F1-Score: {f1:.4f}")
+    plot_confusion_matrix(cm, classes)
+
+    if acc < 0.8:
+        print("Accuracy is low, retraining with increased max_depth...")
+        new_max_depth = current_max_depth + 2
+        new_tree = build_tree(X_train, y_train, max_depth=new_max_depth)
+        print(f"Retrained with max_depth={new_max_depth}")
+        return new_tree
+    else:
+        print("Model performance is satisfactory.")
+        return tree
+
+tree_root = adjust_model_if_needed(tree_root, X_train, y_train, X_test, y_test)
 print_tree(tree_root)
