@@ -1,4 +1,3 @@
-// CONFIGURATION
 const config = {
   gridSize: 11,
   gridHeight: 9,
@@ -8,7 +7,7 @@ const config = {
   initialTime: 180,
   maxHearts: 3,
   initialExplosionRange: 1,
-  itemRevealProbability: 0.9,
+  itemRevealProbability: 0.5,
   dogChaseProbability: 0.5,
   bombTimer: 5000,
   freezeDuration: 5000,
@@ -20,7 +19,6 @@ const config = {
   winWallsRequired: 15,
 };
 
-// GAME STATE
 let isPaused = false;
 let gameInterval;
 let countdownInterval;
@@ -88,6 +86,18 @@ function distance(dog, player) {
   const dogCoords = getCoords(dog.position);
   const playerCoords = getCoords(player.position);
   return Math.abs(dogCoords.row - playerCoords.row) + Math.abs(dogCoords.col - playerCoords.col);
+}
+
+function getDirectionTowardsPlayer(dogPos, playerPos) {
+  const dogCoords = getCoords(dogPos);
+  const playerCoords = getCoords(playerPos);
+  let dir = "down";
+  if (Math.abs(playerCoords.row - dogCoords.row) > Math.abs(playerCoords.col - dogCoords.col)) {
+    dir = playerCoords.row > dogCoords.row ? "down" : "up";
+  } else {
+    dir = playerCoords.col > dogCoords.col ? "right" : "left";
+  }
+  return dir;
 }
 
 function clearGrid() {
@@ -286,7 +296,11 @@ function applyItemEffect(type) {
 
 function freezePlayerMovement(duration) {
   player.frozenUntil = Date.now() + duration;
-  setTimeout(() => {
+  setTimeout(() => {function moveDogRandomly(dog) {
+    const directions = ["up", "down", "left", "right"];
+    const dir = directions[Math.floor(Math.random() * directions.length)];
+    attemptDogMove(dog, dir);
+  }
     const playerImg = document.querySelector(".player");
     const iceMark = playerImg.parentElement.querySelector(".ice-mark");
     if (iceMark) playerImg.parentElement.removeChild(iceMark);
@@ -333,8 +347,11 @@ function attemptDogMove(dog, dir) {
     gridItems[newIndex].appendChild(dog.element);
     dog.position = newIndex;
     dog.direction = dir;
+    updateDogImage(dog);
     if (dog.position === player.position) playerHit();
+    return true;
   }
+  return false;
 }
 
 function moveDogTowardsPlayer(dog) {
@@ -362,12 +379,32 @@ function updateDogImage(dog) {
 
 function updateDogs() {
   dogs.forEach((dog) => {
-    if (Math.random() < config.dogChaseProbability) {
-      moveDogTowardsPlayer(dog);
-    } else {
-      moveDogRandomly(dog);
+    const primaryDir = getDirectionTowardsPlayer(dog.position, player.position);
+    if (attemptDogMove(dog, primaryDir)) {
+      return;
     }
-    updateDogImage(dog);
+
+    const dogCoords = getCoords(dog.position);
+    const playerCoords = getCoords(player.position);
+    let secondaryDir;
+    if (primaryDir === "up" || primaryDir === "down") {
+      secondaryDir = playerCoords.col > dogCoords.col ? "right" : "left";
+    } else {
+      secondaryDir = playerCoords.row > dogCoords.row ? "down" : "up";
+    }
+    if (attemptDogMove(dog, secondaryDir)) {
+      return;
+    }
+
+    let oppositeDir;
+    switch (primaryDir) {
+      case "up": oppositeDir = "down"; break;
+      case "down": oppositeDir = "up"; break;
+      case "left": oppositeDir = "right"; break;
+      case "right": oppositeDir = "left"; break;
+    }
+    attemptDogMove(dog, oppositeDir);
+    // If opposite also blocked, stay in place
   });
 }
 
@@ -416,6 +453,9 @@ function applyExplosionEffect(cell) {
     cell.removeChild(dog);
     const index = dogs.findIndex((d) => d.element === dog);
     if (index > -1) dogs.splice(index, 1);
+    if (dogs.length === 0) {
+      triggerGameOver();
+    }
   }
 }
 

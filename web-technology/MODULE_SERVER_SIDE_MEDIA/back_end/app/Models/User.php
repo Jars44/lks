@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the validator associated with the user.
+     */
+    public function validator()
+    {
+        return $this->hasOne(Validator::class);
+    }
 }
