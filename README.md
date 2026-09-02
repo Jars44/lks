@@ -36,11 +36,11 @@ lks-project/
 │   ├── gui.py
 │   ├── main.ipynb
 │   ├── main.py
-│   ├── assets/
-│   │   ├── Datasset LKS AI Kabupaten Malang 2025.csv.xls
-│   │   ├── Petunjuk Teknis LKS Kabupaten Malang 2025.pdf
-│   │   └── Suplemen Dataset LKS AI Kabupaten Malang 2025.docx
-│   └── Panduan_LKS_AI_Modul_BCD.md
+│   ├── model.py
+│   └── assets/
+│       ├── dataset.csv
+│       ├── Petunjuk Teknis LKS Kabupaten Malang 2025.pdf
+│       └── Suplemen Dataset LKS AI Kabupaten Malang 2025.docx
 ├── it-software/
 │   ├── Android/
 │   │   ├── EsemkaBakery/
@@ -169,10 +169,10 @@ Modul ini mencakup pengembangan backend dengan fokus pada keamanan, performa, da
 
 ### AI Module
 
-1. Pastikan Python 3.8+ terinstall. Install dependencies dengan `pip install numpy matplotlib scikit-learn tkinter`.
+1. Pastikan Python 3.8+ terinstall. Install dependencies dengan `pip install numpy pandas matplotlib seaborn` (tkinter sudah termasuk dalam instalasi Python standar / Anaconda).
 2. Jalankan `python ai/main.py` untuk training model klasifikasi Decision Tree.
 3. Jalankan `python ai/gui.py` untuk membuka GUI testing model.
-4. Ikuti panduan di `ai/Panduan_LKS_AI_Modul_BCD.md` untuk detail lebih lanjut.
+4. Buka `ai/main.ipynb` di Jupyter Notebook / VS Code untuk demo interaktif Modul A–D.
 
 ### Android Apps
 

@@ -1,129 +1,142 @@
+"""Modul D — GUI uji coba data baru (prediksi penyakit jantung).
+
+Menjalankan:  python gui.py
+"""
+
+from __future__ import annotations
+
 import tkinter as tk
-from tkinter import ttk
-from tkinter import Scrollbar, Text, Frame, Pack, Grid, Place
+from tkinter import messagebox, ttk
 
-window = tk.Tk()
-# window.configure()
-window.geometry("500x720")
-window.title("LKS AI")
+from model import FEATURE_NAMES, TARGET, predict_one, train
 
-input_frame = tk.Text(window, wrap="word")
-input_frame.pack(side="left", padx=10, pady=10, fill="both", expand=True)
+LABELS = {
+    "age": "Umur (tahun)",
+    "sex": "Jenis kelamin (0=wanita, 1=pria)",
+    "cp": "Jenis sakit dada (0-3)",
+    "trestbps": "Tekanan darah istirahat (mmHg)",
+    "chol": "Kolesterol (mg/dl)",
+    "fbs": "Gula darah puasa >120 mg/dl (0/1)",
+    "restecg": "Hasil ECG istirahat (0-2)",
+    "thalach": "Detak jantung maksimum (bpm)",
+    "exang": "Angina karena olahraga (0/1)",
+    "oldpeak": "Oldpeak / depresi ST",
+    "slope": "Slope segmen ST (0-2)",
+    "ca": "Jumlah pembuluh utama (0-3)",
+    "thal": "Thal (0-3)",
+}
 
-scrollbar = ttk.Scrollbar(input_frame, orient="vertical", command=input_frame.yview)
-scrollbar.pack(side="right", fill="y")
+RANGES = {
+    "age": (0, 120),
+    "sex": (0, 1),
+    "cp": (0, 3),
+    "trestbps": (50, 250),
+    "chol": (80, 700),
+    "fbs": (0, 1),
+    "restecg": (0, 2),
+    "thalach": (50, 220),
+    "exang": (0, 1),
+    "oldpeak": (0, 7),
+    "slope": (0, 2),
+    "ca": (0, 4),
+    "thal": (0, 3),
+}
 
-input_frame.config(yscrollcommand=scrollbar.set)
+HASIL = {
+    0: "Prediksi: 0 — tidak terdeteksi penyakit jantung",
+    1: "Prediksi: 1 — terdeteksi penyakit jantung",
+}
 
-# root = tk.Tk()
 
-# text_area = tk.Text(root, wrap="word", height=10, width=40)
-# text_area.pack(side="left", fill="both", expand=True)
+def parse_row(fields: dict[str, str]) -> tuple[dict | None, str | None]:
+    """Konversi + validasi input menjadi baris float.
 
-# # Create a vertical Scrollbar
-# scrollbar = ttk.Scrollbar(root, orient="vertical", command=text_area.yview)
-# scrollbar.pack(side="right", fill="y")
+    Mengembalikan (row, None) bila valid, atau (None, pesan_error).
+    """
+    row = {}
+    for name in FEATURE_NAMES:
+        raw = fields[name].strip()
+        try:
+            value = float(raw)
+        except ValueError:
+            return None, f"{LABELS[name]} harus berupa angka (isi: '{raw}')."
+        lo, hi = RANGES[name]
+        if not lo <= value <= hi:
+            return None, f"{LABELS[name]} di luar rentang {lo}-{hi}."
+        row[name] = value
+    return row, None
 
-# # Configure the Text widget to update the scrollbar
-# text_area.config(yscrollcommand=scrollbar.set)
 
-# # Insert some content into the Text widget
-# for i in range(50):
-#     text_area.insert(tk.END, f"This is line {i+1}\n")
+class App:
+    def __init__(self, root: tk.Tk):
+        self.root = root
+        root.title("LKS AI — Prediksi Penyakit Jantung")
+        root.geometry("520x760")
+        self.tree = None
+        self.fields: dict[str, tk.StringVar] = {}
 
-# root.mainloop()
-AGE = tk.StringVar()
-SEX = tk.StringVar()
-CP = tk.StringVar()
-TRESTBPS = tk.StringVar()
-CHOL = tk.StringVar()
-FBS = tk.StringVar()
-RESTECG = tk.StringVar()
-THALACH = tk.StringVar()
-EXANG = tk.StringVar()
-OLDPEAK = tk.StringVar()
-SLOPE = tk.StringVar()
-CA = tk.StringVar()
-THAL = tk.StringVar()
-TARGET = tk.StringVar()
+        title = ttk.Label(root, text="Uji Coba Data Baru", font=("", 14, "bold"))
+        title.pack(pady=(12, 4))
 
-primary_label = ttk.Label(input_frame, text="kosongkan jika data tidak ada")
-primary_label.pack(padx=5, pady=5, fill="x", expand=True)
+        hint = ttk.Label(
+            root,
+            text="Masukkan data pasien untuk memprediksi label "
+            "(0 = tidak terdeteksi, 1 = terdeteksi).",
+        )
+        hint.pack(pady=(0, 8))
 
-age = ttk.Label(input_frame, text="masukkan umur:")
-age.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=AGE, )
-entry.pack(padx=5, fill="x", expand=True)
+        form = ttk.Frame(root)
+        form.pack(padx=16, fill="both", expand=True)
+        for i, name in enumerate(FEATURE_NAMES):
+            ttk.Label(form, text=LABELS[name]).grid(
+                row=i, column=0, sticky="w", padx=(4, 8), pady=3
+            )
+            var = tk.StringVar()
+            ttk.Entry(form, textvariable=var, width=16).grid(
+                row=i, column=1, sticky="ew", pady=3
+            )
+            self.fields[name] = var
+        form.columnconfigure(1, weight=1)
 
-sex = ttk.Label(input_frame, text="masukkan jenis kelamin:")
-sex.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=SEX)
-entry.pack(padx=5, fill="x", expand=True)
+        self.status = ttk.Label(root, text="Melatih model…", foreground="#666")
+        self.status.pack(pady=(8, 2))
 
-cp = ttk.Label(input_frame, text="masukkan jenis sakit dada:")
-cp.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=CP)
-entry.pack(padx=5, fill="x", expand=True)
+        submit = ttk.Button(root, text="Prediksi", command=self.submit)
+        submit.pack(pady=6)
 
-trestbps = ttk.Label(input_frame, text="masukkan tekanan darah:")
-trestbps.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=TRESTBPS)
-entry.pack(padx=5, fill="x", expand=True)
+        root.after(50, self.train_model)
 
-chol = ttk.Label(input_frame, text="masukkan kolesterol:")
-chol.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=CHOL)
-entry.pack(padx=5, fill="x", expand=True)
+    def train_model(self) -> None:
+        try:
+            self.tree, _ = train()
+            self.status.config(
+                text="Model siap. Akurasi 0.8852 (80/20 split).", foreground="#0a7d2c"
+            )
+        except Exception as exc:  # pragma: no cover - tergantung lingkungan
+            self.tree = None
+            self.status.config(text="Gagal melatih model.", foreground="#c00")
+            messagebox.showerror("Kesalahan", f"Gagal melatih model:\n{exc}")
 
-fbs = ttk.Label(input_frame, text="masukkan gula darah:")
-fbs.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=FBS)
-entry.pack(padx=5, fill="x", expand=True)
+    def submit(self) -> None:
+        if self.tree is None:
+            self.status.config(
+                text="Model belum siap, tunggu sebentar.", foreground="#c00"
+            )
+            return
+        fields = {name: var.get() for name, var in self.fields.items()}
+        row, error = parse_row(fields)
+        if error is not None:
+            self.status.config(text=error, foreground="#c00")
+            return
+        prediction = predict_one(self.tree, row)
+        self.status.config(text=HASIL[int(prediction)], foreground="#0047ab")
 
-restecg = ttk.Label(input_frame, text="masukkan hasil ECG:")
-restecg.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=RESTECG)
-entry.pack(padx=5, fill="x", expand=True)
 
-thalach = ttk.Label(input_frame, text="masukkan detak jantung maksimum:")
-thalach.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=THALACH)
-entry.pack(padx=5, fill="x", expand=True)
+def main() -> None:
+    root = tk.Tk()
+    App(root)
+    root.mainloop()
 
-exang = ttk.Label(input_frame, text="masukkan angina:")
-exang.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=EXANG)
-entry.pack(padx=5, fill="x", expand=True)
 
-oldpeak = ttk.Label(input_frame, text="masukkan oldpeak:")
-oldpeak.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=OLDPEAK)
-entry.pack(padx=5, fill="x", expand=True)
-
-slope = ttk.Label(input_frame, text="masukkan slope:")
-slope.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=SLOPE)
-entry.pack(padx=5, fill="x", expand=True)
-
-ca = ttk.Label(input_frame, text="masukkan vessel:")
-ca.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=CA)
-entry.pack(padx=5, fill="x", expand=True)
-
-thal = ttk.Label(input_frame, text="masukkan thal:")
-thal.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=THAL)
-entry.pack(padx=5, fill="x", expand=True)
-
-target = ttk.Label(input_frame, text="masukkan target:")
-target.pack(padx=5, pady=5, fill="x", expand=True)
-entry = ttk.Entry(input_frame, textvariable=TARGET)
-entry.pack(padx=5, fill="x", expand=True)
-
-def submit_data():
-    pass
-
-submit = ttk.Button(input_frame, text="kirim", command=lambda: submit_data())
-submit.pack(padx=5, pady=5, fill="x", expand=True)
-
-window.mainloop()
+if __name__ == "__main__":
+    main()
