@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Validator extends Model
 {
@@ -18,10 +18,8 @@ class Validator extends Model
      */
     protected $fillable = [
         'user_id',
+        'role',
         'name',
-        'position',
-        'department',
-        'is_active',
     ];
 
     /**
@@ -40,10 +38,10 @@ class Validator extends Model
      */
     protected function casts(): array
     {
-        return [
-            'is_active' => 'boolean',
-        ];
+        return [];
     }
+
+    public $timestamps = false;
 
     /**
      * Get the user that owns the validator.

@@ -1,0 +1,95 @@
+erDiagram
+    users ||--o{ validators : "has"
+    regionals ||--o{ societies : "locates"
+    brand ||--o{ installment : "categorizes"
+    installment ||--o{ available_month : "offers"
+    societies ||--o{ validations : "submits"
+    validators ||--o{ validations : "reviews"
+    societies ||--o{ installment_apply_societies : "applies"
+    installment ||--o{ installment_apply_societies : "receives"
+    available_month ||--o{ installment_apply_societies : "selects"
+    installment_apply_societies ||--o{ installment_apply_status : "tracks"
+
+    users {
+        bigint id PK
+        varchar username
+        varchar password
+        varchar remember_token
+    }
+
+    validators {
+        bigint id PK
+        bigint user_id FK
+        enum role "officer or validator"
+        varchar name
+    }
+
+    regionals {
+        bigint id PK
+        varchar province
+        varchar district
+    }
+
+    societies {
+        bigint id PK
+        char id_card_number
+        varchar password
+        varchar name
+        date born_date
+        enum gender "male or female"
+        text address
+        bigint regional_id FK
+        text login_tokens
+    }
+
+    brand {
+        bigint id PK
+        varchar brand
+    }
+
+    installment {
+        bigint id PK
+        int brand_id FK
+        varchar cars
+        text description
+        int price
+    }
+
+    available_month {
+        bigint id PK
+        bigint installment_id FK
+        int month
+        text description
+        int nominal
+    }
+
+    validations {
+        bigint id PK
+        bigint society_id FK
+        bigint validator_id FK
+        enum status "accepted, declined, pending"
+        varchar job
+        text job_description
+        int income
+        text reason_accepted
+        text validator_notes
+    }
+
+    installment_apply_societies {
+        bigint id PK
+        text notes
+        bigint available_month_id FK
+        date date
+        bigint society_id FK
+        bigint installment_id FK
+    }
+
+    installment_apply_status {
+        bigint id PK
+        date date
+        bigint society_id FK
+        bigint installment_id FK
+        bigint available_month_id FK
+        bigint installment_apply_societies_id FK
+        enum status "pending, accepted, rejected"
+    }

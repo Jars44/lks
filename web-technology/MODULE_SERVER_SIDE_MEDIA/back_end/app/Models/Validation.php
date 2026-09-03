@@ -16,11 +16,14 @@ class Validation extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'installment_id',
+        'society_id',
         'validator_id',
         'status',
-        'notes',
-        'validated_at',
+        'job',
+        'job_description',
+        'income',
+        'reason_accepted',
+        'validator_notes',
     ];
 
     /**
@@ -40,16 +43,18 @@ class Validation extends Model
     protected function casts(): array
     {
         return [
-            'validated_at' => 'datetime',
+            'income' => 'integer',
         ];
     }
 
+    public $timestamps = false;
+
     /**
-     * Get the installment that owns the validation.
+     * Get the society that owns the validation.
      */
-    public function installment(): BelongsTo
+    public function society(): BelongsTo
     {
-        return $this->belongsTo(Installment::class);
+        return $this->belongsTo(Society::class);
     }
 
     /**

@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Sanctum\HasApiTokens;
 
 class Society extends Model
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -17,10 +18,12 @@ class Society extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'id_card_number',
+        'password',
         'name',
+        'born_date',
+        'gender',
         'address',
-        'phone',
-        'email',
         'regional_id',
     ];
 
@@ -30,8 +33,11 @@ class Society extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        //
+        'password',
+        'login_tokens',
     ];
+
+    public $timestamps = false;
 
     /**
      * Get the attributes that should be cast.
@@ -40,9 +46,7 @@ class Society extends Model
      */
     protected function casts(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     /**
@@ -54,20 +58,26 @@ class Society extends Model
     }
 
     /**
-     * Get the installments for the society.
+     * Get the validations for the society.
      */
-    public function installments(): HasMany
+    public function validations(): HasMany
     {
-        return $this->hasMany(Installment::class);
+        return $this->hasMany(Validation::class);
     }
 
     /**
-     * The installments that belong to the society through application.
+     * Get the installment apply societies for the society.
      */
-    public function appliedInstallments(): BelongsToMany
+    public function applySocieties(): HasMany
     {
-        return $this->belongsToMany(Installment::class, 'installment_apply_societies')
-                    ->withPivot('status_id', 'applied_at')
-                    ->withTimestamps();
+        return $this->hasMany(InstallmentApplySocieties::class, 'society_id');
+    }
+
+    /**
+     * Alias for applySocieties.
+     */
+    public function applications(): HasMany
+    {
+        return $this->hasMany(InstallmentApplySocieties::class, 'society_id');
     }
 }

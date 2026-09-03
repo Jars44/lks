@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { ToastProvider } from './components/Toast.jsx'
+import Login from './pages/Login.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import RequestValidation from './pages/RequestValidation.jsx'
+import CarList from './pages/CarList.jsx'
+import CarDetail from './pages/CarDetail.jsx'
+import OfficerLogin from './pages/officer/OfficerLogin.jsx'
+import OfficerDashboard from './pages/officer/OfficerDashboard.jsx'
+import ValidatorLogin from './pages/validator/ValidatorLogin.jsx'
+import ValidatorDashboard from './pages/validator/ValidatorDashboard.jsx'
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function RequireToken({ children }) {
+  const t = localStorage.getItem('token')
+  if (!t) return <Navigate to="/login" replace />
+  return children
 }
 
-export default App
+export default function App() {
+  return (
+    <ToastProvider>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<RequireToken><Dashboard /></RequireToken>} />
+        <Route path="/data-validation" element={<RequireToken><RequestValidation /></RequireToken>} />
+        <Route path="/instalments" element={<RequireToken><CarList /></RequireToken>} />
+        <Route path="/instalments/:id" element={<RequireToken><CarDetail /></RequireToken>} />
+
+        <Route path="/officer/login" element={<OfficerLogin />} />
+        <Route path="/officer/dashboard" element={<OfficerDashboard />} />
+        <Route path="/officer/*" element={<OfficerDashboard />} />
+
+        <Route path="/validator/login" element={<ValidatorLogin />} />
+        <Route path="/validator/*" element={<ValidatorDashboard />} />
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </ToastProvider>
+  )
+}

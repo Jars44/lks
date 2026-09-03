@@ -18,8 +18,8 @@ class AvailableMonth extends Model
     protected $fillable = [
         'installment_id',
         'month',
-        'year',
-        'is_available',
+        'description',
+        'nominal',
     ];
 
     /**
@@ -38,10 +38,12 @@ class AvailableMonth extends Model
      */
     protected function casts(): array
     {
-        return [
-            'is_available' => 'boolean',
-        ];
+        return [];
     }
+
+    protected $table = 'available_month';
+
+    public $timestamps = false;
 
     /**
      * Get the installment that owns the available month.

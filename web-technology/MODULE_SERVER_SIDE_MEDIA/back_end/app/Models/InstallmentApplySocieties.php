@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class InstallmentApplySocieties extends Model
 {
@@ -23,10 +24,11 @@ class InstallmentApplySocieties extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'installment_id',
+        'notes',
+        'available_month_id',
+        'date',
         'society_id',
-        'status_id',
-        'applied_at',
+        'installment_id',
     ];
 
     /**
@@ -46,9 +48,11 @@ class InstallmentApplySocieties extends Model
     protected function casts(): array
     {
         return [
-            'applied_at' => 'datetime',
+            'date' => 'date',
         ];
     }
+
+    public $timestamps = false;
 
     /**
      * Get the installment that owns the application.
@@ -67,10 +71,18 @@ class InstallmentApplySocieties extends Model
     }
 
     /**
-     * Get the status that owns the application.
+     * Get the available month that owns the application.
      */
-    public function status(): BelongsTo
+    public function availableMonth(): BelongsTo
     {
-        return $this->belongsTo(InstallmentApplyStatus::class, 'status_id');
+        return $this->belongsTo(AvailableMonth::class);
+    }
+
+    /**
+     * Get the status for the application.
+     */
+    public function status(): HasOne
+    {
+        return $this->hasOne(InstallmentApplyStatus::class, 'installment_apply_societies_id');
     }
 }

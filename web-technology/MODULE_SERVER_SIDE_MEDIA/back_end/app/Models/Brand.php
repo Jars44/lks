@@ -16,8 +16,7 @@ class Brand extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'description',
+        'brand',
     ];
 
     /**
@@ -36,10 +35,12 @@ class Brand extends Model
      */
     protected function casts(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
+
+    protected $table = 'brand';
+
+    public $timestamps = false;
 
     /**
      * Get the installments for the brand.

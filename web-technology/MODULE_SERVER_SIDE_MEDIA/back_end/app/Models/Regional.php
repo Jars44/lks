@@ -16,8 +16,8 @@ class Regional extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'code',
+        'province',
+        'district',
     ];
 
     /**
@@ -36,10 +36,10 @@ class Regional extends Model
      */
     protected function casts(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
+
+    public $timestamps = false;
 
     /**
      * Get the societies for the regional.

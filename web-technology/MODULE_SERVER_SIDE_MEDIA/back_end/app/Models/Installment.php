@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Installment extends Model
 {
@@ -19,17 +18,9 @@ class Installment extends Model
      */
     protected $fillable = [
         'brand_id',
-        'society_id',
-        'name',
+        'cars',
         'description',
-        'total_amount',
-        'down_payment',
-        'monthly_installment',
-        'interest_rate',
-        'tenure_months',
-        'start_date',
-        'end_date',
-        'status',
+        'price',
     ];
 
     /**
@@ -48,15 +39,12 @@ class Installment extends Model
      */
     protected function casts(): array
     {
-        return [
-            'total_amount' => 'decimal:2',
-            'down_payment' => 'decimal:2',
-            'monthly_installment' => 'decimal:2',
-            'interest_rate' => 'decimal:2',
-            'start_date' => 'date',
-            'end_date' => 'date',
-        ];
+        return [];
     }
+
+    protected $table = 'installment';
+
+    public $timestamps = false;
 
     /**
      * Get the brand that owns the installment.
@@ -64,14 +52,6 @@ class Installment extends Model
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
-    }
-
-    /**
-     * Get the society that owns the installment.
-     */
-    public function society(): BelongsTo
-    {
-        return $this->belongsTo(Society::class);
     }
 
     /**
@@ -83,20 +63,10 @@ class Installment extends Model
     }
 
     /**
-     * The societies that applied for the installment.
+     * Get the apply societies for the installment.
      */
-    public function appliedSocieties(): BelongsToMany
+    public function applySocieties(): HasMany
     {
-        return $this->belongsToMany(Society::class, 'installment_apply_societies')
-                    ->withPivot('status_id', 'applied_at')
-                    ->withTimestamps();
-    }
-
-    /**
-     * Get the validations for the installment.
-     */
-    public function validations(): HasMany
-    {
-        return $this->hasMany(Validation::class);
+        return $this->hasMany(InstallmentApplySocieties::class);
     }
 }
