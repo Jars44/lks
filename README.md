@@ -30,7 +30,7 @@ Sebelum menjalankan proyek ini, pastikan Anda memiliki perangkat lunak berikut t
 
 ## Struktur Proyek
 
-```!/bin/bash
+```text
 lks-project/
 ├── ai/
 │   ├── gui.py
@@ -42,42 +42,48 @@ lks-project/
 │       ├── Petunjuk Teknis LKS Kabupaten Malang 2025.pdf
 │       └── Suplemen Dataset LKS AI Kabupaten Malang 2025.docx
 ├── it-software/
+│   ├── .extraction-index/
+│   ├── README.md
 │   ├── Android/
 │   │   ├── EsemkaBakery/
-│   │   │   ├── Esemka Bakery.pdf
-│   │   │   └── Backend/
 │   │   ├── EsemkaGym/
 │   │   ├── EsemkaPetition/
 │   │   ├── EsemkaRecipes/
-│   │   ├── EzemCoffie/
-│   │   └── ...
+│   │   └── EzemCoffie/
 │   ├── Api/
 │   │   ├── EsemkaRailways/
 │   │   └── EsemkaStore/
 │   ├── Desktop/
 │   │   ├── BromoAirlines/
+│   │   ├── EsemNet/
 │   │   ├── EsemkaCorporation/
 │   │   ├── EsemkaFoodcourt/
 │   │   ├── EsemkaPolling/
 │   │   ├── EsemkaTaskMaster/
-│   │   ├── EsemNet/
 │   │   ├── QuizinAja/
-│   │   ├── UbigPos/
-│   │   └── ...
+│   │   └── UbigPos/
 │   └── Pack Soal/
+│       ├── C1/
+│       ├── C2/
+│       ├── SOAL LKS JATIM ITSSB 2024/
+│       └── SOAL LKS NASIONAL ITSSB 2024/
 ├── web-technology/
 │   ├── MODULE_CLIENT_SIDE.docx
-│   ├── MODULE_SERVER_SIDE.docx
 │   ├── MODULE_CLIENT_MEDIA/
 │   │   ├── index.html
 │   │   ├── script.js
 │   │   ├── style.css
 │   │   ├── Example/
-│   │   └── Images/
+│   │   ├── Images/
+│   │   └── XX_CLIENT_MODULE.zip
+│   ├── MODULE_SERVER_SIDE.docx
 │   └── MODULE_SERVER_SIDE_MEDIA/
 │       ├── accounts/
+│       ├── back_end/
 │       ├── database/
-│       └── templates-gui/
+│       ├── front_end/
+│       ├── templates-gui/
+│       └── XX_SERVER_MODULE/
 ├── .gitattributes
 └── .gitignore
 ```
@@ -301,6 +307,6 @@ Proyek ini dibuat untuk keperluan kompetisi LKS. Untuk pertanyaan atau saran, si
 
 ## Lisensi
 
-Proyek ini dilisensikan di bawah [MIT License](LICENSE). Lihat file LICENSE untuk detail lebih lanjut.
+Repositori ini belum memiliki file LICENSE eksplisit; defaultnya mengikuti praktik repository LKS prep internal (lihat tim maintainer).
 
-Selamat bertanding! Semoga sukses dalam kompetisi LKS! 🎉
+Selamat bertanding! Semoga sukses dalam kompetisi LKS!
