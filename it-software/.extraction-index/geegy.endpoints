@@ -1,0 +1,2 @@
+Geegy.API.Controllers.AppointmentsController.GetAppointments(System.DateTime,System.String)
+Geegy.API.Controllers.AppointmentsController.GetAppointmentDetail(System.Int32)

@@ -1,0 +1,8 @@
+Voto.API.Controllers.AuthController.Auth(Voto.API.Controllers.AuthDTO)
+Voto.API.Controllers.CameraController.GetCamera(System.Nullable{System.Int32},System.String)
+Voto.API.Controllers.CameraController.GetCameraDetail(System.Int32)
+Voto.API.Controllers.CategoryController.GetCategory
+Voto.API.Controllers.TransactionController.AddNewTransaction(Voto.API.Controllers.TransactionDTO)
+Voto.API.Controllers.UserController.GetMyInformation
+Voto.API.Controllers.UserController.GetMyTransaction
+Voto.API.Controllers.UserController.UpdateVotoken(System.Int32)
