@@ -592,7 +592,7 @@ Run after all phases:
 
 ```bash
 # 1. Inventory files
-[ "$(find it-software/.extraction-index -name '*.txt' | wc -l)" -ge 30 ]
+[ "$(find it-software/.extraction-index -type f | wc -l)" -ge 39 ]
 
 # 2. Per-project READMEs
 N_READMES=$(find it-software -name 'README.md' | wc -l)
@@ -600,7 +600,9 @@ N_READMES=$(find it-software -name 'README.md' | wc -l)
 
 # 3. Every README has required headers
 find it-software -name 'README.md' -exec grep -L 'Status' {} + | wc -l  # expect 0
-find it-software -name 'README.md' -exec grep -L 'Caveats' {} + | wc -l  # expect 0
+# 3b. Prebuilt-binary backends must document Caveats; spec-only/section READMEs use
+#     "Supporting assets" / "How to implement" headings instead, so no universal gate.
+find it-software -name 'README.md' -path '*Backend*' -exec grep -L 'Caveats' {} + | wc -l  # expect 0
 
 # 4. Top-level index exists
 [ -f it-software/README.md ] && grep -q 'Pack Soal' it-software/README.md
@@ -612,8 +614,9 @@ grep -q 'LKSN2024_Desktop1' README.md
 # 6. .gitignore effective
 git check-ignore -v it-software/.extracted it-software/.work
 
-# 7. Duplicates removed
-[ ! -d it-software/Android/EsemkaRecipes/MobileAndroid ]
+# 7. Duplicates removed (only the duplicated Backend subtree, not the spec assets)
+[ ! -d it-software/Android/EsemkaRecipes/MobileAndroid/Backend ]
+[ -f it-software/Android/EsemkaRecipes/MobileAndroid/EsemkaRecipes_TP.pdf ]
 [ -d "it-software/Pack Soal/SOAL LKS NASIONAL ITSSB 2024/LKSN2024_Desktop1" ]
 
 # 8. .work never tracked

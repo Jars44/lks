@@ -136,6 +136,8 @@ folder berisi spec PDF + aset gambar, hanya sedikit yang memiliki source code.**
 - `it-software/Api/EsemkaStore` — spec PDF + 4-table SQL, no backend
 - 7 Desktop projects (BromoAirlines, EsemNet, EsemkaCorporation, EsemkaFoodcourt,
   EsemkaPolling, EsemkaTaskMaster, QuizinAja) — spec + SQL/assets only
+- `it-software/Pack Soal/SOAL LKS NASIONAL ITSSB 2024/LKSN2024_Desktop1` — GrocerSeeker (spec + 2 SQL variants)
+- `it-software/Pack Soal/SOAL LKS NASIONAL ITSSB 2024/LKSN2024_Desktop2` — MarathonSimulation (spec + SQL)
 
 ## Modul Web Technology
 
