@@ -301,12 +301,3 @@ Berikut adalah beberapa screenshot dari proyek-proyek utama:
 - Periksa log error untuk debugging
 - Pastikan semua dependencies terinstall dengan benar
 
-## Kontribusi
-
-Proyek ini dibuat untuk keperluan kompetisi LKS. Untuk pertanyaan atau saran, silakan hubungi tim pengembang.
-
-## Lisensi
-
-Repositori ini belum memiliki file LICENSE eksplisit; defaultnya mengikuti praktik repository LKS prep internal (lihat tim maintainer).
-
-Selamat bertanding! Semoga sukses dalam kompetisi LKS!
