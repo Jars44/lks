@@ -1,0 +1,7 @@
+EsemkaReceipt.API.Controllers.AuthController.AuthPost(EsemkaReceipt.API.Controllers.AuthModel)
+EsemkaReceipt.API.Controllers.CategoriesController.CategoryGet
+EsemkaReceipt.API.Controllers.MeController.MeGet
+EsemkaReceipt.API.Controllers.MeController.LikedRecipesGet
+EsemkaReceipt.API.Controllers.RecipesController.RecipeGet(System.Int32,System.String)
+EsemkaReceipt.API.Controllers.RecipesController.RecipeDetailGet(System.Int32)
+EsemkaReceipt.API.Controllers.RecipesController.LikeRecipeGet(System.Int32)

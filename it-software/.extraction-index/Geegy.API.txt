@@ -1,0 +1,13 @@
+
+unrar-free 0.3.3  Copyright (C) 2004  Ben Asselstine, Jeroen Dekkers
+
+
+RAR archive it-software/Pack Soal/SOAL LKS JATIM ITSSB 2024/Mobile 02/Backend API/Geegy.API.rar
+
+Pathname/Comment
+                  Size   Date   Time     Attr
+----------------------------------------------
+ Geegy.API.exe
+              54157667 17-04-24 08:33   .....A
+----------------------------------------------
+    1         54157667

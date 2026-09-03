@@ -20,7 +20,7 @@
 
 ---
 
-## Phase 1 — Preflight inventory
+## Task 1: Phase 1 — Preflight inventory
 
 **Files:**
 - Create: `it-software/.extraction-index/esemka-gym.txt`
@@ -104,7 +104,7 @@ git commit -m "docs(it-software): add rar inventory + gitignore work dirs"
 
 ---
 
-## Phase 2 — SQL/UTF-16 schema normalization
+## Task 2: Phase 2 — SQL/UTF-16 schema normalization
 
 **Files:**
 - Modify: each `.extraction-index/<project>.tables` (one per project that has a `.sql`)
@@ -187,7 +187,7 @@ git commit -m "docs(it-software): extract CREATE TABLE lists from all .sql files
 
 ---
 
-## Phase 3 — Per-project docs (Batch A: 10 .NET projects with .xml API docs)
+## Task 3: Phase 3 — Per-project docs (Batch A: 10 .NET projects with .xml API docs)
 
 **Files:** 10 `README.md` files written next to each spec PDF.
 
@@ -339,7 +339,7 @@ git commit -m "docs(it-software): add 10 .NET project READMEs (prebuilt binaries
 
 ---
 
-## Phase 4 — Per-project docs (Batch B: 9 spec-only projects)
+## Task 4: Phase 4 — Per-project docs (Batch B: 9 spec-only projects)
 
 **Files:** 9 `README.md` files next to each spec PDF/SQL, for projects with no backend.
 
@@ -437,7 +437,7 @@ git commit -m "docs(it-software): add 9 spec-only project READMEs"
 
 ---
 
-## Phase 5 — Repo-level index + root README accuracy pass
+## Task 5: Phase 5 — Repo-level index + root README accuracy pass
 
 **Files:**
 - Create: `it-software/README.md` (top-level index for the division)
@@ -550,7 +550,7 @@ git commit -m "docs(it-software): add top-level index + root README accuracy pas
 
 ---
 
-## Phase 6 — Cleanup
+## Task 6: Phase 6 — Cleanup
 
 - [ ] **Step 1: Delete the duplicate `MobileAndroid/` subtree**
 
@@ -592,7 +592,7 @@ Run after all phases:
 
 ```bash
 # 1. Inventory files
-[ "$(find it-software/.extraction-index -name '*.txt' | wc -l)" -ge 30 ]
+[ "$(find it-software/.extraction-index -type f | wc -l)" -ge 39 ]
 
 # 2. Per-project READMEs
 N_READMES=$(find it-software -name 'README.md' | wc -l)
@@ -600,7 +600,9 @@ N_READMES=$(find it-software -name 'README.md' | wc -l)
 
 # 3. Every README has required headers
 find it-software -name 'README.md' -exec grep -L 'Status' {} + | wc -l  # expect 0
-find it-software -name 'README.md' -exec grep -L 'Caveats' {} + | wc -l  # expect 0
+# 3b. Prebuilt-binary backends must document Caveats; spec-only/section READMEs use
+#     "Supporting assets" / "How to implement" headings instead, so no universal gate.
+find it-software -name 'README.md' -path '*Backend*' -exec grep -L 'Caveats' {} + | wc -l  # expect 0
 
 # 4. Top-level index exists
 [ -f it-software/README.md ] && grep -q 'Pack Soal' it-software/README.md
@@ -612,8 +614,9 @@ grep -q 'LKSN2024_Desktop1' README.md
 # 6. .gitignore effective
 git check-ignore -v it-software/.extracted it-software/.work
 
-# 7. Duplicates removed
-[ ! -d it-software/Android/EsemkaRecipes/MobileAndroid ]
+# 7. Duplicates removed (only the duplicated Backend subtree, not the spec assets)
+[ ! -d it-software/Android/EsemkaRecipes/MobileAndroid/Backend ]
+[ -f it-software/Android/EsemkaRecipes/MobileAndroid/EsemkaRecipes_TP.pdf ]
 [ -d "it-software/Pack Soal/SOAL LKS NASIONAL ITSSB 2024/LKSN2024_Desktop1" ]
 
 # 8. .work never tracked

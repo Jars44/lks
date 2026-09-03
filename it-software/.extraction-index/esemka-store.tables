@@ -1,0 +1,4 @@
+dbo.Category
+dbo.Order
+dbo.Product
+dbo.Transaction

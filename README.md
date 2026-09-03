@@ -114,37 +114,30 @@ lks-project/
 
 ## Modul IT Software
 
-Modul IT Software mencakup pengembangan aplikasi mobile, desktop, dan API yang siap pakai untuk berbagai keperluan bisnis dan edukasi. Setiap proyek dirancang dengan arsitektur yang solid, menggunakan teknologi terkini, dan menyediakan dokumentasi lengkap untuk memudahkan pembelajaran dan pengembangan lebih lanjut.
+Modul IT Software berisi kumpulan proyek untuk LKS IT Software. **Status: sebagian besar
+folder berisi spec PDF + aset gambar, hanya sedikit yang memiliki source code.** Lihat
+`it-software/README.md` untuk breakdown per project.
 
-### Android Applications
+### Implementasi yang tersedia (source code lengkap)
+- `it-software/Desktop/UbigPos` — C# WinForms POS (.NET 9, MSSQL)
+- `it-software/Pack Soal/C1/EsemkaLibrary` — Android Kotlin (seleknas 2024)
+- `it-software/Pack Soal/C1/MotorcyclerRepair` — C# WinForms + EF Designer (seleknas 2024)
+- `it-software/Pack Soal/C2/HovRailKiosk` — C# WinForms + EF Designer (seleknas 2024)
+- `it-software/Pack Soal/C2/Tiks09` — Android Kotlin (seleknas 2024)
+- `it-software/Pack Soal/C2/TiksAPI` — C# WebAPI + EF (partial, no migrations)
 
-Aplikasi Android ini dibangun menggunakan Java/Kotlin dengan Android SDK, menawarkan antarmuka yang responsif dan fitur-fitur canggih untuk pengalaman pengguna optimal.
+### Spec + binary (no source)
+- 5 Android projects + 1 Spring Boot: `Backend/*.dll|.exe` publish artifacts only
+- 1 WebAPI (Sakura Sushi, Voto, EsemkaLibrary, etc.): same
+- 1 Spring Boot (EsemkaGym)
 
-- **EsemkaBakery**: Aplikasi pemesanan kue dengan fitur lengkap seperti login, register, halaman utama, pencarian, detail produk, pemesanan, dan checkout, memberikan pengalaman pengguna yang intuitif. Menggunakan database lokal dan integrasi dengan backend API.
-- **EsemkaGym**: Aplikasi manajemen gym yang membantu pengelolaan anggota, jadwal, dan fasilitas. Fitur utama meliputi tracking keanggotaan, pembayaran, dan notifikasi.
-- **EsemkaPetition**: Aplikasi pengaduan/petition untuk memudahkan pengguna menyampaikan aspirasi. Mendukung upload gambar, tracking status, dan komunikasi dua arah.
-- **EsemkaRecipes**: Aplikasi resep masakan dengan fitur pencarian dan penyimpanan resep favorit. Menggunakan API eksternal untuk data resep dan fitur offline.
-- **EzemCoffie**: Aplikasi kopi dengan fitur pemesanan dan informasi produk. Integrasi dengan sistem pembayaran dan tracking pesanan real-time.
-
-### Desktop Applications
-
-Aplikasi desktop ini dikembangkan dengan C# dan .NET Framework, menggunakan database MSSQL/MySQL untuk penyimpanan data yang aman dan efisien.
-
-- **BromoAirlines**: Sistem manajemen tiket penerbangan dengan fitur admin untuk master data dan customer untuk pencarian serta pembelian tiket, mendukung operasi maskapai secara efisien. Menggunakan arsitektur MVC dan reporting tools.
-- **EsemkaCorporation**: Sistem manajemen perusahaan untuk mengelola data dan proses bisnis internal. Fitur meliputi manajemen karyawan, inventori, dan laporan keuangan.
-- **EsemkaFoodcourt**: Sistem manajemen foodcourt yang memudahkan pengelolaan tenant dan transaksi. Mendukung multi-tenant, POS integration, dan analitik penjualan.
-- **EsemkaPolling**: Sistem polling untuk pengumpulan dan analisis data survei. Fitur real-time voting, visualisasi hasil, dan export data.
-- **EsemkaTaskMaster**: Sistem manajemen tugas untuk meningkatkan produktivitas tim. Menggunakan kanban board, deadline tracking, dan notifikasi.
-- **EsemNet**: Sistem jaringan untuk pengelolaan infrastruktur IT. Fitur monitoring jaringan, troubleshooting, dan konfigurasi perangkat.
-- **QuizinAja**: Aplikasi kuis interaktif untuk pembelajaran dan evaluasi. Mendukung berbagai jenis soal, timer, dan leaderboard.
-- **UbigPos**: Sistem Point of Sale yang mendukung transaksi penjualan secara cepat dan akurat. Integrasi dengan barcode scanner dan printer.
-
-### API Projects
-
-API ini dibangun dengan .NET Core/Node.js, menyediakan endpoint RESTful untuk integrasi dengan aplikasi frontend dan mobile.
-
-- **EsemkaRailways**: API untuk sistem kereta api yang menyediakan layanan data dan transaksi terkait. Endpoint untuk jadwal, pemesanan, dan pembayaran tiket.
-- **EsemkaStore**: API untuk toko online yang mendukung operasi e-commerce. Fitur manajemen produk, keranjang belanja, dan integrasi payment gateway.
+### Spec only
+- `it-software/Api/EsemkaRailways` — spec PDF + SQL, no backend
+- `it-software/Api/EsemkaStore` — spec PDF + 4-table SQL, no backend
+- 7 Desktop projects (BromoAirlines, EsemNet, EsemkaCorporation, EsemkaFoodcourt,
+  EsemkaPolling, EsemkaTaskMaster, QuizinAja) — spec + SQL/assets only
+- `it-software/Pack Soal/SOAL LKS NASIONAL ITSSB 2024/LKSN2024_Desktop1` — GrocerSeeker (spec + 2 SQL variants)
+- `it-software/Pack Soal/SOAL LKS NASIONAL ITSSB 2024/LKSN2024_Desktop2` — MarathonSimulation (spec + SQL)
 
 ## Modul Web Technology
 

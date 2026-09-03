@@ -1,0 +1,5 @@
+dbo.Book
+dbo.BookGenre
+dbo.Borrowing
+dbo.Genre
+dbo.Member

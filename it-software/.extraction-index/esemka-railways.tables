@@ -1,0 +1,5 @@
+dbo.Passenger
+dbo.Schedule
+dbo.Station
+dbo.Ticket
+dbo.Train

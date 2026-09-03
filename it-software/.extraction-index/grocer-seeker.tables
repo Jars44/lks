@@ -1,0 +1,4 @@
+dbo.categories
+dbo.products
+dbo.transactions
+dbo.users

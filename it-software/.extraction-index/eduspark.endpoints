@@ -1,0 +1,4 @@
+EduSpark.API.Controllers.GameController.GetGames
+EduSpark.API.Controllers.LeaderboardController.GetLeaderboard(System.Int32)
+EduSpark.API.Controllers.LeaderboardController.PostLeaderboard(EduSpark.API.Controllers.LeaderboardDTO)
+EduSpark.API.Controllers.WordController.GetWordsInGame(System.Int32)

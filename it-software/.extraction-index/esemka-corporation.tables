@@ -1,0 +1,7 @@
+dbo.department
+dbo.employee
+dbo.job
+dbo.job_level
+dbo.mutation
+dbo.position
+dbo.promotion

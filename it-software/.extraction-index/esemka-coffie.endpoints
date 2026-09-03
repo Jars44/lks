@@ -1,0 +1,9 @@
+EzemKofi.API.Controllers.CheckoutController.DoCheckout(System.Collections.Generic.List{EzemKofi.API.Controllers.CheckoutItemDTO})
+EzemKofi.API.Controllers.CoffeeController.GetCoffeeByFilter(System.Nullable{System.Int32},System.String)
+EzemKofi.API.Controllers.CoffeeController.GetCoffee(System.Int32)
+EzemKofi.API.Controllers.CoffeeController.GetTopPicksCoffee
+EzemKofi.API.Controllers.CoffeeTypeController.GetCoffeeCategory
+EzemKofi.API.Controllers.UserController.Auth(EzemKofi.API.Controllers.AuthDTO)
+EzemKofi.API.Controllers.UserController.Register(EzemKofi.API.Controllers.RegisterDTO)
+EzemKofi.API.Controllers.UserController.GetMyInformation
+EzemKofi.API.Controllers.UserController.GetMyTransaction
