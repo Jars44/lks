@@ -29,5 +29,6 @@ No schema dump extracted. EF Core model inferred from DTOs: CheckoutItem, AuthDT
 
 ## Caveats
 - `appsettings.json` has no `ConnectionStrings` section; connection string not found.
+- `appsettings.json` has a trailing-comma JSON syntax error (after `"Url"` value at line 12) — invalid JSON; config load would fail.
 - Single self-contained `.exe` publish.
 - Prebuilt binary; no build instructions possible.
