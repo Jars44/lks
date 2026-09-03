@@ -1,0 +1,10 @@
+dbo.Akun
+dbo.Bandara
+dbo.JadwalPenerbangan
+dbo.KodePromo
+dbo.Maskapai
+dbo.Negara
+dbo.PerubahanStatusJadwalPenerbangan
+dbo.StatusPenerbangan
+dbo.TransaksiDetail
+dbo.TransaksiHeader

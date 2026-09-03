@@ -1,0 +1,10 @@
+dbo.Categories
+dbo.Ingredients
+dbo.MenuIngredients
+dbo.Menus
+dbo.ReservationDetails
+dbo.Reservations
+dbo.Roles
+dbo.Tables
+dbo.Units
+dbo.Users

@@ -1,0 +1,8 @@
+dbo.Genre
+dbo.Movie
+dbo.MovieGenre
+dbo.Schedule
+dbo.Theater
+dbo.Transaction
+dbo.TransactionDetail
+dbo.User

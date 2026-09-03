@@ -1,0 +1,8 @@
+dbo.CartItems
+dbo.Categories
+dbo.Items
+dbo.OrderItems
+dbo.Orders
+dbo.Tables
+dbo.Transactions
+dbo.Users

@@ -1,0 +1,7 @@
+dbo.Jenis
+dbo.KodePotonganHarga
+dbo.Komputer
+dbo.Member
+dbo.Paket
+dbo.Pengguna
+dbo.Transaksi

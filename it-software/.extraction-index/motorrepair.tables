@@ -1,0 +1,7 @@
+dbo.DetailProduct
+dbo.DetailService
+dbo.Mechanics
+dbo.MotorcycleServices
+dbo.Products
+dbo.TransactionService
+dbo.Users

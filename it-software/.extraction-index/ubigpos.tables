@@ -1,0 +1,6 @@
+dbo.Category
+dbo.Coupon
+dbo.DetailTransaction
+dbo.Item
+dbo.Transaction
+dbo.User
