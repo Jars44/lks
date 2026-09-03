@@ -1,0 +1,13 @@
+
+unrar-free 0.3.3  Copyright (C) 2004  Ben Asselstine, Jeroen Dekkers
+
+
+RAR archive it-software/Pack Soal/SOAL LKS JATIM ITSSB 2024/Mobile 01/Backend API/EduSpark.API.rar
+
+Pathname/Comment
+                  Size   Date   Time     Attr
+----------------------------------------------
+ EduSpark.API.exe
+              54145584 15-04-24 10:57   .....A
+----------------------------------------------
+    1         54145584

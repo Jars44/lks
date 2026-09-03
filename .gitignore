@@ -369,3 +369,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# it-software ephemeral work dirs (not for commit)
+it-software/.extracted/
+it-software/.work/
