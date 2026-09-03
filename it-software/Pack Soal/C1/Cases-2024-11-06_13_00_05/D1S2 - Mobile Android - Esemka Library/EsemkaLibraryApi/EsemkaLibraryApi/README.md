@@ -1,7 +1,7 @@
 # EsemkaLibraryApi
 
 ## Status
-Prebuilt backend binary provided. Android client source available separately at `../../EsemkaLibrary/`.
+Prebuilt backend binary provided. Android client source available separately at `../../../../EsemkaLibrary/`.
 
 ## Tech stack
 - ASP.NET Core (IIS in-process via `aspnetcorev2_inprocess.dll`)
