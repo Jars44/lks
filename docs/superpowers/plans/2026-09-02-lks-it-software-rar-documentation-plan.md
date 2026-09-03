@@ -20,7 +20,7 @@
 
 ---
 
-## Phase 1 — Preflight inventory
+## Task 1: Phase 1 — Preflight inventory
 
 **Files:**
 - Create: `it-software/.extraction-index/esemka-gym.txt`
@@ -104,7 +104,7 @@ git commit -m "docs(it-software): add rar inventory + gitignore work dirs"
 
 ---
 
-## Phase 2 — SQL/UTF-16 schema normalization
+## Task 2: Phase 2 — SQL/UTF-16 schema normalization
 
 **Files:**
 - Modify: each `.extraction-index/<project>.tables` (one per project that has a `.sql`)
@@ -187,7 +187,7 @@ git commit -m "docs(it-software): extract CREATE TABLE lists from all .sql files
 
 ---
 
-## Phase 3 — Per-project docs (Batch A: 10 .NET projects with .xml API docs)
+## Task 3: Phase 3 — Per-project docs (Batch A: 10 .NET projects with .xml API docs)
 
 **Files:** 10 `README.md` files written next to each spec PDF.
 
@@ -339,7 +339,7 @@ git commit -m "docs(it-software): add 10 .NET project READMEs (prebuilt binaries
 
 ---
 
-## Phase 4 — Per-project docs (Batch B: 9 spec-only projects)
+## Task 4: Phase 4 — Per-project docs (Batch B: 9 spec-only projects)
 
 **Files:** 9 `README.md` files next to each spec PDF/SQL, for projects with no backend.
 
@@ -437,7 +437,7 @@ git commit -m "docs(it-software): add 9 spec-only project READMEs"
 
 ---
 
-## Phase 5 — Repo-level index + root README accuracy pass
+## Task 5: Phase 5 — Repo-level index + root README accuracy pass
 
 **Files:**
 - Create: `it-software/README.md` (top-level index for the division)
@@ -550,7 +550,7 @@ git commit -m "docs(it-software): add top-level index + root README accuracy pas
 
 ---
 
-## Phase 6 — Cleanup
+## Task 6: Phase 6 — Cleanup
 
 - [ ] **Step 1: Delete the duplicate `MobileAndroid/` subtree**
 
