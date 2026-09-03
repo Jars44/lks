@@ -150,20 +150,85 @@ API ini dibangun dengan .NET Core/Node.js, menyediakan endpoint RESTful untuk in
 
 Modul Web Technology fokus pada pengembangan aplikasi web interaktif dan sistem backend yang scalable. Menggunakan teknologi HTML, CSS, JavaScript untuk frontend, dan bahasa server-side seperti PHP/Node.js untuk backend, modul ini mencakup game interaktif, sistem manajemen akun, dan template UI yang siap pakai.
 
-### Client-Side Media Module
+### Client-Side Module — BOMBSKUY Game
 
-Modul ini menekankan pengembangan frontend dengan JavaScript vanilla, CSS untuk styling, dan HTML untuk struktur, menciptakan pengalaman pengguna yang dinamis dan menarik tanpa framework eksternal.
+Browser-only game (Vanilla JS, ES5 only, no modules) di `web-technology/MODULE_CLIENT_MEDIA/`.
 
-- **BOMSKUY Game**: Game bom berbasis web dengan fitur menarik seperti input username dan tingkat kesulitan, gameplay berbasis grid dengan player, dinding, musuh, dan bom, fungsi pause/resume, sistem leaderboard, serta layar game over dengan statistik lengkap. Menggunakan canvas atau DOM manipulation untuk rendering game.
+- **BOMSKUY Game**: Bomberman-style grid game (1000×600). Welcome screen → username → difficulty (Easy/Medium/Hard) → 3s countdown → in-game (player, walls, dogs, bombs, items) → pause (Esc/Continue) → game over → save score → leaderboard. Player starts top-left, 3 hearts, Walking animation, dog AI chases player, bombs 5s explode 1 box each direction (TNT doubles range), items (heart/tnt/ice) appear from destroyed walls and add marks to player.
 - **File Utama**: `web-technology/MODULE_CLIENT_MEDIA/index.html`, `script.js`, `style.css`
+- **Spec compliance**: ES5 only (`var`, no `const`/`let`/arrow/template literals/modules). 1000×600 canvas centered. Single-page (no reload). Pause via Esc + "Continue" button. Hearts animation. Freeze 5s. Save score in localStorage. Leaderboard sorted by walls/tnts/ices. Spec verified against `MODULE_CLIENT_SIDE.docx` (41 items, all implemented).
+- **Submit**: rename folder ke `XX_CLIENT_MODULE/` (XX = nomor PC), zip dan upload. Folder contains `{index.html, script.js, style.css, Images/}` at root.
 
-### Server-Side Media Module
+Cara menjalankan:
+```
+cd web-technology/MODULE_CLIENT_MEDIA
+# Open index.html directly in Chrome — paths are relative, file:// works
+xdg-open index.html    # Linux
+open index.html        # macOS
+```
 
-Modul ini mencakup pengembangan backend dengan fokus pada keamanan, performa, dan integrasi database. Menggunakan arsitektur RESTful atau MVC untuk membangun aplikasi web yang robust.
+### Server-Side Module — Car Instalment Platform
 
-- **Accounts**: Sistem manajemen akun untuk autentikasi dan otorisasi pengguna. Fitur meliputi registrasi, login, reset password, dan role-based access control menggunakan session atau JWT.
-- **Database**: Konfigurasi dan manajemen database untuk aplikasi web. Mendukung koneksi ke MySQL/SQLite, query optimization, dan migrasi data.
-- **Templates-GUI**: Template antarmuka pengguna untuk mempercepat pengembangan aplikasi web. Menggunakan Bootstrap atau framework CSS custom untuk responsive design dan komponen UI reusable.
+Full-stack di `web-technology/MODULE_SERVER_SIDE_MEDIA/`. Laravel REST API + React SPA. Spec dikes di `MODULE_SERVER_SIDE.docx`.
+
+**Architecture**: Laravel 12 (REST API + Sanctum token auth) + React 19 + Vite 7 + react-router-dom 7 + Axios. Bootstrap 4 templates untuk konsistensi UI.
+
+Struktur submission `XX_SERVER_MODULE/`:
+```
+XX_SERVER_MODULE/
+  BACKEND/                  # Laravel project (no node_modules)
+    app/                    # Models, Controllers, Resources, Requests
+    config/                 # App config
+    database/{migrations,seeders}/
+    public/                 # Web root (no /public suffix in URL via rewrite)
+    routes/api.php
+    bootstrap/app.php
+    .env.example
+    composer.json
+    artisan
+  FRONTEND/                 # Vite-built React app
+    index.html
+    assets/index-*.{js,css}
+  db-dump.sql               # MySQL-format schema + seed data
+  db-diagram.pdf            # ER diagram
+  postman_collection.json   # 19 API requests (collection variable {{base_url}})
+```
+
+**REST API** (prefix `/api/v1/`):
+- Society: `POST /auth/login`, `POST /auth/logout`, `POST /validation`, `GET /validations`, `GET /instalment_cars`, `GET /instalment_cars/{id}`, `POST /applications`, `GET /applications`
+- Officer: `POST /officer/login` + `/officer/{brands,regionals,societies,installments,available-months}` CRUD
+- Validator: `POST /validator/login` + `/validator/validations` (list pending), `PUT /validator/validations/{id}` (approve/reject)
+
+**Sample credentials** (seeded into DB):
+- Society: id_card_number `20210001`–`20210045`, password `121212`
+- Officer: username `officer1`–`officer75`, password `password`
+- Validator: username `validator1`–`validator75`, password `password`
+
+**Cara menjalankan**:
+```
+# Backend
+cd web-technology/MODULE_SERVER_SIDE_MEDIA/back_end
+cp .env.example .env  # edit DB_* if MySQL
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve --port=8000
+
+# Frontend (production build already in front_end/dist)
+# Easiest dev: serve from the dist folder
+cd ../front_end/dist
+python3 -m http.server 5500
+
+# Production (recommended): serve both under same Apache/nginx host
+#   <host>/XX_SERVER_MODULE/BACKEND  → rewrite to BACKEND/public/index.php
+#   <host>/XX_SERVER_MODULE/FRONTEND → static files in FRONTEND/
+# Laravel's public/index.php strips the BACKEND prefix automatically.
+```
+
+**Tech notes (deviations from spec)**:
+- Spec says Laravel 11.x → uses 12.x. APIs identical, framework requirements compatible.
+- Spec says React 18.x → uses 19.x. API surface used is 18-compatible.
+- All spec response JSON shapes verified end-to-end with curl. Postman collection exercises the full flow.
+- ERD generated from Mermaid source.
 
 ## Cara Menjalankan
 

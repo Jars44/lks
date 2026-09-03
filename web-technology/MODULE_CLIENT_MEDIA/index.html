@@ -3,9 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BOMSKUY</title>
+    <title>BOMBSKUY</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   </head>
   <body>
     <!-- Loading Screen Overlay -->
@@ -22,18 +21,12 @@
     <!-- Home Section -->
     <section id="home" style="display: none">
       <div class="form-container">
-        <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo.png" alt="logo" class="logo-root" />
+        <img src="Images/logo.png" alt="logo" class="logo-root" />
         <form class="form">
           <div class="form-input">
             <input class="input-username" type="text" placeholder="Input Username" id="username" required />
-            <select id="level" class="input" required>
-              <option class="option" value="0" disabled selected hidden>Select Difficulty</option>
-              <option class="option" id="difficulty" value="1">Easy</option>
-              <option class="option" id="difficulty" value="2">Medium</option>
-              <option class="option" id="difficulty" value="3">Hard</option>
-            </select>
             <div class="button-form">
-              <button type="button" class="button-root" id="button-play" onclick="Play()">Play</button>
+              <button type="submit" class="button-root" id="button-play" disabled>Play Game</button>
               <button type="button" class="button-root" id="button-instruction" onclick="Instruction()">
                 Instruction
               </button>
@@ -43,13 +36,25 @@
       </div>
     </section>
 
+    <!-- Difficulty Section -->
+    <section id="difficulty-screen" style="display: none">
+      <div class="form-container">
+        <h2 class="difficulty-title">Select Difficulty</h2>
+        <div class="difficulty-buttons">
+          <button type="button" class="button-root" onclick="selectDifficulty(1)">Easy</button>
+          <button type="button" class="button-root" onclick="selectDifficulty(2)">Medium</button>
+          <button type="button" class="button-root" onclick="selectDifficulty(3)">Hard</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Pause Overlay -->
     <section id="pause-overlay" style="display: none">
       <div class="pause-container">
         <h1 class="pause-title">Game Paused</h1>
         <p class="pause-subtitle">Press ESC to resume</p>
         <div class="pause-buttons">
-          <button class="pause-button" onclick="resumeGame()">Resume</button>
+          <button class="pause-button" onclick="resumeGame()">Continue</button>
           <button class="pause-button" onclick="goToHome()">Main Menu</button>
         </div>
       </div>
@@ -66,16 +71,14 @@
           <p>4. Blow up enemies</p>
           <p>5. Enjoy!</p>
         </div>
-        <button class="cross-instruction" id="cross-instruction" onclick="CloseInstruction()">⨯</button>
+        <button class="cross-instruction" id="cross-instruction" onclick="CloseInstruction()">&#10799;</button>
       </div>
     </section>
 
     <!-- Game Section  -->
     <section id="game" style="display: none">
       <div class="container-game">
-        <button class="pause-game-button" onclick="pauseGame()" title="Press ESC to pause">
-          <i class="fa fa-pause"></i>
-        </button>
+        <button class="pause-game-button" onclick="pauseGame()" title="Press ESC to pause">&#10073;&#10073;</button>
         <div class="bg-wrap">
           <div class="grid-container">
             <div class="grid-item" id="tile-1"></div>
@@ -90,7 +93,11 @@
             <div class="grid-item" id="tile-10"></div>
             <div class="grid-item" id="tile-11"></div>
             <div class="grid-item" id="tile-12"></div>
-            <div class="grid-item" id="tile-13"></div>
+            <div class="grid-item" id="tile-13">
+              <div class="player-wrap">
+                <img class="player" src="Images/char_down.png" alt="player" />
+              </div>
+            </div>
             <div class="grid-item" id="tile-14"></div>
             <div class="grid-item" id="tile-15"></div>
             <div class="grid-item" id="tile-16"></div>
@@ -100,9 +107,7 @@
             <div class="grid-item" id="tile-20"></div>
             <div class="grid-item" id="tile-21"></div>
             <div class="grid-item" id="tile-22"></div>
-            <div class="grid-item" id="tile-23">
-              <img class="player" src="/web-technology/MODULE_CLIENT_MEDIA/Images/char_down.png" alt="player" />
-            </div>
+            <div class="grid-item" id="tile-23"></div>
             <div class="grid-item" id="tile-24"></div>
             <div class="grid-item" id="tile-25"></div>
             <div class="grid-item" id="tile-26"></div>
@@ -182,32 +187,23 @@
           </div>
         </div>
         <div class="stats">
-          <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/logo_white.png" alt="" class="logo-game" />
+          <img src="Images/logo_white.png" alt="" class="logo-game" />
           <div class="stat">
             <p class="name">Player<span id="nickname"></span></p>
             <p class="time">Time<span id="time"></span></p>
           </div>
-          <img
-            src="/web-technology/MODULE_CLIENT_MEDIA/Images/heart_indicator.png"
-            alt="health indicator"
-            class="heart-indicator"
-          />
+          <img src="Images/heart_indicator.png" alt="health indicator" class="heart-indicator" />
           <div class="container-stats">
             <div class="wall-score">
-              <img
-                src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
-                alt="wall_crack"
-                id="wall-crack-1"
-                class="game-images"
-              />
+              <img src="Images/wall_crack.png" alt="wall_crack" id="wall-crack-1" class="game-images" />
               <h2 id="walls">= 0</h2>
             </div>
             <div class="tnt-score">
-              <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png" alt="tnt" id="tnt-1" class="game-images" />
+              <img src="Images/tnt.png" alt="tnt" id="tnt-1" class="game-images" />
               <h2 id="tnt">= 0</h2>
             </div>
             <div class="ice-score">
-              <img src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png" alt="ice" id="ice-1" class="game-images" />
+              <img src="Images/ice.png" alt="ice" id="ice-1" class="game-images" />
               <h2 id="ice">= 0</h2>
             </div>
           </div>
@@ -220,32 +216,18 @@
       <div class="container-gameover">
         <h1 class="title-gameover">Game Over!</h1>
         <h2 class="subtitle-gameover"></h2>
+        <h2 class="score-gameover" id="gameover-score"></h2>
         <div class="stats-gameover">
-          <img
-            src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
-            alt="wall_crack"
-            id="wall-crack-gameover"
-            class="gameover-images"
-          />
+          <img src="Images/wall_crack.png" alt="wall_crack" id="wall-crack-gameover" class="gameover-images" />
           <h2 id="gameover-walls">= 0</h2>
-          <img
-            src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png"
-            alt="tnt"
-            id="tnt-gameover"
-            class="gameover-images"
-          />
+          <img src="Images/tnt.png" alt="tnt" id="tnt-gameover" class="gameover-images" />
           <h2 id="gameover-tnt">= 0</h2>
-          <img
-            src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png"
-            alt="ice"
-            id="ice-gameover"
-            class="gameover-images"
-          />
+          <img src="Images/ice.png" alt="ice" id="ice-gameover" class="gameover-images" />
           <h2 id="gameover-ice">= 0</h2>
         </div>
         <div class="buttons-gameover">
           <button class="save-gameover" onclick="saveScore()">Save Score</button>
-          <button class="leaderboard-gameover" onclick="leaderboard()">Leaderboard</button>
+          <button class="leaderboard-gameover" onclick="leaderboard()">Leaderboards</button>
         </div>
       </div>
     </section>
@@ -261,25 +243,13 @@
                 <th style="text-align: left">Player Name</th>
                 <th>Time</th>
                 <th>
-                  <img
-                    src="/web-technology/MODULE_CLIENT_MEDIA/Images/wall_crack.png"
-                    alt="wall_crack"
-                    class="image-leaderboard"
-                  />
+                  <img src="Images/wall_crack.png" alt="wall_crack" class="image-leaderboard" />
                 </th>
                 <th>
-                  <img
-                    src="/web-technology/MODULE_CLIENT_MEDIA/Images/tnt.png"
-                    alt="tnt"
-                    class="image-leaderboard"
-                  />
+                  <img src="Images/tnt.png" alt="tnt" class="image-leaderboard" />
                 </th>
                 <th>
-                  <img
-                    src="/web-technology/MODULE_CLIENT_MEDIA/Images/ice.png"
-                    alt="ice"
-                    class="image-leaderboard"
-                  />
+                  <img src="Images/ice.png" alt="ice" class="image-leaderboard" />
                 </th>
               </tr>
             </thead>
